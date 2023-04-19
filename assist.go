@@ -36,4 +36,3 @@ func Group(columns ...Expr) Condition {
 		return db.Group(buildColumnsValue(db, columns...))
 	}
 }
-
