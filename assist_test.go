@@ -8,10 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func newDb() *gorm.DB {
-	return db.Session(&gorm.Session{DryRun: true})
-}
-
 type Dict struct {
 	Id        int64
 	Name      string
@@ -25,10 +21,12 @@ func (*Dict) TableName() string {
 	return "dict"
 }
 
+var x_Dict_Model_Type = Indirect(&Dict{})
+
 type DictImpl struct {
 	// private fields
-	tableName string
-	modelType reflect.Type
+	xTableName string
+	xModelType reflect.Type
 
 	ALL Asterisk
 
@@ -40,12 +38,11 @@ type DictImpl struct {
 	CreatedAt Time
 }
 
-func NewDict() DictImpl {
-	d := &Dict{}
-	tableName := d.TableName()
+func New_Dict() DictImpl {
+	tableName := "dict"
 	return DictImpl{
-		tableName: tableName,
-		modelType: Indirect(d),
+		xTableName: tableName,
+		xModelType: x_Dict_Model_Type,
 
 		ALL:       NewAsterisk(tableName),
 		Id:        NewInt64(tableName, "id"),
@@ -57,24 +54,32 @@ func NewDict() DictImpl {
 	}
 }
 
-func (d DictImpl) As(alias string) *DictImpl {
-	return &DictImpl{
-		tableName: alias,
-		modelType: d.modelType,
-		Id:        NewInt64(alias, "id"),
-		Score:     NewFloat64(alias, "score"),
-		Name:      NewString(alias, "name"),
-		IsPin:     NewBool(alias, "is_pin"),
-		Sort:      NewUint16(alias, "sort"),
-		CreatedAt: NewTime(alias, "created_at"),
+func (d *DictImpl) As(alias string) DictImpl {
+	return DictImpl{
+		xTableName: alias,
+		xModelType: d.xModelType,
+		Id:         NewInt64(alias, "id"),
+		Score:      NewFloat64(alias, "score"),
+		Name:       NewString(alias, "name"),
+		IsPin:      NewBool(alias, "is_pin"),
+		Sort:       NewUint16(alias, "sort"),
+		CreatedAt:  NewTime(alias, "created_at"),
 	}
 }
 
-func (d DictImpl) Assist_Model() any {
-	return reflect.New(d.modelType).Interface()
+func (d *DictImpl) Active_Model() any {
+	return reflect.New(d.xModelType).Interface()
 }
 
-var dictpm = NewDict()
+func (d *DictImpl) Active_TableName() string {
+	return d.xTableName
+}
+
+var dictpm = New_Dict()
+
+func newDb() *gorm.DB {
+	return db.Session(&gorm.Session{DryRun: true})
+}
 
 func Test_Select(t *testing.T) {
 	var dummy Dict
@@ -87,7 +92,7 @@ func Test_Select(t *testing.T) {
 	}{
 		{
 			name: "select *",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Select(),
 				).
@@ -97,7 +102,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select field",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Select(
 						dictpm.Id,
@@ -111,7 +116,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select field where",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Select(dictpm.Id, dictpm.Score),
 				).
@@ -123,7 +128,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select 1",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Select(One),
 				).
@@ -133,7 +138,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select COUNT(1)",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Select(One.Count()),
 				).
@@ -143,7 +148,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select COUNT(*)",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Select(Star.Count()),
 				).
@@ -153,7 +158,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select AVG(field)",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Select(dictpm.Score.Avg()),
 				).
@@ -163,7 +168,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "update with select field",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Select(
 						dictpm.Score,
@@ -197,7 +202,7 @@ func Test_Order(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Order(),
 				).
@@ -207,7 +212,7 @@ func Test_Order(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Order(dictpm.Score),
 				).
@@ -217,7 +222,7 @@ func Test_Order(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Order(dictpm.Score.Desc()),
 				).
@@ -227,7 +232,7 @@ func Test_Order(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Order(dictpm.Score.Desc(), dictpm.Name),
 				).
@@ -254,7 +259,7 @@ func Test_Group(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Group(),
 				).
@@ -264,7 +269,7 @@ func Test_Group(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Group(dictpm.Name),
 				).
@@ -274,7 +279,7 @@ func Test_Group(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(dictpm.Assist_Model()).
+			db: newDb().Model(dictpm.Active_Model()).
 				Scopes(
 					Select(dictpm.Score.Sum()),
 					Group(dictpm.Name),
