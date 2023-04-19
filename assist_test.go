@@ -38,8 +38,7 @@ type DictImpl struct {
 	CreatedAt Time
 }
 
-func New_Dict() DictImpl {
-	tableName := "dict"
+func x_New_Dict(tableName string) DictImpl {
 	return DictImpl{
 		xTableName: tableName,
 		xModelType: x_Dict_Model_Type,
@@ -54,17 +53,12 @@ func New_Dict() DictImpl {
 	}
 }
 
+func New_Dict() DictImpl {
+	return x_New_Dict("dict")
+}
+
 func (d *DictImpl) As(alias string) DictImpl {
-	return DictImpl{
-		xTableName: alias,
-		xModelType: d.xModelType,
-		Id:         NewInt64(alias, "id"),
-		Score:      NewFloat64(alias, "score"),
-		Name:       NewString(alias, "name"),
-		IsPin:      NewBool(alias, "is_pin"),
-		Sort:       NewUint16(alias, "sort"),
-		CreatedAt:  NewTime(alias, "created_at"),
-	}
+	return x_New_Dict(alias)
 }
 
 func (d *DictImpl) Active_Model() any {
