@@ -74,6 +74,18 @@ func (field String) Like(value string) Expr {
 	return expr{e: clause.Like{Column: field.RawExpr(), Value: value}}
 }
 
+// SuffixLike use expr LIKE ?, ? contain prefix % and suffix %
+// e.g. expr LIKE %value%
+func (field String) FuzzyLike(value string) Expr {
+	return expr{e: clause.Like{Column: field.RawExpr(), Value: "%" + value + "%"}}
+}
+
+// LeftLike use expr LIKE ?, ? contain suffix %.
+// e.g. expr LIKE value%
+func (field String) LeftLike(value string) Expr {
+	return expr{e: clause.Like{Column: field.RawExpr(), Value: value + "%"}}
+}
+
 // NotLike use expr NOT LIKE ?
 func (field String) NotLike(value string) Expr {
 	return expr{e: clause.Not(clause.Like{Column: field.RawExpr(), Value: value})}

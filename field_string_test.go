@@ -86,6 +86,18 @@ func Test_Expr_String(t *testing.T) {
 			want:     "`name` LIKE ?",
 		},
 		{
+			name:     "fuzzy like",
+			expr:     NewString("", "name").FuzzyLike("tom"),
+			wantVars: []any{"%tom%"},
+			want:     "`name` LIKE ?",
+		},
+		{
+			name:     "left like",
+			expr:     NewString("", "name").LeftLike("tom"),
+			wantVars: []any{"tom%"},
+			want:     "`name` LIKE ?",
+		},
+		{
 			name:     "not like",
 			expr:     NewString("", "name").NotLike("%%tom%%"),
 			wantVars: []any{"%%tom%%"},

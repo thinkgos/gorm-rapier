@@ -86,6 +86,18 @@ func Test_Bytes(t *testing.T) {
 			want:     "`name` LIKE ?",
 		},
 		{
+			name:     "fuzzy like",
+			expr:     NewBytes("", "name").FuzzyLike("tom"),
+			wantVars: []any{"%tom%"},
+			want:     "`name` LIKE ?",
+		},
+		{
+			name:     "left like",
+			expr:     NewBytes("", "name").LeftLike("tom"),
+			wantVars: []any{"tom%"},
+			want:     "`name` LIKE ?",
+		},
+		{
 			name:     "not like",
 			expr:     NewBytes("", "name").NotLike("%%tom%%"),
 			wantVars: []any{"%%tom%%"},
