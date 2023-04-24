@@ -36,3 +36,15 @@ func Group(columns ...Expr) Condition {
 		return db.Group(buildColumnsValue(db, columns...))
 	}
 }
+
+func LockingUpdate() Condition {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Clauses(clause.Locking{Strength: "UPDATE"})
+	}
+}
+
+func LockingShare() Condition {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Clauses(clause.Locking{Strength: "SHARE"})
+	}
+}

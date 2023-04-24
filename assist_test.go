@@ -291,6 +291,45 @@ func Test_Group(t *testing.T) {
 	}
 }
 
+func Test_Locking(t *testing.T) {
+	var dummy Dict
+
+	tests := []struct {
+		name     string
+		db       *gorm.DB
+		wantVars []interface{}
+		want     string
+	}{
+		{
+			name: "",
+			db: newDb().Model(dictpm.Active_Model()).
+				Scopes(
+					Group(),
+					LockingUpdate(),
+				).
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` LIMIT 1 FOR UPDATE",
+		},
+		{
+			name: "",
+			db: newDb().Model(dictpm.Active_Model()).
+				Scopes(
+					Group(),
+					LockingShare(),
+				).
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` LIMIT 1 FOR SHARE",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+		})
+	}
+}
+
 func CheckBuildExprSql(t *testing.T, db *gorm.DB, want string, vars []interface{}) {
 	stmt := db.Statement
 	if got := stmt.SQL.String(); got != want {
