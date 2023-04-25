@@ -138,3 +138,8 @@ func (field String) Concat(before, after string) String {
 		return field
 	}
 }
+
+// IntoColumns columns array with sub method
+func (field String) IntoColumns() Columns {
+	return NewColumns(field)
+}

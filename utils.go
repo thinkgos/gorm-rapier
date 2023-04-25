@@ -61,7 +61,9 @@ func Indirect(value interface{}) reflect.Type {
 func IntoExpression(conds ...Expr) []clause.Expression {
 	exprs := make([]clause.Expression, len(conds))
 	for i, cond := range conds {
-		exprs[i] = cond.Expression()
+		if cond != nil {
+			exprs[i] = cond.Expression()
+		}
 	}
 	return exprs
 }

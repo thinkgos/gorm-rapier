@@ -163,3 +163,8 @@ func (field Time) DayName() String {
 func (field Time) MonthName() String {
 	return String{expr{e: clause.Expr{SQL: "MONTHNAME(?)", Vars: []any{field.RawExpr()}}}}
 }
+
+// IntoColumns columns array with sub method
+func (field Time) IntoColumns() Columns {
+	return NewColumns(field)
+}

@@ -119,3 +119,8 @@ func (field Bytes) SubstringIndex(delim string, count int) Bytes {
 		Vars: []any{field.RawExpr()},
 	}}}
 }
+
+// IntoColumns columns array with sub method
+func (field Bytes) IntoColumns() Columns {
+	return NewColumns(field)
+}

@@ -162,3 +162,8 @@ func (field Integer[T]) FromUnixTime(format ...string) String {
 func (field Integer[T]) FromDays() Time {
 	return Time{expr{e: clause.Expr{SQL: "FROM_DAYS(?)", Vars: []any{field.RawExpr()}}}}
 }
+
+// IntoColumns columns array with sub method
+func (field Integer[T]) IntoColumns() Columns {
+	return NewColumns(field)
+}

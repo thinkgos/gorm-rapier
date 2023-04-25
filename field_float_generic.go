@@ -117,3 +117,8 @@ func (field Float[T]) Floor() Int {
 func (field Float[T]) Round(decimals int) Float[T] {
 	return Float[T]{field.round(decimals)}
 }
+
+// IntoColumns columns array with sub method
+func (field Float[T]) IntoColumns() Columns {
+	return NewColumns(field)
+}

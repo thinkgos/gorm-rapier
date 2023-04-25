@@ -68,7 +68,7 @@ func (e expr) BuildColumn(stmt *gorm.Statement, opts ...BuildOption) string {
 func (e expr) Build(builder clause.Builder) {
 	if e.e == nil {
 		if stmt, ok := builder.(*gorm.Statement); ok {
-			builder.WriteString(string(e.BuildColumn(stmt, WithAll)))
+			_, _ = builder.WriteString(e.BuildColumn(stmt, WithAll))
 			return
 		}
 	}
