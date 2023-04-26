@@ -23,6 +23,7 @@ func (*Dict) TableName() string {
 }
 
 var x_Dict_Model_Type = Indirect(&Dict{})
+var xDict = new_X_Dict("dict")
 
 type DictImpl struct {
 	// private fields
@@ -57,28 +58,26 @@ func new_X_Dict(tableName string) DictImpl {
 }
 
 func New_X_Dict() DictImpl {
-	return new_X_Dict("dict")
+	return xDict
 }
 
-func (x *DictImpl) As(alias string) DictImpl {
+func (*DictImpl) As(alias string) DictImpl {
 	return new_X_Dict(alias)
 }
 
-func (x *DictImpl) X_Model() any {
-	return reflect.New(x.xModelType).Interface()
+func (*DictImpl) X_Model() *Dict {
+	return &Dict{}
 }
 
 func (x *DictImpl) Xc_Model() Condition {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Model(reflect.New(x.xModelType).Interface())
+		return db.Model(&Dict{})
 	}
 }
 
 func (x *DictImpl) X_TableName() string {
 	return x.xTableName
 }
-
-var xDict = New_X_Dict()
 
 func newDb() *gorm.DB {
 	return db.Session(&gorm.Session{DryRun: true})
