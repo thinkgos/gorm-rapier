@@ -5,8 +5,7 @@ import (
 	"os"
 	"time"
 
-	gen "github.com/things-go/gorm-assist"
-	"github.com/things-go/gorm-assist/examples/dict"
+	assist "github.com/things-go/gorm-assist"
 	"github.com/things-go/gorm-assist/examples/model"
 
 	"gorm.io/gorm"
@@ -27,27 +26,31 @@ func main() {
 
 	var rows []model.Dict
 
-	dictmf := dict.NewDict()
+	xDict := model.New_X_Dict()
 	db.Model(&model.Dict{}).
-		Scopes(gen.Select(
-			dictmf.Id,
-			dictmf.Key,
-			dictmf.Name,
-			dictmf.IsPin,
-			dictmf.Sort,
-			dictmf.CreatedAt.UnixTimestamp().IfNull(0).As("created_at"),
-		)).
-		Where(dictmf.Id.Eq(100)).
+		Scopes(
+			assist.Select(
+				xDict.Id,
+				xDict.Key,
+				xDict.Name,
+				xDict.IsPin,
+				xDict.Sort,
+				xDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at"),
+			),
+		).
+		Where(xDict.Id.Eq(100)).
 		Find(&rows)
 
 	db.Model(&model.Dict{}).
-		Scopes(gen.Select(
-			dictmf.Key,
-			dictmf.Name,
-			dictmf.IsPin,
-			dictmf.Sort,
-		)).
-		Where(dictmf.Id.Eq(100)).
+		Scopes(
+			assist.Select(
+				xDict.Key,
+				xDict.Name,
+				xDict.IsPin,
+				xDict.Sort,
+			),
+		).
+		Where(xDict.Id.Eq(100)).
 		Updates(&model.Dict{
 			Id:    0,
 			Key:   "",
@@ -55,5 +58,4 @@ func main() {
 			IsPin: false,
 			Sort:  0,
 		})
-
 }

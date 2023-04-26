@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	assist "github.com/things-go/gorm-assist"
+)
 
 // Dict 字典
 type Dict struct {
@@ -16,4 +20,41 @@ type Dict struct {
 // TableName implement schema.Tabler interface
 func (*Dict) TableName() string {
 	return "dict"
+}
+
+type DictImpl struct {
+	xTableName string
+
+	Id        assist.Int64
+	Key       assist.String
+	Name      assist.String
+	IsPin     assist.Bool
+	Sort      assist.Uint16
+	CreatedAt assist.Time
+}
+
+var xx_Dict = new_X_Dict("dict")
+
+func new_X_Dict(tableName string) DictImpl {
+	return DictImpl{
+		xTableName: tableName,
+		Id:         assist.NewInt64(tableName, "id"),
+		Key:        assist.NewString(tableName, "key"),
+		Name:       assist.NewString(tableName, "name"),
+		IsPin:      assist.NewBool(tableName, "is_pin"),
+		Sort:       assist.NewUint16(tableName, "sort"),
+		CreatedAt:  assist.NewTime(tableName, "created_at"),
+	}
+}
+
+func New_X_Dict() DictImpl {
+	return xx_Dict
+}
+
+func (DictImpl) X_Model() *Dict {
+	return &Dict{}
+}
+
+func (DictImpl) As(alias string) DictImpl {
+	return new_X_Dict(alias)
 }
