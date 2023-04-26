@@ -12,6 +12,7 @@ type Expr interface {
 	clause.Expression
 
 	As(alias string) Expr
+	AsWithPrefix(prefix string) Expr
 	ColumnName() string
 	Expression() clause.Expression
 	RawExpr() expression
