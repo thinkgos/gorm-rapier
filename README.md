@@ -28,6 +28,12 @@ Then import the package into your own code.
 
 ### Example
 
+## Reference
+
+- [gorm](git@github.com:go-gorm/gorm.git)
+- [sea-orm](https://github.com/SeaQL/sea-orm)
+- [ent](https://github.com/ent/ent)
+
 ## License
 
 This project is under MIT License. See the [LICENSE](LICENSE) file for the full license text.
