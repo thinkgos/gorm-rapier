@@ -11,14 +11,13 @@ import (
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
 	"gorm.io/gorm/utils/tests"
-	"gorm.io/plugin/soft_delete"
 )
 
 type User struct {
 	ID        uint `gorm:"primarykey"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt soft_delete.DeletedAt
+	DeletedAt int64
 	Name      string
 	Age       uint32
 	Active    bool
