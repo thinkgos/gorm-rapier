@@ -154,8 +154,8 @@ func (c Conditions) LockingShare() Conditions {
 // Pagination 分页器
 // 分页索引: page >= 1
 // 分页大小: perPage >= 1 && <= DefaultMaxPerPage
-func (c Conditions) Pagination(page, perPage int64) Conditions {
-	return append(c, Pagination(page, perPage))
+func (c Conditions) Pagination(page, perPage int64, maxPages ...int64) Conditions {
+	return append(c, Pagination(page, perPage, maxPages...))
 }
 
 // CrossJoin cross joins condition

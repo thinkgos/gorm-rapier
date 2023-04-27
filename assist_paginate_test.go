@@ -38,6 +38,12 @@ func Test_Paginate(t *testing.T) {
 				wantVars: nil,
 				want:     "SELECT * FROM `dict` LIMIT 500",
 			},
+			{
+				name:     "customer perPage > maxPerPage",
+				db:       newDb().Model(Dict{}).Clauses(Paginate(1, 201, 200)).Find([]Dict{}),
+				wantVars: nil,
+				want:     "SELECT * FROM `dict` LIMIT 200",
+			},
 		}
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
