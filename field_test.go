@@ -294,6 +294,12 @@ func Test_Field_Expr_Col(t *testing.T) {
 			want: "Concat(`id`,`new_id`,`new_id2`)",
 		},
 		{
+			name:     "concat with raw",
+			expr:     NewField("", "id").ConcatCol(NewField("", "new_id"), NewRaw("'/'")),
+			wantVars: nil,
+			want:     "Concat(`id`,`new_id`,'/')",
+		},
+		{
 			name: "concat with table",
 			expr: NewField("user", "id").ConcatCol(NewField("userB", "new_id"), NewField("userC", "new_id2")),
 			want: "Concat(`user`.`id`,`userB`.`new_id`,`userC`.`new_id2`)",
