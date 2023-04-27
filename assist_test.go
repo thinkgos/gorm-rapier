@@ -509,6 +509,9 @@ func Test_Conditions(t *testing.T) {
 			JoinX(xDict.X_TableName(), "x").
 			LeftJoinX(xDict.X_TableName(), "x").
 			RightJoinX(xDict.X_TableName(), "x").
+			Append(func(db *gorm.DB) *gorm.DB {
+				return db
+			}).
 			Build()
 	})
 }

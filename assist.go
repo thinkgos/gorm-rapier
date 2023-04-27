@@ -207,3 +207,8 @@ func (c Conditions) RightJoin(tableName string, conds ...Expr) Conditions {
 func (c Conditions) RightJoinX(tableName, alias string, conds ...Expr) Conditions {
 	return append(c, RightJoinX(tableName, alias, conds...))
 }
+
+// Append more condition
+func (c Conditions) Append(cs ...Condition) Conditions {
+	return append(c, cs...)
+}
