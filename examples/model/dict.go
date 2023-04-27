@@ -22,7 +22,7 @@ func (*Dict) TableName() string {
 	return "dict"
 }
 
-type DictImpl struct {
+type X_DictImpl struct {
 	xTableName string
 
 	Id        assist.Int64
@@ -33,10 +33,10 @@ type DictImpl struct {
 	CreatedAt assist.Time
 }
 
-var xx_Dict = new_X_Dict("dict")
+var xx_Dict = New_X_Dict("dict")
 
-func new_X_Dict(tableName string) DictImpl {
-	return DictImpl{
+func New_X_Dict(tableName string) X_DictImpl {
+	return X_DictImpl{
 		xTableName: tableName,
 		Id:         assist.NewInt64(tableName, "id"),
 		Key:        assist.NewString(tableName, "key"),
@@ -47,14 +47,14 @@ func new_X_Dict(tableName string) DictImpl {
 	}
 }
 
-func New_X_Dict() DictImpl {
+func X_Dict() X_DictImpl {
 	return xx_Dict
 }
 
-func (DictImpl) X_Model() *Dict {
+func (X_DictImpl) X_Model() *Dict {
 	return &Dict{}
 }
 
-func (DictImpl) As(alias string) DictImpl {
-	return new_X_Dict(alias)
+func (X_DictImpl) As(alias string) X_DictImpl {
+	return New_X_Dict(alias)
 }

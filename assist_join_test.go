@@ -9,8 +9,8 @@ import (
 func Test_Join(t *testing.T) {
 	var dummy Dict
 
-	xDd := xDict.As("dd")
-	xDi := xDict.As("di")
+	xDd := xx_Dict.As("dd")
+	xDi := xx_Dict.As("di")
 
 	tests := []struct {
 		name     string
@@ -22,7 +22,7 @@ func Test_Join(t *testing.T) {
 			name: "inner join - empty conds",
 			db: newDb().
 				Scopes(
-					xDict.Xc_Model(),
+					xx_Dict.Xc_Model(),
 					Join(xDd.X_TableName()),
 				).
 				Take(&dummy),
@@ -33,8 +33,8 @@ func Test_Join(t *testing.T) {
 			name: "cross join",
 			db: newDb().
 				Scopes(
-					xDict.Xc_Model(),
-					CrossJoin(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					xx_Dict.Xc_Model(),
+					CrossJoin(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -44,8 +44,8 @@ func Test_Join(t *testing.T) {
 			name: "inner join",
 			db: newDb().
 				Scopes(
-					xDict.Xc_Model(),
-					Join(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					xx_Dict.Xc_Model(),
+					Join(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -55,8 +55,8 @@ func Test_Join(t *testing.T) {
 			name: "left join",
 			db: newDb().
 				Scopes(
-					xDict.Xc_Model(),
-					LeftJoin(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					xx_Dict.Xc_Model(),
+					LeftJoin(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -66,8 +66,8 @@ func Test_Join(t *testing.T) {
 			name: "right join",
 			db: newDb().
 				Scopes(
-					xDict.Xc_Model(),
-					RightJoin(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					xx_Dict.Xc_Model(),
+					RightJoin(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -77,8 +77,8 @@ func Test_Join(t *testing.T) {
 			name: "inner join - multiple",
 			db: newDb().
 				Scopes(
-					xDict.Xc_Model(),
-					Join(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid)),
+					xx_Dict.Xc_Model(),
+					Join(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid)),
 					Join(xDi.X_TableName(), xDi.IsPin.Eq(true)),
 				).
 				Take(&dummy),

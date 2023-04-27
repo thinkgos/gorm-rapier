@@ -26,7 +26,7 @@ func main() {
 
 	var rows []model.Dict
 
-	xDict := model.New_X_Dict()
+	xDict := model.X_Dict()
 	db.Model(&model.Dict{}).
 		Scopes(
 			assist.Select(
