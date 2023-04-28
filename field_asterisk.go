@@ -10,7 +10,7 @@ type Asterisk struct{ expr }
 // NewAsterisk new * field
 func NewAsterisk(table string, opts ...Option) Asterisk {
 	return Asterisk{
-		expr{col: intoColumn(table, "*", opts...)},
+		expr{col: intoClauseColumn(table, "*", opts...)},
 	}
 }
 

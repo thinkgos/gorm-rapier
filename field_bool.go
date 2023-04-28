@@ -7,7 +7,7 @@ type Bool Field
 
 // NewBool new bool field.
 func NewBool(table, column string, opts ...Option) Bool {
-	return Bool{expr: expr{col: intoColumn(table, column, opts...)}}
+	return Bool{expr: expr{col: intoClauseColumn(table, column, opts...)}}
 }
 
 // IfNull use IFNULL(expr,?)

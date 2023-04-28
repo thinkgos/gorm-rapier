@@ -10,7 +10,7 @@ type Float[T constraints.Float | ~string] Field
 
 // NewFloat new float field.
 func NewFloat[T constraints.Float | ~string](table, column string, opts ...Option) Float[T] {
-	return Float[T]{expr: expr{col: intoColumn(table, column, opts...)}}
+	return Float[T]{expr: expr{col: intoClauseColumn(table, column, opts...)}}
 }
 
 // IfNull use IFNULL(expr,?)

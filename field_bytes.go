@@ -11,7 +11,7 @@ type Bytes Field
 
 // NewBytes new bytes field.
 func NewBytes(table, column string, opts ...Option) Bytes {
-	return Bytes{expr: expr{col: intoColumn(table, column, opts...)}}
+	return Bytes{expr: expr{col: intoClauseColumn(table, column, opts...)}}
 }
 
 // IfNull use IFNULL(expr,?)

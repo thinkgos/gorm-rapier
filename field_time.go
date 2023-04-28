@@ -11,7 +11,7 @@ type Time Field
 
 // NewTime bew time field
 func NewTime(table, column string, opts ...Option) Time {
-	return Time{expr: expr{col: intoColumn(table, column, opts...)}}
+	return Time{expr: expr{col: intoClauseColumn(table, column, opts...)}}
 }
 
 // IfNull use IFNULL(expr,?)

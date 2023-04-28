@@ -16,7 +16,7 @@ type Raw = Field
 
 // NewField new field
 func NewField(table, column string, opts ...Option) Field {
-	return Field{expr: expr{col: intoColumn(table, column, opts...)}}
+	return Field{expr: expr{col: intoClauseColumn(table, column, opts...)}}
 }
 
 // NewRaw new raw

@@ -12,7 +12,7 @@ type Integer[T constraints.Integer] Field
 
 // NewInt new Integer
 func NewInteger[T constraints.Integer](table, column string, opts ...Option) Integer[T] {
-	return Integer[T]{expr: expr{col: intoColumn(table, column, opts...)}}
+	return Integer[T]{expr: expr{col: intoClauseColumn(table, column, opts...)}}
 }
 
 // IfNull use IFNULL(expr,?)

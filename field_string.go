@@ -11,7 +11,7 @@ type String Field
 
 // NewString new string field.
 func NewString(table, column string, opts ...Option) String {
-	return String{expr: expr{col: intoColumn(table, column, opts...)}}
+	return String{expr: expr{col: intoClauseColumn(table, column, opts...)}}
 }
 
 // IfNull use IFNULL(expr,?)

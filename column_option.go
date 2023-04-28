@@ -10,7 +10,7 @@ var columnRaw Option = func(col clause.Column) clause.Column {
 	return col
 }
 
-func intoColumn(table, column string, opts ...Option) clause.Column {
+func intoClauseColumn(table, column string, opts ...Option) clause.Column {
 	col := clause.Column{Table: table, Name: column}
 	for _, opt := range opts {
 		col = opt(col)
