@@ -61,12 +61,12 @@ func (field Time) NotBetween(left time.Time, right time.Time) Expr {
 
 // In use expr IN (?)
 func (field Time) In(values ...time.Time) Expr {
-	return expr{e: clause.IN{Column: field.RawExpr(), Values: intoSlice(values...)}}
+	return expr{e: clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}}
 }
 
 // NotIn use expr NOT IN (?)
 func (field Time) NotIn(values ...time.Time) Expr {
-	return expr{e: clause.Not(clause.IN{Column: field.RawExpr(), Values: intoSlice(values...)})}
+	return expr{e: clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)})}
 }
 
 // Sum use SUM(expr)

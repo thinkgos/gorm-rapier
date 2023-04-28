@@ -20,7 +20,7 @@ func buildSelectValue(stmt *gorm.Statement, exprs ...Expr) (query string, args [
 		args = append(args, vars...)
 	}
 	if len(args) == 0 {
-		return queryItems[0], intoSlice(queryItems[1:])
+		return queryItems[0], intoAnySlice(queryItems[1:])
 	}
 	return strings.Join(queryItems, ","), args
 }
@@ -39,13 +39,6 @@ func buildColumnsValue(db *gorm.DB, columns ...Expr) string {
 	}
 
 	return stmt.SQL.String()
-}
-func intoSlice[T any](values ...T) []any {
-	slice := make([]any, len(values))
-	for i, v := range values {
-		slice[i] = v
-	}
-	return slice
 }
 
 // Indirect returns the value that v reflect.Type.
@@ -66,4 +59,20 @@ func IntoExpression(conds ...Expr) []clause.Expression {
 		}
 	}
 	return exprs
+}
+
+func intoAnySlice[T any](values ...T) []any {
+	slices := make([]any, len(values))
+	for i, v := range values {
+		slices[i] = v
+	}
+	return slices
+}
+
+func IntoSlice[T any, R any](values []T, f func(T) R) []R {
+	slices := make([]R, len(values))
+	for i, v := range values {
+		slices[i] = f(v)
+	}
+	return slices
 }

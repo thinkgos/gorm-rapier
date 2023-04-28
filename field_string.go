@@ -61,12 +61,12 @@ func (field String) NotBetween(left, right string) Expr {
 
 // In use expr IN (?)
 func (field String) In(values ...string) Expr {
-	return expr{e: clause.IN{Column: field.RawExpr(), Values: intoSlice(values...)}}
+	return expr{e: clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}}
 }
 
 // NotIn use expr NOT IN (?)
 func (field String) NotIn(values ...string) Expr {
-	return expr{e: clause.Not(clause.IN{Column: field.RawExpr(), Values: intoSlice(values...)})}
+	return expr{e: clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)})}
 }
 
 // Like use expr LIKE ?

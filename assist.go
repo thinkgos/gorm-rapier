@@ -52,7 +52,7 @@ func Where(columns ...Expr) Condition {
 		if len(columns) == 0 {
 			return db
 		}
-		return db.Where(columns[0], intoSlice(columns[1:])...)
+		return db.Where(columns[0], intoAnySlice(columns[1:])...)
 	}
 }
 
@@ -62,7 +62,7 @@ func Having(columns ...Expr) Condition {
 		if len(columns) == 0 {
 			return db
 		}
-		return db.Having(columns[0], intoSlice(columns[1:])...)
+		return db.Having(columns[0], intoAnySlice(columns[1:])...)
 	}
 }
 

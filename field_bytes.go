@@ -61,12 +61,12 @@ func (field Bytes) NotBetween(left []byte, right []byte) Expr {
 
 // In use expr IN (?)
 func (field Bytes) In(values ...[]byte) Expr {
-	return expr{e: clause.IN{Column: field.RawExpr(), Values: intoSlice(values...)}}
+	return expr{e: clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}}
 }
 
 // NotIn use expr NOT IN (?)
 func (field Bytes) NotIn(values ...[]byte) Expr {
-	return expr{e: clause.Not(clause.IN{Column: field.RawExpr(), Values: intoSlice(values...)})}
+	return expr{e: clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)})}
 }
 
 // Like use expr LIKE ?
