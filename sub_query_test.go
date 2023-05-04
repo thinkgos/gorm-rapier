@@ -252,7 +252,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 	fieldFloat32 := NewFloat32("", "age")
 	fieldFloat64 := NewFloat64("", "age")
 	fieldDecimal := NewDecimal("", "age")
-	fieldTime := NewDecimal("", "age")
+	fieldTime := NewTime("", "age")
 	tests := []struct {
 		name     string
 		db       *gorm.DB
