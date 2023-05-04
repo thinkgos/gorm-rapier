@@ -202,7 +202,6 @@ func (field Time) Second() Int {
 			buildOpts: field.buildOpts,
 		},
 	}
-
 }
 
 // MicroSecond use MICROSECOND(date) return the microsecond.
