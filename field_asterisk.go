@@ -10,42 +10,54 @@ type Asterisk struct{ expr }
 // NewAsterisk new * field
 func NewAsterisk(table string, opts ...Option) Asterisk {
 	return Asterisk{
-		expr{col: intoClauseColumn(table, "*", opts...)},
+		expr{
+			col: intoClauseColumn(table, "*", opts...),
+		},
 	}
 }
 
 // Count use COUNT(expr)
 func (a Asterisk) Count() Asterisk {
-	var expr *clause.Expr
+	var e clause.Expression
 	switch {
 	case a.e != nil:
-		expr = &clause.Expr{
+		e = &clause.Expr{
 			SQL:  "COUNT(?)",
 			Vars: []any{a.e},
 		}
 	case a.col.Table == "":
-		expr = &clause.Expr{SQL: "COUNT(*)"}
+		e = &clause.Expr{SQL: "COUNT(*)"}
 	default:
-		expr = &clause.Expr{
+		e = &clause.Expr{
 			SQL:  "COUNT(?.*)",
 			Vars: []any{clause.Table{Name: a.col.Table}},
 		}
 	}
-	a.e = expr
-	return Asterisk{expr: a.expr}
+	return Asterisk{
+		expr: expr{
+			col:       a.col,
+			e:         e,
+			buildOpts: a.buildOpts,
+		},
+	}
 }
 
 // Distinct use DISTINCT expr
 func (a Asterisk) Distinct() Asterisk {
-	var expr *clause.Expr
+	var e clause.Expression
 	if a.col.Table == "" {
-		expr = &clause.Expr{SQL: "DISTINCT *"}
+		e = &clause.Expr{SQL: "DISTINCT *"}
 	} else {
-		expr = &clause.Expr{
+		e = &clause.Expr{
 			SQL:  "DISTINCT ?.*",
 			Vars: []any{clause.Table{Name: a.col.Table}},
 		}
 	}
-	a.e = expr
-	return Asterisk{expr: a.expr}
+	return Asterisk{
+		expr: expr{
+			col:       a.col,
+			e:         e,
+			buildOpts: a.buildOpts,
+		},
+	}
 }

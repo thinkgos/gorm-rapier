@@ -12,7 +12,11 @@ type Integer[T constraints.Integer] Field
 
 // NewInt new Integer
 func NewInteger[T constraints.Integer](table, column string, opts ...Option) Integer[T] {
-	return Integer[T]{expr: expr{col: intoClauseColumn(table, column, opts...)}}
+	return Integer[T]{
+		expr: expr{
+			col: intoClauseColumn(table, column, opts...),
+		},
+	}
 }
 
 // IfNull use IFNULL(expr,?)
@@ -22,32 +26,56 @@ func (field Integer[T]) IfNull(value T) Expr {
 
 // Eq equal to, use expr = ?
 func (field Integer[T]) Eq(value T) Expr {
-	return expr{e: clause.Eq{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Eq{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Neq not equal to, use expr <> ?
 func (field Integer[T]) Neq(value T) Expr {
-	return expr{e: clause.Neq{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Neq{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Gt greater than, use expr > ?
 func (field Integer[T]) Gt(value T) Expr {
-	return expr{e: clause.Gt{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Gt{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Gte greater or equal to, use expr >= ?
 func (field Integer[T]) Gte(value T) Expr {
-	return expr{e: clause.Gte{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Gte{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Lt less than, use expr < ?
 func (field Integer[T]) Lt(value T) Expr {
-	return expr{e: clause.Lt{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Lt{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Lte less or equal to, use expr <= ?
 func (field Integer[T]) Lte(value T) Expr {
-	return expr{e: clause.Lte{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Lte{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Between use expr BETWEEN ? AND ?
@@ -62,22 +90,38 @@ func (field Integer[T]) NotBetween(left T, right T) Expr {
 
 // In use expr IN (?)
 func (field Integer[T]) In(values ...T) Expr {
-	return expr{e: clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}}
+	return expr{
+		col:       field.col,
+		e:         clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // NotIn use expr NOT IN (?)
 func (field Integer[T]) NotIn(values ...T) Expr {
-	return expr{e: clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)})}
+	return expr{
+		col:       field.col,
+		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Like use expr LIKE ?
 func (field Integer[T]) Like(value T) Expr {
-	return expr{e: clause.Like{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Like{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // NotLike use expr NOT LIKE ?
 func (field Integer[T]) NotLike(value T) Expr {
-	return expr{e: clause.Not(clause.Like{Column: field.RawExpr(), Value: value})}
+	return expr{
+		col:       field.col,
+		e:         clause.Not(clause.Like{Column: field.RawExpr(), Value: value}),
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Sum use SUM(expr)
@@ -152,15 +196,31 @@ func (field Integer[T]) BitFlip() Integer[T] {
 
 // FromUnixTime use FromUnixTime(unix_timestamp[, format])
 func (field Integer[T]) FromUnixTime(format ...string) String {
+	var e clause.Expression
+
 	if len(format) > 0 && strings.TrimSpace(format[0]) != "" {
-		return String{expr{e: clause.Expr{SQL: "FROM_UNIXTIME(?, ?)", Vars: []any{field.RawExpr(), format[0]}}}}
+		e = &clause.Expr{SQL: "FROM_UNIXTIME(?, ?)", Vars: []any{field.RawExpr(), format[0]}}
+	} else {
+		e = &clause.Expr{SQL: "FROM_UNIXTIME(?)", Vars: []any{field.RawExpr()}}
 	}
-	return String{expr{e: clause.Expr{SQL: "FROM_UNIXTIME(?)", Vars: []any{field.RawExpr()}}}}
+	return String{
+		expr{
+			col:       field.col,
+			e:         e,
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // FromDays use FROM_DAYS(value)
 func (field Integer[T]) FromDays() Time {
-	return Time{expr{e: clause.Expr{SQL: "FROM_DAYS(?)", Vars: []any{field.RawExpr()}}}}
+	return Time{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "FROM_DAYS(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // IntoColumns columns array with sub method

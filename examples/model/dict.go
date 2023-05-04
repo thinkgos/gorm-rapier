@@ -58,3 +58,30 @@ func (X_DictImpl) X_Model() *Dict {
 func (X_DictImpl) As(alias string) X_DictImpl {
 	return New_X_Dict(alias)
 }
+
+func X_SelectDict(prefixes ...string) []assist.Expr {
+	x := &xx_Dict
+	if len(prefixes) > 0 && prefixes[0] != "" {
+		prefix := prefixes[0]
+		return []assist.Expr{
+			x.Id.As(prefix + "_id"),
+			x.Key.As(prefix + "_key"),
+			x.Name.As(prefix + "_name"),
+			x.IsPin.As(prefix + "_is_pin"),
+			x.Sort.As(prefix + "_sort"),
+			x.CreatedAt.UnixTimestamp().As(prefix + "_created_at"),
+		}
+	} else {
+		return []assist.Expr{
+			x.Id,
+			x.Key,
+			x.Name,
+			x.IsPin,
+			x.Sort,
+			x.CreatedAt.UnixTimestamp().As("created_at"),
+		}
+	}
+}
+func Xc_SelectDict(prefixes ...string) assist.Condition {
+	return assist.Select(X_SelectDict(prefixes...)...)
+}

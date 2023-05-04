@@ -252,6 +252,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 	fieldFloat32 := NewFloat32("", "age")
 	fieldFloat64 := NewFloat64("", "age")
 	fieldDecimal := NewDecimal("", "age")
+	fieldTime := NewDecimal("", "age")
 	tests := []struct {
 		name     string
 		db       *gorm.DB
@@ -399,6 +400,14 @@ func Test_Field_IntoColumns(t *testing.T) {
 			name: "decimal IntoColumns",
 			db: newDb().Model(xx_Dict.X_Model()).
 				Where(fieldDecimal.IntoColumns().Eq(newDb().Model(xx_Dict.X_Model()).Scopes(Select(fieldDecimal.Max())))).
+				Find(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
+		},
+		{
+			name: "time IntoColumns",
+			db: newDb().Model(xx_Dict.X_Model()).
+				Where(fieldTime.IntoColumns().Eq(newDb().Model(xx_Dict.X_Model()).Scopes(Select(fieldDecimal.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",

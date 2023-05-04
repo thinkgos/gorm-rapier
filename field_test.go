@@ -55,30 +55,6 @@ func Test_Field_Expr_Keyword(t *testing.T) {
 			want:     "`user`.`id`+? AS `user_id`",
 		},
 		{
-			name:     "as with prefix",
-			expr:     NewField("", "id").AsWithPrefix("user"),
-			wantVars: nil,
-			want:     "`id` AS `user_id`",
-		},
-		{
-			name:     "as with prefix - expression",
-			expr:     NewField("", "id").Add(value1).AsWithPrefix("user"),
-			wantVars: []any{value1},
-			want:     "`id`+? AS `user_id`",
-		},
-		{
-			name:     "as  with prefix with table",
-			expr:     NewField("user", "id").AsWithPrefix("user"),
-			wantVars: nil,
-			want:     "`user`.`id` AS `user_id`",
-		},
-		{
-			name:     "as  with prefix expression with table",
-			expr:     NewField("user", "id").Add(value1).AsWithPrefix("user"),
-			wantVars: []any{value1},
-			want:     "`user`.`id`+? AS `user_id`",
-		},
-		{
 			name:     "desc",
 			expr:     NewField("", "id").Desc(),
 			wantVars: nil,

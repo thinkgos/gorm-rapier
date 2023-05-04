@@ -29,14 +29,7 @@ func main() {
 	xDict := model.X_Dict()
 	db.Model(&model.Dict{}).
 		Scopes(
-			assist.Select(
-				xDict.Id,
-				xDict.Key,
-				xDict.Name,
-				xDict.IsPin,
-				xDict.Sort,
-				xDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at"),
-			),
+			model.Xc_SelectDict("aaa"),
 		).
 		Where(xDict.Id.Eq(100)).
 		Find(&rows)

@@ -7,7 +7,11 @@ type Bool Field
 
 // NewBool new bool field.
 func NewBool(table, column string, opts ...Option) Bool {
-	return Bool{expr: expr{col: intoClauseColumn(table, column, opts...)}}
+	return Bool{
+		expr: expr{
+			col: intoClauseColumn(table, column, opts...),
+		},
+	}
 }
 
 // IfNull use IFNULL(expr,?)
@@ -17,12 +21,20 @@ func (field Bool) IfNull(value bool) Expr {
 
 // Eq equal to, use expr = ?
 func (field Bool) Eq(value bool) Expr {
-	return expr{e: clause.Eq{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Eq{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Neq not equal to, use expr <> ?
 func (field Bool) Neq(value bool) Expr {
-	return expr{e: clause.Neq{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Neq{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Is use expr = ?
@@ -32,7 +44,11 @@ func (field Bool) Is(value bool) Expr {
 
 // Not use NOT expr
 func (field Bool) Not() Expr {
-	return expr{e: clause.Expr{SQL: "NOT ?", Vars: []any{field.RawExpr()}}}
+	return expr{
+		col:       field.col,
+		e:         clause.Expr{SQL: "NOT ?", Vars: []any{field.RawExpr()}},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Xor use expr XOR ?

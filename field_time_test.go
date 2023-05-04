@@ -16,8 +16,8 @@ func Test_Time(t *testing.T) {
 	}{
 		{
 			name:     "IfNull",
-			expr:     NewInt("", "created_at").IfNull(100),
-			wantVars: []any{100},
+			expr:     NewTime("", "created_at").IfNull(value1),
+			wantVars: []any{value1},
 			want:     "IFNULL(`created_at`,?)",
 		},
 		{

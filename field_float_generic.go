@@ -10,7 +10,11 @@ type Float[T constraints.Float | ~string] Field
 
 // NewFloat new float field.
 func NewFloat[T constraints.Float | ~string](table, column string, opts ...Option) Float[T] {
-	return Float[T]{expr: expr{col: intoClauseColumn(table, column, opts...)}}
+	return Float[T]{
+		expr: expr{
+			col: intoClauseColumn(table, column, opts...),
+		},
+	}
 }
 
 // IfNull use IFNULL(expr,?)
@@ -20,32 +24,56 @@ func (field Float[T]) IfNull(value T) Expr {
 
 // Eq equal to, use expr = ?
 func (field Float[T]) Eq(value T) Expr {
-	return expr{e: clause.Eq{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Eq{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Neq not equal to, use expr <> ?
 func (field Float[T]) Neq(value T) Expr {
-	return expr{e: clause.Neq{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Neq{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Gt greater than, use expr > ?
 func (field Float[T]) Gt(value T) Expr {
-	return expr{e: clause.Gt{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Gt{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Gte greater or equal to, use expr >= ?
 func (field Float[T]) Gte(value T) Expr {
-	return expr{e: clause.Gte{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Gte{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Lt less than, use expr < ?
 func (field Float[T]) Lt(value T) Expr {
-	return expr{e: clause.Lt{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Lt{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Lte less or equal to, use expr <= ?
 func (field Float[T]) Lte(value T) Expr {
-	return expr{e: clause.Lte{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Lte{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Between use expr BETWEEN ? AND ?
@@ -60,22 +88,38 @@ func (field Float[T]) NotBetween(left T, right T) Expr {
 
 // In use expr IN (?)
 func (field Float[T]) In(values ...T) Expr {
-	return expr{e: clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}}
+	return expr{
+		col:       field.col,
+		e:         clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // NotIn use expr NOT IN (?)
 func (field Float[T]) NotIn(values ...T) Expr {
-	return expr{e: clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)})}
+	return expr{
+		col:       field.col,
+		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Like use expr LIKE ?
 func (field Float[T]) Like(value T) Expr {
-	return expr{e: clause.Like{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Like{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // NotLike use expr NOT LIKE ?
 func (field Float[T]) NotLike(value T) Expr {
-	return expr{e: clause.Not(clause.Like{Column: field.RawExpr(), Value: value})}
+	return expr{
+		col:       field.col,
+		e:         clause.Not(clause.Like{Column: field.RawExpr(), Value: value}),
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Sum use SUM(expr)

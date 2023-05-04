@@ -5,6 +5,19 @@ import (
 	"testing"
 )
 
+func Test_buildSelectValue(t *testing.T) {
+	t.Run("", func(t *testing.T) {
+		db := newDb()
+		query, args := buildSelectValue(db.Statement)
+		if query != "" {
+			t.Errorf("SQL expects %v got %v", "", query)
+		}
+		if len(args) != 0 {
+			t.Errorf("Vars expects %+v got %v", nil, args)
+		}
+	})
+}
+
 func Test_IntoSlice(t *testing.T) {
 	t.Run("", func(t *testing.T) {
 		want := []int{1, 2, 3}

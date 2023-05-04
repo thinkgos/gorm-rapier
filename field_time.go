@@ -21,32 +21,56 @@ func (field Time) IfNull(value time.Time) Expr {
 
 // Eq equal to, use expr = ?
 func (field Time) Eq(value time.Time) Expr {
-	return expr{e: clause.Eq{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Eq{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Neq not equal to, use expr <> ?
 func (field Time) Neq(value time.Time) Expr {
-	return expr{e: clause.Neq{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Neq{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Gt greater than, use expr > ?
 func (field Time) Gt(value time.Time) Expr {
-	return expr{e: clause.Gt{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Gt{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Gte greater or equal to, use expr >= ?
 func (field Time) Gte(value time.Time) Expr {
-	return expr{e: clause.Gte{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Gte{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Lt less than, use expr < ?
 func (field Time) Lt(value time.Time) Expr {
-	return expr{e: clause.Lt{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Lt{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Lte less or equal to, use expr <= ?
 func (field Time) Lte(value time.Time) Expr {
-	return expr{e: clause.Lte{Column: field.RawExpr(), Value: value}}
+	return expr{
+		col:       field.col,
+		e:         clause.Lte{Column: field.RawExpr(), Value: value},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Between use expr BETWEEN ? AND ?
@@ -61,12 +85,20 @@ func (field Time) NotBetween(left time.Time, right time.Time) Expr {
 
 // In use expr IN (?)
 func (field Time) In(values ...time.Time) Expr {
-	return expr{e: clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}}
+	return expr{
+		col:       field.col,
+		e:         clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)},
+		buildOpts: field.buildOpts,
+	}
 }
 
 // NotIn use expr NOT IN (?)
 func (field Time) NotIn(values ...time.Time) Expr {
-	return expr{e: clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)})}
+	return expr{
+		col:       field.col,
+		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
+		buildOpts: field.buildOpts,
+	}
 }
 
 // Sum use SUM(expr)
@@ -86,82 +118,179 @@ func (field Time) Sub(value time.Duration) Time {
 
 // UnixTimestamp use UnixTimestamp(date)
 func (field Time) UnixTimestamp() Int64 {
-	return Int64{expr{e: clause.Expr{SQL: "UNIX_TIMESTAMP(?)", Vars: []any{field.RawExpr()}}}}
+	return Int64{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "UNIX_TIMESTAMP(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // Date use DATE(expr) return the date.
 func (field Time) Date() Time {
-	return Time{expr{e: clause.Expr{SQL: "DATE(?)", Vars: []any{field.RawExpr()}}}}
+	return Time{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "DATE(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // Year use YEAR(date) return the year.
 func (field Time) Year() Int {
-	return Int{expr{e: clause.Expr{SQL: "YEAR(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "YEAR(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // Month use MONTH(date) return the month.
 func (field Time) Month() Int {
-	return Int{expr{e: clause.Expr{SQL: "MONTH(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "MONTH(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // Day use DAY(date) return the day.
 func (field Time) Day() Int {
-	return Int{expr{e: clause.Expr{SQL: "DAY(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "DAY(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // Hour use HOUR(date) return the hour.
 func (field Time) Hour() Int {
-	return Int{expr{e: clause.Expr{SQL: "HOUR(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "HOUR(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // Minute use MINUTE(date) return the minute.
 func (field Time) Minute() Int {
-	return Int{expr{e: clause.Expr{SQL: "MINUTE(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "MINUTE(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // Second use SECOND(date) return the second.
 func (field Time) Second() Int {
-	return Int{expr{e: clause.Expr{SQL: "SECOND(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "SECOND(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
+
 }
 
 // MicroSecond use MICROSECOND(date) return the microsecond.
 func (field Time) MicroSecond() Int {
-	return Int{expr{e: clause.Expr{SQL: "MICROSECOND(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "MICROSECOND(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // DayOfWeek use DAYOFWEEK(date)
 func (field Time) DayOfWeek() Int {
-	return Int{expr{e: clause.Expr{SQL: "DAYOFWEEK(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "DAYOFWEEK(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // DayOfMonth use DAYOFMONTH(date)
 func (field Time) DayOfMonth() Int {
-	return Int{expr{e: clause.Expr{SQL: "DAYOFMONTH(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "DAYOFMONTH(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // DayOfYear use DAYOFYEAR(date)
 func (field Time) DayOfYear() Int {
-	return Int{expr{e: clause.Expr{SQL: "DAYOFYEAR(?)", Vars: []any{field.RawExpr()}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "DAYOFYEAR(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // DateDiff use DATEDIFF(expr1, expr2)
 func (field Time) DateDiff(expr2 time.Time) Int {
-	return Int{expr{e: clause.Expr{SQL: "DATEDIFF(?,?)", Vars: []any{field.RawExpr(), expr2}}}}
+	return Int{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "DATEDIFF(?,?)", Vars: []any{field.RawExpr(), expr2}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // DateFormat use DATE_FORMAT(date,format)
 func (field Time) DateFormat(format string) String {
-	return String{expr{e: clause.Expr{SQL: "DATE_FORMAT(?,?)", Vars: []any{field.RawExpr(), format}}}}
+	return String{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "DATE_FORMAT(?,?)", Vars: []any{field.RawExpr(), format}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // DayName use DAYNAME(date) return the name of the day of the week.
 func (field Time) DayName() String {
-	return String{expr{e: clause.Expr{SQL: "DAYNAME(?)", Vars: []any{field.RawExpr()}}}}
+	return String{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "DAYNAME(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // MonthName use MONTHNAME(date) return the name of the month of the year.
 func (field Time) MonthName() String {
-	return String{expr{e: clause.Expr{SQL: "MONTHNAME(?)", Vars: []any{field.RawExpr()}}}}
+	return String{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "MONTHNAME(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
 }
 
 // IntoColumns columns array with sub method
