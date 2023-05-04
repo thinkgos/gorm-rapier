@@ -30,7 +30,7 @@ Then import the package into your own code.
 
 ## Reference
 
-- [gorm](git@github.com:go-gorm/gorm.git)
+- [gorm](https://github.com:go-gorm/gorm)
 - [sea-orm](https://github.com/SeaQL/sea-orm)
 - [ent](https://github.com/ent/ent)
 
