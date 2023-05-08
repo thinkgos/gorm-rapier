@@ -104,8 +104,9 @@ func LockingShare() Condition {
 type Conditions []Condition
 
 // NewConditions new condition instance.
-func NewConditions() Conditions {
-	return make(Conditions, 0, 16)
+func NewConditions(cs ...Condition) Conditions {
+	c := make(Conditions, 0, 16)
+	return append(c, cs...)
 }
 
 // Build into []Condition
