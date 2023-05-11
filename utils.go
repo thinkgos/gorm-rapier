@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"strings"
 
+	"golang.org/x/exp/constraints"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -73,6 +74,14 @@ func IntoSlice[T any, R any](values []T, f func(T) R) []R {
 	slices := make([]R, len(values))
 	for i, v := range values {
 		slices[i] = f(v)
+	}
+	return slices
+}
+
+func IntoIntegerSlice[T constraints.Integer, R constraints.Integer](values []T) []R {
+	slices := make([]R, len(values))
+	for i, v := range values {
+		slices[i] = R(v)
 	}
 	return slices
 }

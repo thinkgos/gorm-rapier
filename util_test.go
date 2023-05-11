@@ -29,3 +29,15 @@ func Test_IntoSlice(t *testing.T) {
 		}
 	})
 }
+
+type TestInteger int32
+
+func Test_IntoIntegerSlice(t *testing.T) {
+	t.Run("", func(t *testing.T) {
+		want := []int{1, 2, 3}
+		got := IntoIntegerSlice[TestInteger, int]([]TestInteger{1, 2, 3})
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("Vars expects %+v got %v", want, got)
+		}
+	})
+}
