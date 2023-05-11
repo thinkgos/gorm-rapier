@@ -616,6 +616,45 @@ func Test_Field_Expr(t *testing.T) {
 			wantVars: []any{"[", "address", "path", "]"},
 			want:     "CONCAT(?,REPLACE(`address`,?,?),?)",
 		},
+
+		{
+			name:     "trim",
+			expr:     NewField("", "address").Trim("abc"),
+			wantVars: []any{"abc"},
+			want:     "TRIM(BOTH ? FROM `address`)",
+		},
+		{
+			name:     "leading trim",
+			expr:     NewField("", "address").LTrim("abc"),
+			wantVars: []any{"abc"},
+			want:     "TRIM(LEADING ? FROM `address`)",
+		},
+		{
+			name:     "trailing trim",
+			expr:     NewField("", "address").RTrim("abc"),
+			wantVars: []any{"abc"},
+			want:     "TRIM(TRAILING ? FROM `address`)",
+		},
+
+		{
+			name:     "trim space",
+			expr:     NewField("", "address").TrimSpace(),
+			wantVars: nil,
+			want:     "TRIM(`address`)",
+		},
+		{
+			name:     "leading trim space",
+			expr:     NewField("", "address").LTrimSpace(),
+			wantVars: nil,
+			want:     "LTRIM(`address`)",
+		},
+		{
+			name:     "trailing trim space",
+			expr:     NewField("", "address").RTrimSpace(),
+			wantVars: nil,
+			want:     "RTRIM(`address`)",
+		},
+
 		{
 			name:     "FromUnixTime use FROM_UNIXTIME(date)",
 			expr:     NewField("t1", "age").FromUnixTime(),

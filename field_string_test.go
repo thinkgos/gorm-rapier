@@ -169,6 +169,43 @@ func Test_Expr_String(t *testing.T) {
 			wantVars: []any{"[", "address", "path", "]"},
 			want:     "CONCAT(?,REPLACE(`address`,?,?),?)",
 		},
+		{
+			name:     "trim",
+			expr:     NewString("", "address").Trim("abc"),
+			wantVars: []any{"abc"},
+			want:     "TRIM(BOTH ? FROM `address`)",
+		},
+		{
+			name:     "leading trim",
+			expr:     NewString("", "address").LTrim("abc"),
+			wantVars: []any{"abc"},
+			want:     "TRIM(LEADING ? FROM `address`)",
+		},
+		{
+			name:     "trailing trim",
+			expr:     NewString("", "address").RTrim("abc"),
+			wantVars: []any{"abc"},
+			want:     "TRIM(TRAILING ? FROM `address`)",
+		},
+
+		{
+			name:     "trim space",
+			expr:     NewString("", "address").TrimSpace(),
+			wantVars: nil,
+			want:     "TRIM(`address`)",
+		},
+		{
+			name:     "leading trim space",
+			expr:     NewString("", "address").LTrimSpace(),
+			wantVars: nil,
+			want:     "LTRIM(`address`)",
+		},
+		{
+			name:     "trailing trim space",
+			expr:     NewString("", "address").RTrimSpace(),
+			wantVars: nil,
+			want:     "RTRIM(`address`)",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

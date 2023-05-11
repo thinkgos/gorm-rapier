@@ -302,6 +302,72 @@ func (field Field) Concat(before, after string) String {
 	}
 }
 
+// Trim use TRIM(BOTH ? FROM ?)
+func (field Field) Trim(remStr string) String {
+	return String{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "TRIM(BOTH ? FROM ?)", Vars: []any{remStr, field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
+}
+
+// LTrim use TRIM(LEADING ? FROM ?)
+func (field Field) LTrim(remStr string) String {
+	return String{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "TRIM(LEADING ? FROM ?)", Vars: []any{remStr, field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
+}
+
+// RTrim use TRIM(TRAILING ? FROM ?)
+func (field Field) RTrim(remStr string) String {
+	return String{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "TRIM(TRAILING ? FROM ?)", Vars: []any{remStr, field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
+}
+
+// TrimSpace use TRIM(?)
+func (field Field) TrimSpace() String {
+	return String{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "TRIM(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
+}
+
+// LTrimSpace use LTRIM(?)
+func (field Field) LTrimSpace() String {
+	return String{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "LTRIM(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
+}
+
+// RTrimSpace use RTRIM(?)
+func (field Field) RTrimSpace() String {
+	return String{
+		expr{
+			col:       field.col,
+			e:         clause.Expr{SQL: "RTRIM(?)", Vars: []any{field.RawExpr()}},
+			buildOpts: field.buildOpts,
+		},
+	}
+}
+
 // FromUnixTime use FromUnixTime(unix_timestamp[, format])
 func (field Field) FromUnixTime(format ...string) String {
 	var e clause.Expression
