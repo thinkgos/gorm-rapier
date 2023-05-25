@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func Test_Join(t *testing.T) {
+func Test_Joins(t *testing.T) {
 	var dummy Dict
 
 	xDd := xx_Dict.As("dd")
@@ -23,7 +23,7 @@ func Test_Join(t *testing.T) {
 			db: newDb().
 				Scopes(
 					xx_Dict.Xc_Model(),
-					Join(xDd.X_TableName()),
+					InnerJoins(xDd.X_TableName()),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -34,7 +34,7 @@ func Test_Join(t *testing.T) {
 			db: newDb().
 				Scopes(
 					xx_Dict.Xc_Model(),
-					CrossJoin(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
+					CrossJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -45,7 +45,7 @@ func Test_Join(t *testing.T) {
 			db: newDb().
 				Scopes(
 					xx_Dict.Xc_Model(),
-					Join(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
+					InnerJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -56,7 +56,7 @@ func Test_Join(t *testing.T) {
 			db: newDb().
 				Scopes(
 					xx_Dict.Xc_Model(),
-					LeftJoin(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
+					LeftJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -67,7 +67,7 @@ func Test_Join(t *testing.T) {
 			db: newDb().
 				Scopes(
 					xx_Dict.Xc_Model(),
-					RightJoin(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
+					RightJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -78,8 +78,8 @@ func Test_Join(t *testing.T) {
 			db: newDb().
 				Scopes(
 					xx_Dict.Xc_Model(),
-					Join(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid)),
-					Join(xDi.X_TableName(), xDi.IsPin.Eq(true)),
+					InnerJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid)),
+					InnerJoins(xDi.X_TableName(), xDi.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},

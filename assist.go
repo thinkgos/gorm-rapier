@@ -159,54 +159,44 @@ func (c Conditions) Pagination(page, perPage int64, maxPages ...int64) Condition
 	return append(c, Pagination(page, perPage, maxPages...))
 }
 
-// CrossJoin cross joins condition
-func (c Conditions) CrossJoin(tableName string, conds ...Expr) Conditions {
-	return append(c, CrossJoin(tableName, conds...))
+// CrossJoins cross joins condition
+func (c Conditions) CrossJoins(tableName string, conds ...Expr) Conditions {
+	return append(c, CrossJoins(tableName, conds...))
 }
 
-// CrossJoinX cross joins condition
-func (c Conditions) CrossJoinX(tableName, alias string, conds ...Expr) Conditions {
-	return append(c, CrossJoinX(tableName, alias, conds...))
+// CrossJoinsX cross joins condition
+func (c Conditions) CrossJoinsX(tableName, alias string, conds ...Expr) Conditions {
+	return append(c, CrossJoinsX(tableName, alias, conds...))
 }
 
-// Join same as InnerJoin.
-func (c Conditions) Join(tableName string, conds ...Expr) Conditions {
-	return append(c, Join(tableName, conds...))
+// InnerJoins inner joins condition
+func (c Conditions) InnerJoins(tableName string, conds ...Expr) Conditions {
+	return append(c, InnerJoins(tableName, conds...))
 }
 
-// JoinX same as InnerJoinX.
-func (c Conditions) JoinX(tableName, alias string, conds ...Expr) Conditions {
-	return append(c, JoinX(tableName, alias, conds...))
+// InnerJoinsX inner joins condition
+func (c Conditions) InnerJoinsX(tableName, alias string, conds ...Expr) Conditions {
+	return append(c, InnerJoinsX(tableName, alias, conds...))
 }
 
-// InnerJoin inner joins condition
-func (c Conditions) InnerJoin(tableName string, conds ...Expr) Conditions {
-	return append(c, InnerJoin(tableName, conds...))
+// LeftJoins left join condition
+func (c Conditions) LeftJoins(tableName string, conds ...Expr) Conditions {
+	return append(c, LeftJoins(tableName, conds...))
 }
 
-// InnerJoinX inner joins condition
-func (c Conditions) InnerJoinX(tableName, alias string, conds ...Expr) Conditions {
-	return append(c, InnerJoinX(tableName, alias, conds...))
+// LeftJoinsX left join condition
+func (c Conditions) LeftJoinsX(tableName, alias string, conds ...Expr) Conditions {
+	return append(c, LeftJoinsX(tableName, alias, conds...))
 }
 
-// LeftJoin left join condition
-func (c Conditions) LeftJoin(tableName string, conds ...Expr) Conditions {
-	return append(c, LeftJoin(tableName, conds...))
+// RightJoins right join condition
+func (c Conditions) RightJoins(tableName string, conds ...Expr) Conditions {
+	return append(c, RightJoins(tableName, conds...))
 }
 
-// LeftJoinX left join condition
-func (c Conditions) LeftJoinX(tableName, alias string, conds ...Expr) Conditions {
-	return append(c, LeftJoinX(tableName, alias, conds...))
-}
-
-// RightJoin right join condition
-func (c Conditions) RightJoin(tableName string, conds ...Expr) Conditions {
-	return append(c, RightJoin(tableName, conds...))
-}
-
-// RightJoinX right join condition
-func (c Conditions) RightJoinX(tableName, alias string, conds ...Expr) Conditions {
-	return append(c, RightJoinX(tableName, alias, conds...))
+// RightJoinsX right join condition
+func (c Conditions) RightJoinsX(tableName, alias string, conds ...Expr) Conditions {
+	return append(c, RightJoinsX(tableName, alias, conds...))
 }
 
 // Append more condition

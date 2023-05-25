@@ -499,16 +499,14 @@ func Test_Conditions(t *testing.T) {
 			LockingUpdate().
 			LockingShare().
 			Pagination(1, 20).
-			CrossJoin(xx_Dict.X_TableName()).
-			InnerJoin(xx_Dict.X_TableName()).
-			Join(xx_Dict.X_TableName()).
-			LeftJoin(xx_Dict.X_TableName()).
-			RightJoin(xx_Dict.X_TableName()).
-			CrossJoinX(xx_Dict.X_TableName(), "x").
-			InnerJoinX(xx_Dict.X_TableName(), "x").
-			JoinX(xx_Dict.X_TableName(), "x").
-			LeftJoinX(xx_Dict.X_TableName(), "x").
-			RightJoinX(xx_Dict.X_TableName(), "x").
+			CrossJoins(xx_Dict.X_TableName()).
+			InnerJoins(xx_Dict.X_TableName()).
+			LeftJoins(xx_Dict.X_TableName()).
+			RightJoins(xx_Dict.X_TableName()).
+			CrossJoinsX(xx_Dict.X_TableName(), "x").
+			InnerJoinsX(xx_Dict.X_TableName(), "x").
+			LeftJoinsX(xx_Dict.X_TableName(), "x").
+			RightJoinsX(xx_Dict.X_TableName(), "x").
 			Append(func(db *gorm.DB) *gorm.DB {
 				return db
 			}).
