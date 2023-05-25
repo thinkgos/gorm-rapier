@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	assist "github.com/things-go/gorm-assist"
 	"github.com/things-go/gorm-assist/examples/model"
 
 	"gorm.io/gorm"
@@ -24,31 +23,34 @@ func main() {
 	})
 	db.DryRun = true
 
-	var rows []model.Dict
-
 	xDict := model.X_Dict()
-	db.Model(&model.Dict{}).
-		Scopes(
-			model.Xc_SelectDict("aaa"),
-		).
-		Where(xDict.Id.Eq(100)).
-		Find(&rows)
+	xEntityDict := model.New_Dict(db)
 
-	db.Model(&model.Dict{}).
-		Scopes(
-			assist.Select(
-				xDict.Key,
-				xDict.Name,
-				xDict.IsPin,
-				xDict.Sort,
-			),
+	_, err := xEntityDict.Executor().
+		Where(xDict.Id.Eq(100)).
+		FindAll()
+	checkError(err)
+
+	_, err = xEntityDict.Executor().
+		SelectExpr(
+			xDict.Key,
+			xDict.Name,
+			xDict.IsPin,
+			xDict.Remark,
 		).
 		Where(xDict.Id.Eq(100)).
 		Updates(&model.Dict{
-			Id:    0,
-			Key:   "",
-			Name:  "",
-			IsPin: false,
-			Sort:  0,
+			Id:     0,
+			Key:    "123",
+			Name:   "456",
+			IsPin:  false,
+			Remark: "remark",
 		})
+	checkError(err)
+}
+
+func checkError(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
