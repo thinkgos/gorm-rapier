@@ -1,5 +1,7 @@
 package assist
 
+import "gorm.io/gorm"
+
 func (x *Executor[T]) FirstOne() (*T, error) {
 	var row T
 
@@ -49,6 +51,14 @@ func (x *Executor[T]) First(dest any) error {
 	return x.chains().First(dest).Error
 }
 
+func (x *Executor[T]) FirstOrInit(dest any) error {
+	return x.chains().FirstOrInit(dest).Error
+}
+
+func (x *Executor[T]) FirstOrCreate(dest any) error {
+	return x.chains().FirstOrCreate(dest).Error
+}
+
 func (x *Executor[T]) Take(dest any) error {
 	return x.chains().Take(dest).Error
 }
@@ -85,6 +95,10 @@ func (x *Executor[T]) FindAll() ([]*T, error) {
 
 func (x *Executor[T]) Find(dest any) error {
 	return x.chains().Find(dest).Error
+}
+
+func (x *Executor[T]) FindInBatches(dest any, batchSize int, fc func(tx *gorm.DB, batch int) error) error {
+	return x.chains().FindInBatches(dest, batchSize, fc).Error
 }
 
 func (x *Executor[T]) Create(value any) error {

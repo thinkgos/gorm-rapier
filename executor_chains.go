@@ -115,6 +115,34 @@ func (x *Executor[T]) Scopes(funcs ...func(*gorm.DB) *gorm.DB) *Executor[T] {
 	return x
 }
 
+func (x *Executor[T]) Preload(query string, args ...any) *Executor[T] {
+	x.funcs = append(x.funcs, func(db *gorm.DB) *gorm.DB {
+		return db.Preload(query, args...)
+	})
+	return x
+}
+
+func (x *Executor[T]) Attrs(attrs ...any) *Executor[T] {
+	x.funcs = append(x.funcs, func(db *gorm.DB) *gorm.DB {
+		return db.Attrs(attrs...)
+	})
+	return x
+}
+
+func (x *Executor[T]) Assign(attrs ...any) *Executor[T] {
+	x.funcs = append(x.funcs, func(db *gorm.DB) *gorm.DB {
+		return db.Assign(attrs...)
+	})
+	return x
+}
+
+func (x *Executor[T]) Unscoped() *Executor[T] {
+	x.funcs = append(x.funcs, func(db *gorm.DB) *gorm.DB {
+		return db.Unscoped()
+	})
+	return x
+}
+
 func (x *Executor[T]) TableExpr(fromSubs ...From) *Executor[T] {
 	x.funcs = append(x.funcs, Table(fromSubs...))
 	return x
