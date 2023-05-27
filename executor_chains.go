@@ -217,14 +217,3 @@ func (x *Executor[T]) Pagination(page, perPage int64, maxPerPages ...int64) *Exe
 	x.funcs = append(x.funcs, Pagination(page, perPage, maxPerPages...))
 	return x
 }
-
-func (x *Executor[T]) chains() (db *gorm.DB) {
-	if x.table == nil {
-		var t T
-
-		db = x.db.Model(&t)
-	} else {
-		db = x.db.Scopes(x.table)
-	}
-	return db.Scopes(x.funcs...)
-}

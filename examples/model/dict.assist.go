@@ -2,6 +2,7 @@ package model
 
 import (
 	assist "github.com/things-go/gorm-assist"
+	"gorm.io/gorm"
 )
 
 const (
@@ -80,19 +81,24 @@ func New_X_Dict(xTableName string) Dict_Active {
 	}
 }
 
-// X_TableName hold table name when call New_X_Dict or Dict_Active.As that you defined.
-func (x *Dict_Active) X_TableName() string {
-	return x.xTableName
-}
-
 // As alias
 func (*Dict_Active) As(alias string) Dict_Active {
 	return New_X_Dict(alias)
 }
 
+// X_TableName hold table name when call New_X_Dict or Dict_Active.As that you defined.
+func (x *Dict_Active) X_TableName() string {
+	return x.xTableName
+}
+
 // X_Model model
 func (*Dict_Active) X_Model() *Dict {
 	return &Dict{}
+}
+
+// X_TableName hold table name when call New_X_Dict or Dict_Active.As that you defined.
+func (x *Dict_Active) X_Executor(db *gorm.DB) *assist.Executor[Dict] {
+	return assist.NewExecutor[Dict](db)
 }
 
 // TableName hold model `Dict` table name returns `dict`.

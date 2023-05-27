@@ -24,14 +24,13 @@ func main() {
 	db.DryRun = true
 
 	xDict := model.X_Dict()
-	xEntityDict := model.New_Dict(db)
 
-	_, err := xEntityDict.Executor().
+	_, err := xDict.X_Executor(db).
 		Where(xDict.Id.Eq(100)).
 		FindAll()
 	checkError(err)
 
-	_, err = xEntityDict.Executor().
+	_, err = xDict.X_Executor(db).
 		SelectExpr(
 			xDict.Key,
 			xDict.Name,

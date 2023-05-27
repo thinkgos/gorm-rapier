@@ -35,3 +35,14 @@ func (x *Executor[T]) Debug() *Executor[T] {
 	x.db = x.db.Debug()
 	return x
 }
+
+func (x *Executor[T]) chains() (db *gorm.DB) {
+	if x.table == nil {
+		var t T
+
+		db = x.db.Model(&t)
+	} else {
+		db = x.db.Scopes(x.table)
+	}
+	return db.Scopes(x.funcs...)
+}
