@@ -139,3 +139,100 @@ func (x *Executor[T]) Delete() (rowsAffected int64, err error) {
 	result := x.chains().Delete(&t)
 	return result.RowsAffected, result.Error
 }
+
+/**************************** 辅助 api *************************************/
+
+func (x *Executor[T]) FirstBool() (v bool, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstInt() (v int, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstInt64() (v int64, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstFloat64() (v Float64, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstString() (v string, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) TakeBool() (v bool, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeInt() (v int, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeInt64() (v int64, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeFloat64() (v Float64, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeString() (v string, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) ScanBool() (v bool, err error) {
+	err = x.Scan(&v)
+	return
+}
+
+func (x *Executor[T]) ScanInt() (v int, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) ScanInt64() (v int64, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) ScanFloat64() (v Float64, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) ScanString() (v string, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) PluckBool(column string) (slice []bool, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckInt(column string) (slice []int, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckInt64(column string) (slice []int64, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckString(column string) (slice []string, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
