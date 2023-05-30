@@ -43,40 +43,40 @@ func (x *Executor[T]) ScanOne() (*T, error) {
 }
 
 func (x *Executor[T]) Count() (count int64, err error) {
-	err = x.chains().Count(&count).Error
+	err = x.IntoDB().Count(&count).Error
 	return count, err
 }
 
 func (x *Executor[T]) First(dest any) error {
-	return x.chains().First(dest).Error
+	return x.IntoDB().First(dest).Error
 }
 
 func (x *Executor[T]) FirstOrInit(dest any) error {
-	return x.chains().FirstOrInit(dest).Error
+	return x.IntoDB().FirstOrInit(dest).Error
 }
 
 func (x *Executor[T]) FirstOrCreate(dest any) error {
-	return x.chains().FirstOrCreate(dest).Error
+	return x.IntoDB().FirstOrCreate(dest).Error
 }
 
 func (x *Executor[T]) Take(dest any) error {
-	return x.chains().Take(dest).Error
+	return x.IntoDB().Take(dest).Error
 }
 
 func (x *Executor[T]) Last(dest any) error {
-	return x.chains().Last(dest).Error
+	return x.IntoDB().Last(dest).Error
 }
 
 func (x *Executor[T]) Scan(dest any) error {
-	return x.chains().Scan(dest).Error
+	return x.IntoDB().Scan(dest).Error
 }
 
 func (x *Executor[T]) Pluck(column string, value any) error {
-	return x.chains().Pluck(column, value).Error
+	return x.IntoDB().Pluck(column, value).Error
 }
 
 func (x *Executor[T]) Exist() (exist bool, err error) {
-	err = x.chains().
+	err = x.IntoDB().
 		Select("1").
 		Limit(1).
 		Scan(&exist).Error
@@ -94,11 +94,11 @@ func (x *Executor[T]) FindAll() ([]*T, error) {
 }
 
 func (x *Executor[T]) Find(dest any) error {
-	return x.chains().Find(dest).Error
+	return x.IntoDB().Find(dest).Error
 }
 
 func (x *Executor[T]) FindInBatches(dest any, batchSize int, fc func(tx *gorm.DB, batch int) error) error {
-	return x.chains().FindInBatches(dest, batchSize, fc).Error
+	return x.IntoDB().FindInBatches(dest, batchSize, fc).Error
 }
 
 func (x *Executor[T]) Create(value any) error {
@@ -114,29 +114,29 @@ func (x *Executor[T]) Save(value any) error {
 }
 
 func (x *Executor[T]) Updates(value *T) (rowsAffected int64, err error) {
-	result := x.chains().Updates(value)
+	result := x.IntoDB().Updates(value)
 	return result.RowsAffected, result.Error
 }
 
 func (x *Executor[T]) Update(column string, value any) (rowsAffected int64, err error) {
-	result := x.chains().Update(column, value)
+	result := x.IntoDB().Update(column, value)
 	return result.RowsAffected, result.Error
 }
 
 func (x *Executor[T]) UpdateColumns(value *T) (rowsAffected int64, err error) {
-	result := x.chains().UpdateColumns(value)
+	result := x.IntoDB().UpdateColumns(value)
 	return result.RowsAffected, result.Error
 }
 
 func (x *Executor[T]) UpdateColumn(column string, value any) (rowsAffected int64, err error) {
-	result := x.chains().UpdateColumn(column, value)
+	result := x.IntoDB().UpdateColumn(column, value)
 	return result.RowsAffected, result.Error
 }
 
 func (x *Executor[T]) Delete() (rowsAffected int64, err error) {
 	var t T
 
-	result := x.chains().Delete(&t)
+	result := x.IntoDB().Delete(&t)
 	return result.RowsAffected, result.Error
 }
 

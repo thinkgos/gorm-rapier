@@ -36,7 +36,7 @@ func (x *Executor[T]) Debug() *Executor[T] {
 	return x
 }
 
-func (x *Executor[T]) chains() (db *gorm.DB) {
+func (x *Executor[T]) IntoDB() (db *gorm.DB) {
 	if x.table == nil {
 		var t T
 

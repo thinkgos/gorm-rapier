@@ -26,7 +26,10 @@ func main() {
 	xDict := model.X_Dict()
 
 	_, err := xDict.X_Executor(db).
-		Where(xDict.Id.Eq(100)).
+		Where(
+			xDict.Id.Eq(100),
+			xDict.Key.IntoColumns().Eq(xDict.X_Executor(db).Where(xDict.Id.Eq(1)).IntoDB()),
+		).
 		FindAll()
 	checkError(err)
 
@@ -37,7 +40,9 @@ func main() {
 			xDict.IsPin,
 			xDict.Remark,
 		).
-		Where(xDict.Id.Eq(100)).
+		Where(
+			xDict.Id.Eq(100),
+		).
 		Updates(&model.Dict{
 			Id:     0,
 			Key:    "123",
