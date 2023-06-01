@@ -118,12 +118,22 @@ func (x *Executor[T]) Updates(value *T) (rowsAffected int64, err error) {
 	return result.RowsAffected, result.Error
 }
 
+func (x *Executor[T]) UpdatesMap(value map[string]any) (rowsAffected int64, err error) {
+	result := x.IntoDB().Updates(value)
+	return result.RowsAffected, result.Error
+}
+
 func (x *Executor[T]) Update(column string, value any) (rowsAffected int64, err error) {
 	result := x.IntoDB().Update(column, value)
 	return result.RowsAffected, result.Error
 }
 
 func (x *Executor[T]) UpdateColumns(value *T) (rowsAffected int64, err error) {
+	result := x.IntoDB().UpdateColumns(value)
+	return result.RowsAffected, result.Error
+}
+
+func (x *Executor[T]) UpdateColumnsMap(value map[string]any) (rowsAffected int64, err error) {
 	result := x.IntoDB().UpdateColumns(value)
 	return result.RowsAffected, result.Error
 }
