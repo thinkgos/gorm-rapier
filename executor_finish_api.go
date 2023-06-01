@@ -208,22 +208,22 @@ func (x *Executor[T]) ScanBool() (v bool, err error) {
 }
 
 func (x *Executor[T]) ScanInt() (v int, err error) {
-	err = x.Take(&v)
+	err = x.Scan(&v)
 	return
 }
 
 func (x *Executor[T]) ScanInt64() (v int64, err error) {
-	err = x.Take(&v)
+	err = x.Scan(&v)
 	return
 }
 
 func (x *Executor[T]) ScanFloat64() (v Float64, err error) {
-	err = x.Take(&v)
+	err = x.Scan(&v)
 	return
 }
 
 func (x *Executor[T]) ScanString() (v string, err error) {
-	err = x.Take(&v)
+	err = x.Scan(&v)
 	return
 }
 
