@@ -162,12 +162,57 @@ func (x *Executor[T]) FirstInt() (v int, err error) {
 	return
 }
 
+func (x *Executor[T]) FirstInt8() (v int8, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstInt16() (v int16, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstInt32() (v int32, err error) {
+	err = x.First(&v)
+	return
+}
+
 func (x *Executor[T]) FirstInt64() (v int64, err error) {
 	err = x.First(&v)
 	return
 }
 
-func (x *Executor[T]) FirstFloat64() (v Float64, err error) {
+func (x *Executor[T]) FirstUint() (v uint, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstUint8() (v uint8, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstUint16() (v uint16, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstUint32() (v uint32, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstUint64() (v uint64, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstFloat32() (v float32, err error) {
+	err = x.First(&v)
+	return
+}
+
+func (x *Executor[T]) FirstFloat64() (v float64, err error) {
 	err = x.First(&v)
 	return
 }
@@ -187,12 +232,57 @@ func (x *Executor[T]) TakeInt() (v int, err error) {
 	return
 }
 
+func (x *Executor[T]) TakeInt8() (v int8, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeInt16() (v int16, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeInt32() (v int32, err error) {
+	err = x.Take(&v)
+	return
+}
+
 func (x *Executor[T]) TakeInt64() (v int64, err error) {
 	err = x.Take(&v)
 	return
 }
 
-func (x *Executor[T]) TakeFloat64() (v Float64, err error) {
+func (x *Executor[T]) TakeUint() (v uint, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeUint8() (v uint8, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeUint16() (v uint16, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeUint32() (v uint32, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeUint64() (v uint64, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeFloat32() (v float32, err error) {
+	err = x.Take(&v)
+	return
+}
+
+func (x *Executor[T]) TakeFloat64() (v float64, err error) {
 	err = x.Take(&v)
 	return
 }
@@ -212,12 +302,57 @@ func (x *Executor[T]) ScanInt() (v int, err error) {
 	return
 }
 
+func (x *Executor[T]) ScanInt8() (v int8, err error) {
+	err = x.Scan(&v)
+	return
+}
+
+func (x *Executor[T]) ScanInt16() (v int16, err error) {
+	err = x.Scan(&v)
+	return
+}
+
+func (x *Executor[T]) ScanInt32() (v int32, err error) {
+	err = x.Scan(&v)
+	return
+}
+
 func (x *Executor[T]) ScanInt64() (v int64, err error) {
 	err = x.Scan(&v)
 	return
 }
 
-func (x *Executor[T]) ScanFloat64() (v Float64, err error) {
+func (x *Executor[T]) ScanUint() (v uint, err error) {
+	err = x.Scan(&v)
+	return
+}
+
+func (x *Executor[T]) ScanUint8() (v uint8, err error) {
+	err = x.Scan(&v)
+	return
+}
+
+func (x *Executor[T]) ScanUint16() (v uint16, err error) {
+	err = x.Scan(&v)
+	return
+}
+
+func (x *Executor[T]) ScanUint32() (v uint32, err error) {
+	err = x.Scan(&v)
+	return
+}
+
+func (x *Executor[T]) ScanUint64() (v uint64, err error) {
+	err = x.Scan(&v)
+	return
+}
+
+func (x *Executor[T]) ScanFloat32() (v float32, err error) {
+	err = x.Scan(&v)
+	return
+}
+
+func (x *Executor[T]) ScanFloat64() (v float64, err error) {
 	err = x.Scan(&v)
 	return
 }
@@ -237,7 +372,47 @@ func (x *Executor[T]) PluckInt(column string) (slice []int, err error) {
 	return
 }
 
+func (x *Executor[T]) PluckInt8(column string) (slice []int8, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckInt16(column string) (slice []int16, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckInt32(column string) (slice []int32, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
 func (x *Executor[T]) PluckInt64(column string) (slice []int64, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckUint(column string) (slice []uint, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckUint8(column string) (slice []uint8, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckUint16(column string) (slice []uint16, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckUint32(column string) (slice []uint32, err error) {
+	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckUint64(column string) (slice []uint64, err error) {
 	err = x.Pluck(column, &slice)
 	return
 }

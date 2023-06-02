@@ -148,6 +148,11 @@ func (x *Executor[T]) TableExpr(fromSubs ...From) *Executor[T] {
 	return x
 }
 
+func (x *Executor[T]) DistinctExpr(columns ...Expr) *Executor[T] {
+	x.funcs = append(x.funcs, Distinct(columns...))
+	return x
+}
+
 func (x *Executor[T]) SelectExpr(columns ...Expr) *Executor[T] {
 	x.funcs = append(x.funcs, Select(columns...))
 	return x

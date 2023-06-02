@@ -46,6 +46,18 @@ func Select(columns ...Expr) Condition {
 	}
 }
 
+// Distinct with field
+func Distinct(columns ...Expr) Condition {
+	return func(db *gorm.DB) *gorm.DB {
+		db = db.Distinct()
+		if len(columns) == 0 {
+			query, args := buildSelectValue(db.Statement, columns...)
+			db = db.Select(query, args)
+		}
+		return db
+	}
+}
+
 // Where with field
 func Where(columns ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
@@ -120,6 +132,11 @@ func (c Conditions) Table(fromSubs ...From) Conditions {
 // Select with field
 func (c Conditions) Select(columns ...Expr) Conditions {
 	return append(c, Select(columns...))
+}
+
+// Distinct with field
+func (c Conditions) Distinct(columns ...Expr) Conditions {
+	return append(c, Distinct(columns...))
 }
 
 // Order with field
