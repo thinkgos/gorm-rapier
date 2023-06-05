@@ -50,9 +50,9 @@ func Select(columns ...Expr) Condition {
 func Distinct(columns ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		db = db.Distinct()
-		if len(columns) == 0 {
+		if len(columns) > 0 {
 			query, args := buildSelectValue(db.Statement, columns...)
-			db = db.Select(query, args)
+			db = db.Select(query, args...)
 		}
 		return db
 	}

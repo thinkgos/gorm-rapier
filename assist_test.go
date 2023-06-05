@@ -257,6 +257,41 @@ func Test_Select(t *testing.T) {
 	}
 }
 
+func Test_Distinct(t *testing.T) {
+	tests := []struct {
+		name     string
+		db       *gorm.DB
+		wantVars []interface{}
+		want     string
+	}{
+		{
+			name: "select * using distinct",
+			db: newDb().
+				Scopes(
+					xx_Dict.Xc_Model(),
+					Distinct(),
+					Select(xx_Dict.Id),
+				).
+				Take(&Dict{}),
+			wantVars: nil,
+			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT 1",
+		},
+		{
+			name: "distinct field",
+			db: newDb().Model(xx_Dict.X_Model()).
+				Scopes(Distinct(xx_Dict.Id)).
+				Take(&Dict{}),
+			wantVars: nil,
+			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT 1",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+		})
+	}
+}
+
 func Test_Where(t *testing.T) {
 	var dummy Dict
 
@@ -483,7 +518,7 @@ func CheckBuildExprSql(t *testing.T, db *gorm.DB, want string, vars []interface{
 		t.Errorf("SQL expects %v got %v", want, got)
 	}
 	if !reflect.DeepEqual(stmt.Vars, vars) {
-		t.Errorf("Vars expects %+v got %v", vars, stmt.Vars)
+		t.Errorf("Vars expects %+v got %+v", vars, stmt.Vars)
 	}
 }
 
