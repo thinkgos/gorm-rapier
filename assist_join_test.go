@@ -9,8 +9,8 @@ import (
 func Test_Joins(t *testing.T) {
 	var dummy Dict
 
-	xDd := xx_Dict.As("dd")
-	xDi := xx_Dict.As("di")
+	xDd := xDict.As("dd")
+	xDi := xDict.As("di")
 
 	tests := []struct {
 		name     string
@@ -20,9 +20,8 @@ func Test_Joins(t *testing.T) {
 	}{
 		{
 			name: "inner join - empty conds",
-			db: newDb().
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					xx_Dict.Xc_Model(),
 					InnerJoins(xDd.X_TableName()),
 				).
 				Take(&dummy),
@@ -31,10 +30,9 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "cross join",
-			db: newDb().
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					xx_Dict.Xc_Model(),
-					CrossJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
+					CrossJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -42,10 +40,9 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "inner join",
-			db: newDb().
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					xx_Dict.Xc_Model(),
-					InnerJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
+					InnerJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -53,10 +50,9 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "left join",
-			db: newDb().
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					xx_Dict.Xc_Model(),
-					LeftJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
+					LeftJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -64,10 +60,9 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "right join",
-			db: newDb().
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					xx_Dict.Xc_Model(),
-					RightJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid), xDd.IsPin.Eq(true)),
+					RightJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -75,10 +70,9 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "inner join - multiple",
-			db: newDb().
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					xx_Dict.Xc_Model(),
-					InnerJoins(xDd.X_TableName(), xDd.Id.EqCol(xx_Dict.Pid)),
+					InnerJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid)),
 					InnerJoins(xDi.X_TableName(), xDi.IsPin.Eq(true)),
 				).
 				Take(&dummy),

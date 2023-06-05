@@ -23,7 +23,7 @@ func (*Dict) TableName() string {
 }
 
 var x_Dict_Model_Type = Indirect(&Dict{})
-var xx_Dict = New_X_Dict("dict")
+var xDict = New_X_Dict("dict")
 
 type X_DictImpl struct {
 	// private fields
@@ -58,7 +58,7 @@ func New_X_Dict(tableName string) X_DictImpl {
 }
 
 func X_Dict() X_DictImpl {
-	return xx_Dict
+	return xDict
 }
 
 func (*X_DictImpl) As(alias string) X_DictImpl {
@@ -67,12 +67,6 @@ func (*X_DictImpl) As(alias string) X_DictImpl {
 
 func (*X_DictImpl) X_Model() *Dict {
 	return &Dict{}
-}
-
-func (x *X_DictImpl) Xc_Model() Condition {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Model(&Dict{})
-	}
 }
 
 func (x *X_DictImpl) X_TableName() string {
@@ -94,7 +88,7 @@ func Test_Table(t *testing.T) {
 	}{
 		{
 			name: "empty table",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Table(),
 				).
@@ -104,13 +98,13 @@ func Test_Table(t *testing.T) {
 		},
 		{
 			name: "single table",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Table(
 						From{
 							"a",
 							newDb().
-								Model(xx_Dict.X_Model()),
+								Model(xDict.X_Model()),
 						},
 					),
 				).
@@ -120,18 +114,18 @@ func Test_Table(t *testing.T) {
 		},
 		{
 			name: "multi table",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Table(
 						From{
 							"a",
 							newDb().
-								Model(xx_Dict.X_Model()),
+								Model(xDict.X_Model()),
 						},
 						From{
 							"b",
 							newDb().
-								Model(xx_Dict.X_Model()),
+								Model(xDict.X_Model()),
 						},
 					),
 				).
@@ -158,9 +152,8 @@ func Test_Select(t *testing.T) {
 	}{
 		{
 			name: "select *",
-			db: newDb().
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					xx_Dict.Xc_Model(),
 					Select(),
 				).
 				Take(&Dict{}),
@@ -169,12 +162,12 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select field",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Select(
-						xx_Dict.Id,
-						xx_Dict.CreatedAt.UnixTimestamp().As("created_at"),
-						xx_Dict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at1"),
+						xDict.Id,
+						xDict.CreatedAt.UnixTimestamp().As("created_at"),
+						xDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at1"),
 					),
 				).
 				Take(&dummy),
@@ -183,18 +176,18 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select field where",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(xx_Dict.Id, xx_Dict.Score),
+					Select(xDict.Id, xDict.Score),
 				).
-				Where(xx_Dict.Name.Eq(""), xx_Dict.IsPin.Is(true)).
+				Where(xDict.Name.Eq(""), xDict.IsPin.Is(true)).
 				Take(&dummy),
 			wantVars: []any{"", true},
 			want:     "SELECT `dict`.`id`,`dict`.`score` FROM `dict` WHERE `dict`.`name` = ? AND `dict`.`is_pin` = ? LIMIT 1",
 		},
 		{
 			name: "select 1",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Select(One),
 				).
@@ -204,7 +197,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select COUNT(1)",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Select(One.Count()),
 				).
@@ -214,7 +207,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select COUNT(*)",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Select(Star.Count()),
 				).
@@ -224,9 +217,9 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select AVG(field)",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(xx_Dict.Score.Avg()),
+					Select(xDict.Score.Avg()),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -234,14 +227,14 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "update with select field",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Select(
-						xx_Dict.Score,
-						xx_Dict.IsPin,
+						xDict.Score,
+						xDict.IsPin,
 					),
 				).
-				Where(xx_Dict.Id.Eq(100)).
+				Where(xDict.Id.Eq(100)).
 				Updates(&Dict{
 					Score: 100,
 					IsPin: true,
@@ -266,11 +259,10 @@ func Test_Distinct(t *testing.T) {
 	}{
 		{
 			name: "select * using distinct",
-			db: newDb().
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					xx_Dict.Xc_Model(),
 					Distinct(),
-					Select(xx_Dict.Id),
+					Select(xDict.Id),
 				).
 				Take(&Dict{}),
 			wantVars: nil,
@@ -278,8 +270,8 @@ func Test_Distinct(t *testing.T) {
 		},
 		{
 			name: "distinct field",
-			db: newDb().Model(xx_Dict.X_Model()).
-				Scopes(Distinct(xx_Dict.Id)).
+			db: newDb().Model(xDict.X_Model()).
+				Scopes(Distinct(xDict.Id)).
 				Take(&Dict{}),
 			wantVars: nil,
 			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT 1",
@@ -303,9 +295,9 @@ func Test_Where(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Where(xx_Dict.Id.Eq(100)),
+					Where(xDict.Id.Eq(100)),
 				).
 				Take(&dummy),
 			wantVars: []any{int64(100)},
@@ -313,7 +305,7 @@ func Test_Where(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Where(),
 				).
@@ -340,10 +332,10 @@ func Test_Having(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Having(xx_Dict.Id.Eq(100)),
-					Group(xx_Dict.Id),
+					Having(xDict.Id.Eq(100)),
+					Group(xDict.Id),
 				).
 				Take(&dummy),
 			wantVars: []any{int64(100)},
@@ -351,7 +343,7 @@ func Test_Having(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Having(),
 				).
@@ -378,7 +370,7 @@ func Test_Order(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Order(),
 				).
@@ -388,9 +380,9 @@ func Test_Order(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Order(xx_Dict.Score),
+					Order(xDict.Score),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -398,9 +390,9 @@ func Test_Order(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Order(xx_Dict.Score.Desc()),
+					Order(xDict.Score.Desc()),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -408,9 +400,9 @@ func Test_Order(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Order(xx_Dict.Score.Desc(), xx_Dict.Name),
+					Order(xDict.Score.Desc(), xDict.Name),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -435,7 +427,7 @@ func Test_Group(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Group(),
 				).
@@ -445,9 +437,9 @@ func Test_Group(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Group(xx_Dict.Name),
+					Group(xDict.Name),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -455,12 +447,12 @@ func Test_Group(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(xx_Dict.Score.Sum()),
-					Group(xx_Dict.Name),
+					Select(xDict.Score.Sum()),
+					Group(xDict.Name),
 				).
-				Having(xx_Dict.Score.Sum().Gt(100)).
+				Having(xDict.Score.Sum().Gt(100)).
 				Take(&dummy),
 			wantVars: []any{float64(100)},
 			want:     "SELECT SUM(`dict`.`score`) FROM `dict` GROUP BY `dict`.`name` HAVING SUM(`dict`.`score`) > ? LIMIT 1",
@@ -484,7 +476,7 @@ func Test_Locking(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Group(),
 					LockingUpdate(),
@@ -495,7 +487,7 @@ func Test_Locking(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xx_Dict.X_Model()).
+			db: newDb().Model(xDict.X_Model()).
 				Scopes(
 					Group(),
 					LockingShare(),
@@ -534,14 +526,14 @@ func Test_Conditions(t *testing.T) {
 			LockingUpdate().
 			LockingShare().
 			Pagination(1, 20).
-			CrossJoins(xx_Dict.X_TableName()).
-			InnerJoins(xx_Dict.X_TableName()).
-			LeftJoins(xx_Dict.X_TableName()).
-			RightJoins(xx_Dict.X_TableName()).
-			CrossJoinsX(xx_Dict.X_TableName(), "x").
-			InnerJoinsX(xx_Dict.X_TableName(), "x").
-			LeftJoinsX(xx_Dict.X_TableName(), "x").
-			RightJoinsX(xx_Dict.X_TableName(), "x").
+			CrossJoins(xDict.X_TableName()).
+			InnerJoins(xDict.X_TableName()).
+			LeftJoins(xDict.X_TableName()).
+			RightJoins(xDict.X_TableName()).
+			CrossJoinsX(xDict.X_TableName(), "x").
+			InnerJoinsX(xDict.X_TableName(), "x").
+			LeftJoinsX(xDict.X_TableName(), "x").
+			RightJoinsX(xDict.X_TableName(), "x").
 			Append(func(db *gorm.DB) *gorm.DB {
 				return db
 			}).
