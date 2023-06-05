@@ -12,7 +12,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{

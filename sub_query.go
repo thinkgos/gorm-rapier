@@ -15,11 +15,11 @@ func containsSubQuery(columns []Expr, subQuery *gorm.DB) Expr {
 	case 1:
 		return expr{e: clause.Expr{
 			SQL:  "? IN (?)",
-			Vars: []interface{}{columns[0].RawExpr(), subQuery},
+			Vars: []any{columns[0].RawExpr(), subQuery},
 		}}
 	default: // len(columns) > 0
 		placeholders := make([]string, len(columns))
-		cols := make([]interface{}, len(columns))
+		cols := make([]any, len(columns))
 		for i, c := range columns {
 			placeholders[i], cols[i] = "?", c.RawExpr()
 		}
@@ -37,11 +37,11 @@ func containsValues(columns []Expr, value Value) Expr {
 	case 1:
 		return expr{e: clause.Expr{
 			SQL:  "? IN (?)",
-			Vars: []interface{}{columns[0].RawExpr(), clause.Expr(value)},
+			Vars: []any{columns[0].RawExpr(), clause.Expr(value)},
 		}}
 	default: // len(columns) > 0
 		vars := make([]string, len(columns))
-		queryCols := make([]interface{}, len(columns))
+		queryCols := make([]any, len(columns))
 		for i, c := range columns {
 			vars[i], queryCols[i] = "?", c.RawExpr()
 		}
@@ -74,7 +74,7 @@ const (
 func compareSubQuery(op compareOperator, column Expr, subQuery *gorm.DB) Expr {
 	return expr{e: clause.Expr{
 		SQL:  fmt.Sprint("?", op, "(?)"),
-		Vars: []interface{}{column.RawExpr(), subQuery},
+		Vars: []any{column.RawExpr(), subQuery},
 	}}
 }
 
@@ -157,7 +157,7 @@ func (cs Columns) Lte(subQuery *gorm.DB) Expr {
 func Exist(subQuery *gorm.DB) Expr {
 	return expr{e: clause.Expr{
 		SQL:  "EXISTS(?)",
-		Vars: []interface{}{subQuery},
+		Vars: []any{subQuery},
 	}}
 }
 
@@ -165,6 +165,6 @@ func Exist(subQuery *gorm.DB) Expr {
 func NotExist(subQuery *gorm.DB) Expr {
 	return expr{e: clause.Expr{
 		SQL:  "NOT EXISTS(?)",
-		Vars: []interface{}{subQuery},
+		Vars: []any{subQuery},
 	}}
 }

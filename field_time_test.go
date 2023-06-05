@@ -7,6 +7,12 @@ import (
 
 func Test_Time(t *testing.T) {
 	value1, _ := time.Parse("2006-01-02 15:04:05", "2021-06-29 15:11:49")
+	value2 := value1.Add(1 * time.Hour)
+	value3 := value1.Add(2 * time.Hour)
+	value0 := value1.Add(24 * time.Hour)
+	value4 := []time.Time{value1, value2, value3}
+	value5 := []TestTime{TestTime(value1), TestTime(value2), TestTime(value3)}
+	value6 := []string{"1", "2", "3"}
 
 	tests := []struct {
 		name     string
@@ -58,27 +64,75 @@ func Test_Time(t *testing.T) {
 		},
 		{
 			name:     "between",
-			expr:     NewTime("", "created_at").Between(value1, value1.Add(24*time.Hour)),
-			wantVars: []any{value1, value1.Add(24 * time.Hour)},
+			expr:     NewTime("", "created_at").Between(value1, value0),
+			wantVars: []any{value1, value0},
 			want:     "`created_at` BETWEEN ? AND ?",
 		},
 		{
 			name:     "not between",
-			expr:     NewTime("", "created_at").NotBetween(value1, value1.Add(24*time.Hour)),
-			wantVars: []any{value1, value1.Add(24 * time.Hour)},
+			expr:     NewTime("", "created_at").NotBetween(value1, value0),
+			wantVars: []any{value1, value0},
 			want:     "NOT (`created_at` BETWEEN ? AND ?)",
 		},
 		{
 			name:     "in",
-			expr:     NewTime("", "created_at").In(value1, value1.Add(1*time.Hour), value1.Add(2*time.Hour)),
-			wantVars: []any{value1, value1.Add(1 * time.Hour), value1.Add(2 * time.Hour)},
+			expr:     NewTime("", "created_at").In(value1, value2, value3),
+			wantVars: []any{value1, value2, value3},
 			want:     "`created_at` IN (?,?,?)",
+		},
+		{
+			name:     "in any current type",
+			expr:     NewTime("", "created_at").InAny(value4),
+			wantVars: []any{value1, value2, value3},
+			want:     "`created_at` IN (?,?,?)",
+		},
+		{
+			name:     "in any under new type",
+			expr:     NewTime("", "created_at").InAny(value5),
+			wantVars: []any{TestTime(value1), TestTime(value2), TestTime(value3)},
+			want:     "`created_at` IN (?,?,?)",
+		},
+		{
+			name:     "in any under type string",
+			expr:     NewTime("", "created_at").InAny(value6),
+			wantVars: []any{"1", "2", "3"},
+			want:     "`created_at` IN (?,?,?)",
+		},
+		{
+			name:     "in any but not a array/slice",
+			expr:     NewTime("", "created_at").InAny(1),
+			wantVars: nil,
+			want:     "",
 		},
 		{
 			name:     "not in",
 			expr:     NewTime("", "created_at").NotIn(value1, value1.Add(1*time.Hour), value1.Add(2*time.Hour)),
 			wantVars: []any{value1, value1.Add(1 * time.Hour), value1.Add(2 * time.Hour)},
 			want:     "`created_at` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any current type",
+			expr:     NewTime("", "created_at").NotInAny(value4),
+			wantVars: []any{value1, value2, value3},
+			want:     "`created_at` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any under new type",
+			expr:     NewTime("", "created_at").NotInAny(value5),
+			wantVars: []any{TestTime(value1), TestTime(value2), TestTime(value3)},
+			want:     "`created_at` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any under type string",
+			expr:     NewTime("", "created_at").NotInAny(value6),
+			wantVars: []any{"1", "2", "3"},
+			want:     "`created_at` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any but not a array/slice",
+			expr:     NewTime("", "created_at").NotInAny(1),
+			wantVars: nil,
+			want:     "NOT",
 		},
 		{
 			name:     "Sum",

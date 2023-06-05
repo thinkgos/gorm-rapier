@@ -46,6 +46,9 @@ func testExprInteger[T constraints.Integer](
 	var value1 T = 0
 	var value2 T = 5
 	var value3 T = 8
+	var value4 []T = []T{value1, value2, value3}
+	var value5 []TestInteger = []TestInteger{1, 2, 3}
+	var value6 []string = []string{"1", "2", "3"}
 
 	tests := []struct {
 		name     string
@@ -114,10 +117,58 @@ func testExprInteger[T constraints.Integer](
 			want:     "`t1`.`age` IN (?,?,?)",
 		},
 		{
+			name:     "in any current type",
+			expr:     newInteger("t1", "age").InAny(value4),
+			wantVars: []any{value1, value2, value3},
+			want:     "`t1`.`age` IN (?,?,?)",
+		},
+		{
+			name:     "in any under new type",
+			expr:     newInteger("t1", "age").InAny(value5),
+			wantVars: []any{TestInteger(1), TestInteger(2), TestInteger(3)},
+			want:     "`t1`.`age` IN (?,?,?)",
+		},
+		{
+			name:     "in any under type string",
+			expr:     newInteger("t1", "age").InAny(value6),
+			wantVars: []any{"1", "2", "3"},
+			want:     "`t1`.`age` IN (?,?,?)",
+		},
+		{
+			name:     "in any but not a array/slice",
+			expr:     newInteger("t1", "age").InAny(1),
+			wantVars: nil,
+			want:     "",
+		},
+		{
 			name:     "not in",
 			expr:     newInteger("t1", "age").NotIn(value1, value2, value3),
 			wantVars: []any{value1, value2, value3},
 			want:     "`t1`.`age` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any current type",
+			expr:     newInteger("t1", "age").NotInAny(value4),
+			wantVars: []any{value1, value2, value3},
+			want:     "`t1`.`age` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any under new type",
+			expr:     newInteger("t1", "age").NotInAny(value5),
+			wantVars: []any{TestInteger(1), TestInteger(2), TestInteger(3)},
+			want:     "`t1`.`age` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any under type string",
+			expr:     newInteger("t1", "age").NotInAny(value6),
+			wantVars: []any{"1", "2", "3"},
+			want:     "`t1`.`age` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any but not a array/slice",
+			expr:     newInteger("t1", "age").NotInAny(1),
+			wantVars: nil,
+			want:     "NOT",
 		},
 		{
 			name:     "like",

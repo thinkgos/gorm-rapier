@@ -15,7 +15,7 @@ func Test_Joins(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{

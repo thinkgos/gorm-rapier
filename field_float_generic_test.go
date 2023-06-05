@@ -42,6 +42,9 @@ func testExprFloat[T constraints.Float | ~string](
 	getTestValue func() (T, T, T),
 ) {
 	value1, value2, value3 := getTestValue()
+	var value4 []T = []T{value1, value2, value3}
+	var value5 []TestFloat = []TestFloat{1.1, 2.2, 3.3}
+	var value6 []string = []string{"1", "2", "3"}
 
 	tests := []struct {
 		name     string
@@ -110,11 +113,61 @@ func testExprFloat[T constraints.Float | ~string](
 			want:     "`t1`.`score` IN (?,?,?)",
 		},
 		{
+			name:     "in any current type",
+			expr:     newFloat("t1", "score").InAny(value4),
+			wantVars: []any{value1, value2, value3},
+			want:     "`t1`.`score` IN (?,?,?)",
+		},
+		{
+			name:     "in any under new type",
+			expr:     newFloat("t1", "score").InAny(value5),
+			wantVars: []any{TestFloat(1.1), TestFloat(2.2), TestFloat(3.3)},
+			want:     "`t1`.`score` IN (?,?,?)",
+		},
+		{
+			name:     "in any under type string",
+			expr:     newFloat("t1", "score").InAny(value6),
+			wantVars: []any{"1", "2", "3"},
+			want:     "`t1`.`score` IN (?,?,?)",
+		},
+		{
+			name:     "in any but not a array/slice",
+			expr:     newFloat("t1", "score").InAny(1),
+			wantVars: nil,
+			want:     "",
+		},
+		{
 			name:     "not in",
 			expr:     newFloat("t1", "score").NotIn(value1, value2, value3),
 			wantVars: []any{value1, value2, value3},
 			want:     "`t1`.`score` NOT IN (?,?,?)",
 		},
+
+		{
+			name:     "not in any current type",
+			expr:     newFloat("t1", "score").NotInAny(value4),
+			wantVars: []any{value1, value2, value3},
+			want:     "`t1`.`score` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any under new type",
+			expr:     newFloat("t1", "score").NotInAny(value5),
+			wantVars: []any{TestFloat(1.1), TestFloat(2.2), TestFloat(3.3)},
+			want:     "`t1`.`score` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any under type string",
+			expr:     newFloat("t1", "score").NotInAny(value6),
+			wantVars: []any{"1", "2", "3"},
+			want:     "`t1`.`score` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any but not a array/slice",
+			expr:     newFloat("t1", "score").NotInAny(1),
+			wantVars: nil,
+			want:     "NOT",
+		},
+
 		{
 			name:     "like",
 			expr:     newFloat("t1", "score").Like(value1),

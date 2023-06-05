@@ -23,7 +23,7 @@ func Table(fromSubs ...From) Condition {
 			return db
 		}
 		tablePlaceholder := make([]string, len(fromSubs))
-		tableExprs := make([]interface{}, len(fromSubs))
+		tableExprs := make([]any, len(fromSubs))
 		for i, query := range fromSubs {
 			tablePlaceholder[i] = "(?)"
 			tableExprs[i] = query.SubQuery

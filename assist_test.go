@@ -22,7 +22,6 @@ func (*Dict) TableName() string {
 	return "dict"
 }
 
-var x_Dict_Model_Type = Indirect(&Dict{})
 var xDict = New_X_Dict("dict")
 
 type X_DictImpl struct {
@@ -44,7 +43,6 @@ type X_DictImpl struct {
 func New_X_Dict(tableName string) X_DictImpl {
 	return X_DictImpl{
 		xTableName: tableName,
-		xModelType: x_Dict_Model_Type,
 
 		ALL:       NewAsterisk(tableName),
 		Id:        NewInt64(tableName, "id"),
@@ -83,7 +81,7 @@ func Test_Table(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{
@@ -147,7 +145,7 @@ func Test_Select(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{
@@ -239,7 +237,7 @@ func Test_Select(t *testing.T) {
 					Score: 100,
 					IsPin: true,
 				}),
-			wantVars: []interface{}{float64(100), true, int64(100)},
+			wantVars: []any{float64(100), true, int64(100)},
 			want:     "UPDATE `dict` SET `score`=?,`is_pin`=? WHERE `dict`.`id` = ?",
 		},
 	}
@@ -254,7 +252,7 @@ func Test_Distinct(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{
@@ -290,7 +288,7 @@ func Test_Where(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{
@@ -327,7 +325,7 @@ func Test_Having(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{
@@ -365,7 +363,7 @@ func Test_Order(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{
@@ -422,7 +420,7 @@ func Test_Group(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{
@@ -471,7 +469,7 @@ func Test_Locking(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
-		wantVars []interface{}
+		wantVars []any
 		want     string
 	}{
 		{
@@ -504,7 +502,7 @@ func Test_Locking(t *testing.T) {
 	}
 }
 
-func CheckBuildExprSql(t *testing.T, db *gorm.DB, want string, vars []interface{}) {
+func CheckBuildExprSql(t *testing.T, db *gorm.DB, want string, vars []any) {
 	stmt := db.Statement
 	if got := stmt.SQL.String(); got != want {
 		t.Errorf("SQL expects %v got %v", want, got)

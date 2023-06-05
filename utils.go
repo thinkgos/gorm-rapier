@@ -42,15 +42,6 @@ func buildColumnsValue(db *gorm.DB, columns ...Expr) string {
 	return stmt.SQL.String()
 }
 
-// Indirect returns the value that v reflect.Type.
-func Indirect(value interface{}) reflect.Type {
-	mt := reflect.TypeOf(value)
-	if mt.Kind() == reflect.Pointer {
-		mt = mt.Elem()
-	}
-	return mt
-}
-
 // IntoExpression convert Expr to clause.Expression
 func IntoExpression(conds ...Expr) []clause.Expression {
 	exprs := make([]clause.Expression, len(conds))
@@ -84,4 +75,25 @@ func IntoIntegerSlice[T constraints.Integer, R constraints.Integer](values []T) 
 		slices[i] = R(v)
 	}
 	return slices
+}
+
+// clause.IN{} expression
+func intoInExpr(column, value any) clause.Expression {
+	reflectValue := reflect.Indirect(reflect.ValueOf(value))
+	for reflectValue.Kind() == reflect.Ptr {
+		reflectValue = reflectValue.Elem()
+	}
+
+	kind := reflectValue.Kind()
+	if kind == reflect.Slice || kind == reflect.Array {
+		valueLen := reflectValue.Len()
+		values := make([]any, valueLen)
+		for i := 0; i < valueLen; i++ {
+			values[i] = reflectValue.Index(i).Interface()
+		}
+		if len(values) > 0 {
+			return clause.IN{Column: column, Values: values}
+		}
+	}
+	return EmptyExpr()
 }

@@ -7,7 +7,7 @@ type Value clause.Expr
 func Values(value any) Value {
 	return Value(clause.Expr{
 		SQL:                "?",
-		Vars:               []interface{}{value},
+		Vars:               []any{value},
 		WithoutParentheses: true,
 	})
 }

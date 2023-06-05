@@ -96,11 +96,31 @@ func (field String) In(values ...string) Expr {
 	}
 }
 
+// InAny use expr IN (?)
+// value must be a array/slice
+func (field String) InAny(value any) Expr {
+	return expr{
+		col:       field.col,
+		e:         intoInExpr(field.RawExpr(), value),
+		buildOpts: field.buildOpts,
+	}
+}
+
 // NotIn use expr NOT IN (?)
 func (field String) NotIn(values ...string) Expr {
 	return expr{
 		col:       field.col,
 		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
+		buildOpts: field.buildOpts,
+	}
+}
+
+// NotInAny use expr NOT IN (?)
+// value must be a array/slice
+func (field String) NotInAny(value any) Expr {
+	return expr{
+		col:       field.col,
+		e:         clause.Not(intoInExpr(field.RawExpr(), value)),
 		buildOpts: field.buildOpts,
 	}
 }

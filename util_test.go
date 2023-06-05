@@ -3,6 +3,7 @@ package assist
 import (
 	"reflect"
 	"testing"
+	"time"
 )
 
 func Test_buildSelectValue(t *testing.T) {
@@ -31,6 +32,10 @@ func Test_IntoSlice(t *testing.T) {
 }
 
 type TestInteger int32
+type TestFloat float64
+type TestString string
+type TestBytes []byte
+type TestTime time.Time
 
 func Test_IntoIntegerSlice(t *testing.T) {
 	t.Run("", func(t *testing.T) {

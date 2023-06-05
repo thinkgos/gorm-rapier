@@ -3,9 +3,12 @@ package assist
 import "testing"
 
 func Test_Bytes(t *testing.T) {
-	var value1 = []byte("tom")
-	var value2 = []byte("lucy")
-	var value3 = []byte("john")
+	value1 := []byte("tom")
+	value2 := []byte("lucy")
+	value3 := []byte("john")
+	value4 := [][]byte{value1, value2, value3}
+	value5 := []TestBytes{value1, value2, value3}
+	value6 := []int{1, 2, 3}
 
 	tests := []struct {
 		name     string
@@ -73,11 +76,61 @@ func Test_Bytes(t *testing.T) {
 			wantVars: []any{value1, value2, value3},
 			want:     "`name` IN (?,?,?)",
 		},
+
+		{
+			name:     "in any current type",
+			expr:     NewString("", "name").InAny(value4),
+			wantVars: []any{value1, value2, value3},
+			want:     "`name` IN (?,?,?)",
+		},
+		{
+			name:     "in any under new type",
+			expr:     NewString("", "name").InAny(value5),
+			wantVars: []any{TestBytes(value1), TestBytes(value2), TestBytes(value3)},
+			want:     "`name` IN (?,?,?)",
+		},
+		{
+			name:     "in any under type string",
+			expr:     NewString("", "name").InAny(value6),
+			wantVars: []any{1, 2, 3},
+			want:     "`name` IN (?,?,?)",
+		},
+		{
+			name:     "in any but not a array/slice",
+			expr:     NewString("", "name").InAny(1),
+			wantVars: nil,
+			want:     "",
+		},
+
 		{
 			name:     "not in",
 			expr:     NewBytes("", "name").NotIn(value1, value2, value3),
 			wantVars: []any{value1, value2, value3},
 			want:     "`name` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any current type",
+			expr:     NewString("", "name").NotInAny(value4),
+			wantVars: []any{value1, value2, value3},
+			want:     "`name` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any under new type",
+			expr:     NewString("", "name").NotInAny(value5),
+			wantVars: []any{TestBytes(value1), TestBytes(value2), TestBytes(value3)},
+			want:     "`name` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any under type string",
+			expr:     NewString("", "name").NotInAny(value6),
+			wantVars: []any{1, 2, 3},
+			want:     "`name` NOT IN (?,?,?)",
+		},
+		{
+			name:     "not in any but not a array/slice",
+			expr:     NewString("", "name").NotInAny(1),
+			wantVars: nil,
+			want:     "NOT",
 		},
 		{
 			name:     "like",
