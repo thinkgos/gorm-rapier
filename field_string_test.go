@@ -2,8 +2,7 @@ package assist
 
 import "testing"
 
-func 
-Test_Expr_String(t *testing.T) {
+func Test_Expr_String(t *testing.T) {
 	value1 := ""
 	value2 := "lucy"
 	value3 := "john"
