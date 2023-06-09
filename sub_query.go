@@ -159,7 +159,7 @@ func (cs Columns) FindInSet(subQuery *gorm.DB) Expr {
 		return EmptyExpr()
 	}
 	return expr{e: clause.Expr{
-		SQL:  "FIND_IN_SET(?,(?))",
+		SQL:  "FIND_IN_SET(?, (?))",
 		Vars: []any{cs[0].RawExpr(), subQuery},
 	}}
 }

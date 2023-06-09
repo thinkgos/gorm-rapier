@@ -70,6 +70,9 @@ func (*X_DictImpl) X_Model() *Dict {
 func (x *X_DictImpl) X_TableName() string {
 	return x.xTableName
 }
+func (*X_DictImpl) X_Executor(db *gorm.DB) *Executor[Dict] {
+	return NewExecutor[Dict](db)
+}
 
 func newDb() *gorm.DB {
 	return db.Session(&gorm.Session{DryRun: true})
@@ -154,7 +157,7 @@ func Test_Select(t *testing.T) {
 				Scopes(
 					Select(),
 				).
-				Take(&Dict{}),
+				Take(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` LIMIT 1",
 		},

@@ -208,6 +208,22 @@ func Test_Columns_SubQuery(t *testing.T) {
 			want:     "SELECT * FROM `dict` WHERE ",
 		},
 		{
+			name: "find_in_set",
+			db: newDb().Model(xDict.X_Model()).
+				Where(xDict.Id.IntoColumns().FindInSet(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Find(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` WHERE FIND_IN_SET(`dict`.`id`, (SELECT MIN(`dict`.`id`) FROM `dict`))",
+		},
+		{
+			name: "find_in_set - (no field)",
+			db: newDb().Model(xDict.X_Model()).
+				Where(NewColumns().FindInSet(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Find(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` WHERE ",
+		},
+		{
 			name: "exist",
 			db: newDb().Model(xDict.X_Model()).
 				Where(Exist(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).

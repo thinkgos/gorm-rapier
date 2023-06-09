@@ -6,9 +6,11 @@ import (
 )
 
 func (x *Executor[T]) Clauses(conds ...clause.Expression) *Executor[T] {
-	x.funcs = append(x.funcs, func(db *gorm.DB) *gorm.DB {
-		return db.Clauses(conds...)
-	})
+	if len(conds) > 0 {
+		x.funcs = append(x.funcs, func(db *gorm.DB) *gorm.DB {
+			return db.Clauses(conds...)
+		})
+	}
 	return x
 }
 
@@ -111,7 +113,9 @@ func (x *Executor[T]) Offset(offset int) *Executor[T] {
 }
 
 func (x *Executor[T]) Scopes(funcs ...func(*gorm.DB) *gorm.DB) *Executor[T] {
-	x.funcs = append(x.funcs, funcs...)
+	if len(funcs) > 0 {
+		x.funcs = append(x.funcs, funcs...)
+	}
 	return x
 }
 
