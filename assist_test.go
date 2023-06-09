@@ -524,6 +524,7 @@ func Test_Conditions(t *testing.T) {
 			Group().
 			Where().
 			Having().
+			Distinct().
 			LockingUpdate().
 			LockingShare().
 			Pagination(1, 20).
