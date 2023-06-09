@@ -234,22 +234,14 @@ func (field Field) NotRegxp(value string) Expr {
 	return field.notRegexp(value)
 }
 
-// FindInSet use FIND_IN_SET(field_name, input_string_list)
+// FindInSet use FIND_IN_SET(expr, ?)
 func (field Field) FindInSet(targetList string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Expr{SQL: "FIND_IN_SET(?,?)", Vars: []any{field.RawExpr(), targetList}},
-		buildOpts: field.buildOpts,
-	}
+	return field.findInSet(targetList)
 }
 
 // FindInSetWith use FIND_IN_SET(?, expr)
 func (field Field) FindInSetWith(target string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Expr{SQL: "FIND_IN_SET(?,?)", Vars: []any{target, field.RawExpr()}},
-		buildOpts: field.buildOpts,
-	}
+	return field.findInSetWith(target)
 }
 
 // SubstringIndex use SUBSTRING_INDEX(expr,?,?)

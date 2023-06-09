@@ -153,6 +153,12 @@ func Test_Time(t *testing.T) {
 			want:     "DATE_SUB(`created_at`, INTERVAL ? MICROSECOND)",
 		},
 		{
+			name:     "find_in_set",
+			expr:     NewTime("", "created_at").FindInSet("1,2,3"),
+			wantVars: []any{"1,2,3"},
+			want:     "FIND_IN_SET(`created_at`, ?)",
+		},
+		{
 			name:     "UNIX_TIMESTAMP use UNIX_TIMESTAMP(date)",
 			expr:     NewTime("", "created_at").UnixTimestamp(),
 			wantVars: nil,

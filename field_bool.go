@@ -37,6 +37,11 @@ func (field Bool) Neq(value bool) Expr {
 	}
 }
 
+// FindInSet use FIND_IN_SET(expr, ?)
+func (field Bool) FindInSet(targetList string) Expr {
+	return field.findInSet(targetList)
+}
+
 // Is use expr = ?
 func (field Bool) Is(value bool) Expr {
 	return field.Eq(value)

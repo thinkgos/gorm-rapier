@@ -144,6 +144,11 @@ func (field Integer[T]) NotLike(value T) Expr {
 	}
 }
 
+// FindInSet equal to FIND_IN_SET(expr, ?)
+func (field Integer[T]) FindInSet(targetList string) Expr {
+	return field.findInSet(targetList)
+}
+
 // Sum use SUM(expr)
 func (field Integer[T]) Sum() Integer[T] {
 	return Integer[T]{field.sum()}

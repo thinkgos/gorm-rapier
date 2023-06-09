@@ -2,7 +2,8 @@ package assist
 
 import "testing"
 
-func Test_Expr_String(t *testing.T) {
+func 
+Test_Expr_String(t *testing.T) {
 	value1 := ""
 	value2 := "lucy"
 	value3 := "john"
@@ -168,15 +169,15 @@ func Test_Expr_String(t *testing.T) {
 		},
 		{
 			name:     "find_in_set",
-			expr:     NewString("", "address").FindInSet("sh"),
-			wantVars: []any{"sh"},
-			want:     "FIND_IN_SET(`address`,?)",
+			expr:     NewString("", "address").FindInSet("a"),
+			wantVars: []any{"a"},
+			want:     "FIND_IN_SET(`address`, ?)",
 		},
 		{
 			name:     "find_in_set with",
 			expr:     NewString("", "address").FindInSetWith("sh"),
 			wantVars: []any{"sh"},
-			want:     "FIND_IN_SET(?,`address`)",
+			want:     "FIND_IN_SET(?, `address`)",
 		},
 		{
 			name:     "SUBSTRING_INDEX",

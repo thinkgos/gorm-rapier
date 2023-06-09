@@ -153,6 +153,17 @@ func (cs Columns) Lte(subQuery *gorm.DB) Expr {
 	return compareSubQuery(lteOp, cs[0], subQuery)
 }
 
+// FindInSet FIND_IN_SET(column, (subQuery))
+func (cs Columns) FindInSet(subQuery *gorm.DB) Expr {
+	if len(cs) == 0 {
+		return EmptyExpr()
+	}
+	return expr{e: clause.Expr{
+		SQL:  "FIND_IN_SET(?,(?))",
+		Vars: []any{cs[0].RawExpr(), subQuery},
+	}}
+}
+
 // Exist equivalent EXISTS(subQuery)
 func Exist(subQuery *gorm.DB) Expr {
 	return expr{e: clause.Expr{

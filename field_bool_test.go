@@ -35,6 +35,12 @@ func Test_Bool(t *testing.T) {
 			want:     "`male` = ?",
 		},
 		{
+			name:     "find_in_set",
+			expr:     NewBool("", "male").FindInSet("1,2,3"),
+			wantVars: []any{"1,2,3"},
+			want:     "FIND_IN_SET(`male`, ?)",
+		},
+		{
 			name:     "not",
 			expr:     NewBool("", "male").Not(),
 			wantVars: nil,

@@ -142,6 +142,11 @@ func (field Float[T]) NotLike(value T) Expr {
 	}
 }
 
+// FindInSet use FIND_IN_SET(expr, ?)
+func (field Float[T]) FindInSet(targetList string) Expr {
+	return field.findInSet(targetList)
+}
+
 // Sum use SUM(expr)
 func (field Float[T]) Sum() Float[T] {
 	return Float[T]{field.sum()}

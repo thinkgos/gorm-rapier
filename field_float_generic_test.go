@@ -181,6 +181,12 @@ func testExprFloat[T constraints.Float | ~string](
 			want:     "`t1`.`score` NOT LIKE ?",
 		},
 		{
+			name:     "find_in_set",
+			expr:     newFloat("t1", "score").FindInSet("1,2,3"),
+			wantVars: []any{"1,2,3"},
+			want:     "FIND_IN_SET(`t1`.`score`, ?)",
+		},
+		{
 			name:     "Sum",
 			expr:     newFloat("t1", "score").Sum(),
 			wantVars: nil,

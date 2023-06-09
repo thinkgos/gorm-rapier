@@ -170,15 +170,15 @@ func Test_Bytes(t *testing.T) {
 		},
 		{
 			name:     "find_in_set",
-			expr:     NewBytes("", "address").FindInSet("sh"),
-			wantVars: []any{"sh"},
-			want:     "FIND_IN_SET(`address`,?)",
+			expr:     NewBytes("", "address").FindInSet("a"),
+			wantVars: []any{"a"},
+			want:     "FIND_IN_SET(`address`, ?)",
 		},
 		{
 			name:     "find_in_set with",
 			expr:     NewBytes("", "address").FindInSetWith("sh"),
 			wantVars: []any{"sh"},
-			want:     "FIND_IN_SET(?,`address`)",
+			want:     "FIND_IN_SET(?, `address`)",
 		},
 		{
 			name:     "SUBSTRING_INDEX",

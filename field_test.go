@@ -564,15 +564,15 @@ func Test_Field_Expr(t *testing.T) {
 		},
 		{
 			name:     "find_in_set",
-			expr:     NewField("", "address").FindInSet("sh"),
-			wantVars: []any{"sh"},
-			want:     "FIND_IN_SET(`address`,?)",
+			expr:     NewField("", "address").FindInSet("1,2,3"),
+			wantVars: []any{"1,2,3"},
+			want:     "FIND_IN_SET(`address`, ?)",
 		},
 		{
 			name:     "find_in_set with",
-			expr:     NewField("", "address").FindInSetWith("sh"),
-			wantVars: []any{"sh"},
-			want:     "FIND_IN_SET(?,`address`)",
+			expr:     NewField("", "address").FindInSetWith("a"),
+			wantVars: []any{"a"},
+			want:     "FIND_IN_SET(?, `address`)",
 		},
 		{
 			name:     "SUBSTRING_INDEX",

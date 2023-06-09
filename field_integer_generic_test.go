@@ -183,6 +183,12 @@ func testExprInteger[T constraints.Integer](
 			want:     "`t1`.`age` NOT LIKE ?",
 		},
 		{
+			name:     "find_in_set",
+			expr:     newInteger("t1", "age").FindInSet("1,2,3"),
+			wantVars: []any{"1,2,3"},
+			want:     "FIND_IN_SET(`t1`.`age`, ?)",
+		},
+		{
 			name:     "Sum",
 			expr:     newInteger("t1", "age").Sum(),
 			wantVars: nil,

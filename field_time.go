@@ -136,6 +136,11 @@ func (field Time) Sub(value time.Duration) Time {
 	return Time{field.sub(value)}
 }
 
+// FindInSet use FIND_IN_SET(expr, ?)
+func (field Time) FindInSet(targetList string) Expr {
+	return field.findInSet(targetList)
+}
+
 // UnixTimestamp use UnixTimestamp(date)
 func (field Time) UnixTimestamp() Int64 {
 	return Int64{

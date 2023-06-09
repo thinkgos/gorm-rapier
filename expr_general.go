@@ -122,6 +122,24 @@ func (e expr) round(decimals int) expr {
 	return e
 }
 
+// findInSet equal to FIND_IN_SET(expr, targetList)
+func (field expr) findInSet(targetList string) expr {
+	return expr{
+		col:       field.col,
+		e:         clause.Expr{SQL: "FIND_IN_SET(?, ?)", Vars: []any{field.RawExpr(), targetList}},
+		buildOpts: field.buildOpts,
+	}
+}
+
+// findInSetWith equal to FIND_IN_SET(target, expr)
+func (field expr) findInSetWith(target string) expr {
+	return expr{
+		col:       field.col,
+		e:         clause.Expr{SQL: "FIND_IN_SET(?, ?)", Vars: []any{target, field.RawExpr()}},
+		buildOpts: field.buildOpts,
+	}
+}
+
 func (e expr) rightShift(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{SQL: "?>>?", Vars: []any{e.col, value}}
