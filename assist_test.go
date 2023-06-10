@@ -27,10 +27,8 @@ var xDict = New_X_Dict("dict")
 type X_DictImpl struct {
 	// private fields
 	xTableName string
-	xModelType reflect.Type
 
-	ALL Asterisk
-
+	ALL       Asterisk
 	Id        Int64
 	Pid       Int64
 	Score     Float64
