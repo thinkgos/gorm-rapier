@@ -9,7 +9,7 @@ import (
 type Executor[T any] struct {
 	db    *gorm.DB
 	table func(*gorm.DB) *gorm.DB
-	funcs []func(*gorm.DB) *gorm.DB
+	funcs *Conditions
 }
 
 // Executor new executor
@@ -17,7 +17,7 @@ func NewExecutor[T any](db *gorm.DB) *Executor[T] {
 	return &Executor[T]{
 		db:    db,
 		table: nil,
-		funcs: make([]func(*gorm.DB) *gorm.DB, 0, 16),
+		funcs: NewConditions(),
 	}
 }
 
@@ -44,5 +44,5 @@ func (x *Executor[T]) IntoDB() (db *gorm.DB) {
 	} else {
 		db = x.db.Scopes(x.table)
 	}
-	return db.Scopes(x.funcs...)
+	return db.Scopes(x.funcs.Build()...)
 }

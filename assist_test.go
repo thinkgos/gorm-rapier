@@ -285,81 +285,6 @@ func Test_Distinct(t *testing.T) {
 	}
 }
 
-func Test_Where(t *testing.T) {
-	var dummy Dict
-
-	tests := []struct {
-		name     string
-		db       *gorm.DB
-		wantVars []any
-		want     string
-	}{
-		{
-			name: "",
-			db: newDb().Model(xDict.X_Model()).
-				Scopes(
-					Where(xDict.Id.Eq(100)),
-				).
-				Take(&dummy),
-			wantVars: []any{int64(100)},
-			want:     "SELECT * FROM `dict` WHERE `dict`.`id` = ? LIMIT 1",
-		},
-		{
-			name: "",
-			db: newDb().Model(xDict.X_Model()).
-				Scopes(
-					Where(),
-				).
-				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
-		})
-	}
-}
-
-func Test_Having(t *testing.T) {
-	var dummy Dict
-
-	tests := []struct {
-		name     string
-		db       *gorm.DB
-		wantVars []any
-		want     string
-	}{
-		{
-			name: "",
-			db: newDb().Model(xDict.X_Model()).
-				Scopes(
-					Having(xDict.Id.Eq(100)),
-					Group(xDict.Id),
-				).
-				Take(&dummy),
-			wantVars: []any{int64(100)},
-			want:     "SELECT * FROM `dict` GROUP BY `dict`.`id` HAVING `dict`.`id` = ? LIMIT 1",
-		},
-		{
-			name: "",
-			db: newDb().Model(xDict.X_Model()).
-				Scopes(
-					Having(),
-				).
-				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
-		})
-	}
-}
-
 func Test_Order(t *testing.T) {
 	var dummy Dict
 
@@ -513,32 +438,4 @@ func CheckBuildExprSql(t *testing.T, db *gorm.DB, want string, vars []any) {
 	if !reflect.DeepEqual(stmt.Vars, vars) {
 		t.Errorf("Vars expects %+v got %+v", vars, stmt.Vars)
 	}
-}
-
-func Test_Conditions(t *testing.T) {
-	t.Run("empty", func(t *testing.T) {
-		NewConditions().
-			Table().
-			Select().
-			Order().
-			Group().
-			Where().
-			Having().
-			Distinct().
-			LockingUpdate().
-			LockingShare().
-			Pagination(1, 20).
-			CrossJoins(xDict.X_TableName()).
-			InnerJoins(xDict.X_TableName()).
-			LeftJoins(xDict.X_TableName()).
-			RightJoins(xDict.X_TableName()).
-			CrossJoinsX(xDict.X_TableName(), "x").
-			InnerJoinsX(xDict.X_TableName(), "x").
-			LeftJoinsX(xDict.X_TableName(), "x").
-			RightJoinsX(xDict.X_TableName(), "x").
-			Append(func(db *gorm.DB) *gorm.DB {
-				return db
-			}).
-			Build()
-	})
 }

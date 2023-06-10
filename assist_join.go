@@ -51,13 +51,12 @@ func joins(joinType clause.JoinType, tableName, alias string, conds ...Expr) Con
 			return db
 		}
 
-		join := clause.Join{
+		clauseFrom := getClauseFrom(db)
+		clauseFrom.Joins = append(clauseFrom.Joins, clause.Join{
 			Type:  joinType,
 			Table: clause.Table{Name: tableName, Alias: alias},
 			ON:    clause.Where{Exprs: IntoExpression(conds...)},
-		}
-		clauseFrom := getClauseFrom(db)
-		clauseFrom.Joins = append(clauseFrom.Joins, join)
+		})
 		return db.Clauses(clauseFrom)
 	}
 }
