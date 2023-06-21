@@ -51,6 +51,9 @@ func main() {
 			Remark: "remark",
 		})
 	checkError(err)
+
+	log.Printf("%+v", xDict.Key.Count().IfNull(0))
+	log.Printf("%+v", xDict.Key)
 }
 
 func checkError(err error) {

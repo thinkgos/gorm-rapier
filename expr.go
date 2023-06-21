@@ -33,7 +33,10 @@ func (e expr) ColumnName() string { return e.col.Name }
 
 func (e expr) Expression() clause.Expression {
 	if e.e == nil {
-		return clause.NamedExpr{SQL: "?", Vars: []any{e.col}}
+		return clause.NamedExpr{
+			SQL:  "?",
+			Vars: []any{e.col},
+		}
 	}
 	return e.e
 }
@@ -80,7 +83,11 @@ func (e expr) BuildWithArgs(stmt *gorm.Statement) (string, []any) {
 	if e.e == nil {
 		return e.BuildColumn(stmt, WithAll), nil
 	}
-	newStmt := &gorm.Statement{DB: stmt.DB, Table: stmt.Table, Schema: stmt.Schema}
+	newStmt := &gorm.Statement{
+		DB:     stmt.DB,
+		Table:  stmt.Table,
+		Schema: stmt.Schema,
+	}
 	e.e.Build(newStmt)
 	return newStmt.SQL.String(), newStmt.Vars
 }
