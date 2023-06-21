@@ -95,11 +95,7 @@ func (field Time) In(values ...time.Time) Expr {
 // InAny use expr IN (?)
 // value must be a array/slice
 func (field Time) InAny(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         intoInExpr(field.RawExpr(), value),
-		buildOpts: field.buildOpts,
-	}
+	return field.inAny(value)
 }
 
 // NotIn use expr NOT IN (?)
@@ -114,11 +110,7 @@ func (field Time) NotIn(values ...time.Time) Expr {
 // NotInAny use expr NOT IN (?)
 // value must be a array/slice
 func (field Time) NotInAny(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(intoInExpr(field.RawExpr(), value)),
-		buildOpts: field.buildOpts,
-	}
+	return field.notInAny(value)
 }
 
 // Sum use SUM(expr)

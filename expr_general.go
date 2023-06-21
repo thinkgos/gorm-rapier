@@ -14,6 +14,16 @@ func (e expr) ifNull(value any) expr {
 	return e
 }
 
+func (e expr) inAny(value any) expr {
+	e.e = intoInExpr(e.RawExpr(), value)
+	return e
+}
+
+func (e expr) notInAny(value any) expr {
+	e.e = clause.Not(intoInExpr(e.RawExpr(), value))
+	return e
+}
+
 func (e expr) regexp(value any) expr {
 	e.e = clause.Expr{
 		SQL:  "? REGEXP ?",

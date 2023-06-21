@@ -98,11 +98,7 @@ func (field Float[T]) In(values ...T) Expr {
 // InAny use expr IN (?)
 // value must be a array/slice
 func (field Float[T]) InAny(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         intoInExpr(field.RawExpr(), value),
-		buildOpts: field.buildOpts,
-	}
+	return field.inAny(value)
 }
 
 // NotIn use expr NOT IN (?)
@@ -117,11 +113,7 @@ func (field Float[T]) NotIn(values ...T) Expr {
 // NotInAny use expr NOT IN (?)
 // value must be a array/slice
 func (field Float[T]) NotInAny(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(intoInExpr(field.RawExpr(), value)),
-		buildOpts: field.buildOpts,
-	}
+	return field.notInAny(value)
 }
 
 // Like use expr LIKE ?
