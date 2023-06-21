@@ -317,7 +317,6 @@ func (field Time) MonthName() String {
 	}
 }
 
-
 // AddCol use expr1 + expr2
 func (e Time) AddCol(col Expr) Time {
 	return Time{e.addCol(col)}
