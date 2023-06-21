@@ -257,6 +257,62 @@ func Test_Expr_String(t *testing.T) {
 			wantVars: nil,
 			want:     "RTRIM(`address`)",
 		},
+		{
+			name: "add",
+			expr: NewString("", "id").AddCol(NewString("", "new_id")),
+			want: "`id` + `new_id`",
+		},
+		{
+			name: "add with table",
+			expr: NewString("user", "id").AddCol(NewString("userB", "new_id")),
+			want: "`user`.`id` + `userB`.`new_id`",
+		},
+		{
+			name: "sub",
+			expr: NewString("", "id").SubCol(NewString("", "new_id")),
+			want: "`id` - `new_id`",
+		},
+		{
+			name: "sub with table",
+			expr: NewString("user", "id").SubCol(NewString("userB", "new_id")),
+			want: "`user`.`id` - `userB`.`new_id`",
+		},
+		{
+			name: "mul",
+			expr: NewString("", "id").MulCol(NewString("", "new_id")),
+			want: "(`id`) * (`new_id`)",
+		},
+		{
+			name: "mul with table",
+			expr: NewString("user", "id").MulCol(NewString("userB", "new_id")),
+			want: "(`user`.`id`) * (`userB`.`new_id`)",
+		},
+		{
+			name: "mul",
+			expr: NewString("", "id").DivCol(NewString("", "new_id")),
+			want: "(`id`) / (`new_id`)",
+		},
+		{
+			name: "mul with table",
+			expr: NewString("user", "id").DivCol(NewString("userB", "new_id")),
+			want: "(`user`.`id`) / (`userB`.`new_id`)",
+		},
+		{
+			name: "concat",
+			expr: NewString("", "id").ConcatCol(NewString("", "new_id"), NewString("", "new_id2")),
+			want: "Concat(`id`,`new_id`,`new_id2`)",
+		},
+		{
+			name:     "concat with raw",
+			expr:     NewString("", "id").ConcatCol(NewString("", "new_id"), NewRaw("'/'")),
+			wantVars: nil,
+			want:     "Concat(`id`,`new_id`,'/')",
+		},
+		{
+			name: "concat with table",
+			expr: NewString("user", "id").ConcatCol(NewString("userB", "new_id"), NewString("userC", "new_id2")),
+			want: "Concat(`user`.`id`,`userB`.`new_id`,`userC`.`new_id2`)",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

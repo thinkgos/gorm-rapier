@@ -248,6 +248,26 @@ func (field Integer[T]) FromDays() Time {
 	}
 }
 
+// AddCol use expr1 + expr2
+func (e Integer[T]) AddCol(col Expr) Integer[T] {
+	return Integer[T]{e.addCol(col)}
+}
+
+// SubCol use expr1 - expr2
+func (e Integer[T]) SubCol(col Expr) Integer[T] {
+	return Integer[T]{e.subCol(col)}
+}
+
+// MulCol use (expr1) * (expr2)
+func (e Integer[T]) MulCol(col Expr) Integer[T] {
+	return Integer[T]{e.mulCol(col)}
+}
+
+// DivCol use (expr1) / (expr2)
+func (e Integer[T]) DivCol(col Expr) Integer[T] {
+	return Integer[T]{e.divCol(col)}
+}
+
 // IntoColumns columns array with sub method
 func (field Integer[T]) IntoColumns() Columns {
 	return NewColumns(field)

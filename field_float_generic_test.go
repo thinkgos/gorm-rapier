@@ -240,6 +240,46 @@ func testExprFloat[T constraints.Float | ~string](
 			wantVars: []any{value1, value2, value3},
 			want:     "((`t1`.`score`+?)*?)/?",
 		},
+		{
+			name: "add",
+			expr: newFloat("", "id").AddCol(newFloat("", "new_id")),
+			want: "`id` + `new_id`",
+		},
+		{
+			name: "add with table",
+			expr: newFloat("user", "id").AddCol(newFloat("userB", "new_id")),
+			want: "`user`.`id` + `userB`.`new_id`",
+		},
+		{
+			name: "sub",
+			expr: newFloat("", "id").SubCol(newFloat("", "new_id")),
+			want: "`id` - `new_id`",
+		},
+		{
+			name: "sub with table",
+			expr: newFloat("user", "id").SubCol(newFloat("userB", "new_id")),
+			want: "`user`.`id` - `userB`.`new_id`",
+		},
+		{
+			name: "mul",
+			expr: newFloat("", "id").MulCol(newFloat("", "new_id")),
+			want: "(`id`) * (`new_id`)",
+		},
+		{
+			name: "mul with table",
+			expr: newFloat("user", "id").MulCol(newFloat("userB", "new_id")),
+			want: "(`user`.`id`) * (`userB`.`new_id`)",
+		},
+		{
+			name: "mul",
+			expr: newFloat("", "id").DivCol(newFloat("", "new_id")),
+			want: "(`id`) / (`new_id`)",
+		},
+		{
+			name: "mul with table",
+			expr: newFloat("user", "id").DivCol(newFloat("userB", "new_id")),
+			want: "(`user`.`id`) / (`userB`.`new_id`)",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

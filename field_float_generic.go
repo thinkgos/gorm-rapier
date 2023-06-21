@@ -187,6 +187,26 @@ func (field Float[T]) Round(decimals int) Float[T] {
 	return Float[T]{field.round(decimals)}
 }
 
+// AddCol use expr1 + expr2
+func (e Float[T]) AddCol(col Expr) Float[T] {
+	return Float[T]{e.addCol(col)}
+}
+
+// SubCol use expr1 - expr2
+func (e Float[T]) SubCol(col Expr) Float[T] {
+	return Float[T]{e.subCol(col)}
+}
+
+// MulCol use (expr1) * (expr2)
+func (e Float[T]) MulCol(col Expr) Float[T] {
+	return Float[T]{e.mulCol(col)}
+}
+
+// DivCol use (expr1) / (expr2)
+func (e Float[T]) DivCol(col Expr) Float[T] {
+	return Float[T]{e.divCol(col)}
+}
+
 // IntoColumns columns array with sub method
 func (field Float[T]) IntoColumns() Columns {
 	return NewColumns(field)

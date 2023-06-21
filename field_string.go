@@ -298,6 +298,31 @@ func (field String) RTrimSpace() String {
 	}
 }
 
+// AddCol use expr1 + expr2
+func (e String) AddCol(col Expr) String {
+	return String{e.addCol(col)}
+}
+
+// SubCol use expr1 - expr2
+func (e String) SubCol(col Expr) String {
+	return String{e.subCol(col)}
+}
+
+// MulCol use (expr1) * (expr2)
+func (e String) MulCol(col Expr) String {
+	return String{e.mulCol(col)}
+}
+
+// DivCol use (expr1) / (expr2)
+func (e String) DivCol(col Expr) String {
+	return String{e.divCol(col)}
+}
+
+// ConcatCol use CONCAT(expr1,exp2...exprN)
+func (e String) ConcatCol(cols ...Expr) String {
+	return String{e.concatCol(cols...)}
+}
+
 // IntoColumns columns array with sub method
 func (field String) IntoColumns() Columns {
 	return NewColumns(field)

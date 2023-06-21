@@ -43,32 +43,32 @@ func (e expr) GteCol(col Expr) Expr {
 	return e
 }
 
-// AddCol use expr1 + expr2
-func (e expr) AddCol(col Expr) Expr {
+// addCol use expr1 + expr2
+func (e expr) addCol(col Expr) expr {
 	e.e = clause.Expr{SQL: "? + ?", Vars: []any{e.RawExpr(), col.RawExpr()}}
 	return e
 }
 
-// SubCol use expr1 - expr2
-func (e expr) SubCol(col Expr) Expr {
+// subCol use expr1 - expr2
+func (e expr) subCol(col Expr) expr {
 	e.e = clause.Expr{SQL: "? - ?", Vars: []any{e.RawExpr(), col.RawExpr()}}
 	return e
 }
 
-// MulCol use (expr1) * (expr2)
-func (e expr) MulCol(col Expr) Expr {
+// mulCol use (expr1) * (expr2)
+func (e expr) mulCol(col Expr) expr {
 	e.e = clause.Expr{SQL: "(?) * (?)", Vars: []any{e.RawExpr(), col.RawExpr()}}
 	return e
 }
 
-// DivCol use (expr1) / (expr2)
-func (e expr) DivCol(col Expr) Expr {
+// divCol use (expr1) / (expr2)
+func (e expr) divCol(col Expr) expr {
 	e.e = clause.Expr{SQL: "(?) / (?)", Vars: []any{e.RawExpr(), col.RawExpr()}}
 	return e
 }
 
-// ConcatCol use CONCAT(expr1,exp2...exprN)
-func (e expr) ConcatCol(cols ...Expr) Expr {
+// concatCol use CONCAT(expr1,exp2...exprN)
+func (e expr) concatCol(cols ...Expr) expr {
 	placeholders := []string{"?"}
 	vars := []any{e.RawExpr()}
 	for _, col := range cols {

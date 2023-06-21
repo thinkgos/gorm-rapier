@@ -565,6 +565,31 @@ func (field Field) MonthName() String {
 	}
 }
 
+// AddCol use expr1 + expr2
+func (e Field) AddCol(col Expr) Field {
+	return Field{e.addCol(col)}
+}
+
+// SubCol use expr1 - expr2
+func (e Field) SubCol(col Expr) Field {
+	return Field{e.subCol(col)}
+}
+
+// MulCol use (expr1) * (expr2)
+func (e Field) MulCol(col Expr) Field {
+	return Field{e.mulCol(col)}
+}
+
+// DivCol use (expr1) / (expr2)
+func (e Field) DivCol(col Expr) Field {
+	return Field{e.divCol(col)}
+}
+
+// ConcatCol use CONCAT(expr1,exp2...exprN)
+func (e Field) ConcatCol(cols ...Expr) Field {
+	return Field{e.concatCol(cols...)}
+}
+
 // IntoColumns columns array with sub method
 func (field Field) IntoColumns() Columns {
 	return NewColumns(field)

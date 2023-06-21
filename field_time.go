@@ -317,6 +317,27 @@ func (field Time) MonthName() String {
 	}
 }
 
+
+// AddCol use expr1 + expr2
+func (e Time) AddCol(col Expr) Time {
+	return Time{e.addCol(col)}
+}
+
+// SubCol use expr1 - expr2
+func (e Time) SubCol(col Expr) Time {
+	return Time{e.subCol(col)}
+}
+
+// MulCol use (expr1) * (expr2)
+func (e Time) MulCol(col Expr) Time {
+	return Time{e.mulCol(col)}
+}
+
+// DivCol use (expr1) / (expr2)
+func (e Time) DivCol(col Expr) Time {
+	return Time{e.divCol(col)}
+}
+
 // IntoColumns columns array with sub method
 func (field Time) IntoColumns() Columns {
 	return NewColumns(field)

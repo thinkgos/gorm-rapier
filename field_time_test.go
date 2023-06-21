@@ -260,6 +260,46 @@ func Test_Time(t *testing.T) {
 			wantVars: nil,
 			want:     "MONTHNAME(`created_at`)",
 		},
+		{
+			name: "add",
+			expr: NewTime("", "created_at").AddCol(NewTime("", "created_at1")),
+			want: "`created_at` + `created_at1`",
+		},
+		{
+			name: "add with table",
+			expr: NewTime("user", "created_at").AddCol(NewTime("userB", "created_at1")),
+			want: "`user`.`created_at` + `userB`.`created_at1`",
+		},
+		{
+			name: "sub",
+			expr: NewTime("", "created_at").SubCol(NewTime("", "created_at1")),
+			want: "`created_at` - `created_at1`",
+		},
+		{
+			name: "sub with table",
+			expr: NewTime("user", "created_at").SubCol(NewTime("userB", "created_at1")),
+			want: "`user`.`created_at` - `userB`.`created_at1`",
+		},
+		{
+			name: "mul",
+			expr: NewTime("", "created_at").MulCol(NewTime("", "created_at1")),
+			want: "(`created_at`) * (`created_at1`)",
+		},
+		{
+			name: "mul with table",
+			expr: NewTime("user", "created_at").MulCol(NewTime("userB", "created_at1")),
+			want: "(`user`.`created_at`) * (`userB`.`created_at1`)",
+		},
+		{
+			name: "mul",
+			expr: NewTime("", "created_at").DivCol(NewTime("", "created_at1")),
+			want: "(`created_at`) / (`created_at1`)",
+		},
+		{
+			name: "mul with table",
+			expr: NewTime("user", "created_at").DivCol(NewTime("userB", "created_at1")),
+			want: "(`user`.`created_at`) / (`userB`.`created_at1`)",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

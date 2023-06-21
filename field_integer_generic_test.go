@@ -296,6 +296,46 @@ func testExprInteger[T constraints.Integer](
 			wantVars: nil,
 			want:     "FROM_DAYS(`t1`.`age`)",
 		},
+		{
+			name: "add",
+			expr: newInteger("", "id").AddCol(newInteger("", "new_id")),
+			want: "`id` + `new_id`",
+		},
+		{
+			name: "add with table",
+			expr: newInteger("user", "id").AddCol(newInteger("userB", "new_id")),
+			want: "`user`.`id` + `userB`.`new_id`",
+		},
+		{
+			name: "sub",
+			expr: newInteger("", "id").SubCol(newInteger("", "new_id")),
+			want: "`id` - `new_id`",
+		},
+		{
+			name: "sub with table",
+			expr: newInteger("user", "id").SubCol(newInteger("userB", "new_id")),
+			want: "`user`.`id` - `userB`.`new_id`",
+		},
+		{
+			name: "mul",
+			expr: newInteger("", "id").MulCol(newInteger("", "new_id")),
+			want: "(`id`) * (`new_id`)",
+		},
+		{
+			name: "mul with table",
+			expr: newInteger("user", "id").MulCol(newInteger("userB", "new_id")),
+			want: "(`user`.`id`) * (`userB`.`new_id`)",
+		},
+		{
+			name: "mul",
+			expr: newInteger("", "id").DivCol(newInteger("", "new_id")),
+			want: "(`id`) / (`new_id`)",
+		},
+		{
+			name: "mul with table",
+			expr: newInteger("user", "id").DivCol(newInteger("userB", "new_id")),
+			want: "(`user`.`id`) / (`userB`.`new_id`)",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
