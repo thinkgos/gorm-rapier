@@ -35,8 +35,8 @@ func Table(fromSubs ...From) Condition {
 	}
 }
 
-// Select with field
-func Select(columns ...Expr) Condition {
+// SelectExpr with field
+func SelectExpr(columns ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(columns) == 0 {
 			return db.Clauses(clause.Select{})
@@ -46,8 +46,8 @@ func Select(columns ...Expr) Condition {
 	}
 }
 
-// Distinct with field
-func Distinct(columns ...Expr) Condition {
+// DistinctExpr with field
+func DistinctExpr(columns ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		db = db.Distinct()
 		if len(columns) > 0 {
@@ -58,8 +58,8 @@ func Distinct(columns ...Expr) Condition {
 	}
 }
 
-// Order with field
-func Order(columns ...Expr) Condition {
+// OrderExpr with field
+func OrderExpr(columns ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(columns) == 0 {
 			return db
@@ -68,8 +68,8 @@ func Order(columns ...Expr) Condition {
 	}
 }
 
-// Group with field
-func Group(columns ...Expr) Condition {
+// GroupExpr with field
+func GroupExpr(columns ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(columns) == 0 {
 			return db

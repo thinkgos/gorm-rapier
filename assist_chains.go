@@ -23,24 +23,24 @@ func (c *Conditions) Table(fromSubs ...From) *Conditions {
 	return c.Append(Table(fromSubs...))
 }
 
-// Select with field
-func (c *Conditions) Select(columns ...Expr) *Conditions {
-	return c.Append(Select(columns...))
+// SelectExpr with field
+func (c *Conditions) SelectExpr(columns ...Expr) *Conditions {
+	return c.Append(SelectExpr(columns...))
 }
 
-// Distinct with field
-func (c *Conditions) Distinct(columns ...Expr) *Conditions {
-	return c.Append(Distinct(columns...))
+// DistinctExpr with field
+func (c *Conditions) DistinctExpr(columns ...Expr) *Conditions {
+	return c.Append(DistinctExpr(columns...))
 }
 
-// Order with field
-func (c *Conditions) Order(columns ...Expr) *Conditions {
-	return c.Append(Order(columns...))
+// OrderExpr with field
+func (c *Conditions) OrderExpr(columns ...Expr) *Conditions {
+	return c.Append(OrderExpr(columns...))
 }
 
-// Group with field
-func (c *Conditions) Group(columns ...Expr) *Conditions {
-	return c.Append(Group(columns...))
+// GroupExpr with field
+func (c *Conditions) GroupExpr(columns ...Expr) *Conditions {
+	return c.Append(GroupExpr(columns...))
 }
 
 // LockingUpdate specify the lock strength to UPDATE
@@ -60,44 +60,44 @@ func (c *Conditions) Pagination(page, perPage int64, maxPages ...int64) *Conditi
 	return c.Append(Pagination(page, perPage, maxPages...))
 }
 
-// CrossJoins cross joins condition
-func (c *Conditions) CrossJoins(tableName string, conds ...Expr) *Conditions {
-	return c.Append(CrossJoins(tableName, conds...))
+// CrossJoinsExpr cross joins condition
+func (c *Conditions) CrossJoinsExpr(tableName string, conds ...Expr) *Conditions {
+	return c.Append(CrossJoinsExpr(tableName, conds...))
 }
 
-// CrossJoinsX cross joins condition
-func (c *Conditions) CrossJoinsX(tableName, alias string, conds ...Expr) *Conditions {
-	return c.Append(CrossJoinsX(tableName, alias, conds...))
+// CrossJoinsXExpr cross joins condition
+func (c *Conditions) CrossJoinsXExpr(tableName, alias string, conds ...Expr) *Conditions {
+	return c.Append(CrossJoinsXExpr(tableName, alias, conds...))
 }
 
-// InnerJoins inner joins condition
-func (c *Conditions) InnerJoins(tableName string, conds ...Expr) *Conditions {
-	return c.Append(InnerJoins(tableName, conds...))
+// InnerJoinsExpr inner joins condition
+func (c *Conditions) InnerJoinsExpr(tableName string, conds ...Expr) *Conditions {
+	return c.Append(InnerJoinsExpr(tableName, conds...))
 }
 
-// InnerJoinsX inner joins condition
-func (c *Conditions) InnerJoinsX(tableName, alias string, conds ...Expr) *Conditions {
-	return c.Append(InnerJoinsX(tableName, alias, conds...))
+// InnerJoinsXExpr inner joins condition
+func (c *Conditions) InnerJoinsXExpr(tableName, alias string, conds ...Expr) *Conditions {
+	return c.Append(InnerJoinsXExpr(tableName, alias, conds...))
 }
 
-// LeftJoins left join condition
-func (c *Conditions) LeftJoins(tableName string, conds ...Expr) *Conditions {
-	return c.Append(LeftJoins(tableName, conds...))
+// LeftJoinsExpr left join condition
+func (c *Conditions) LeftJoinsExpr(tableName string, conds ...Expr) *Conditions {
+	return c.Append(LeftJoinsExpr(tableName, conds...))
 }
 
-// LeftJoinsX left join condition
-func (c *Conditions) LeftJoinsX(tableName, alias string, conds ...Expr) *Conditions {
-	return c.Append(LeftJoinsX(tableName, alias, conds...))
+// LeftJoinsXExpr left join condition
+func (c *Conditions) LeftJoinsXExpr(tableName, alias string, conds ...Expr) *Conditions {
+	return c.Append(LeftJoinsXExpr(tableName, alias, conds...))
 }
 
-// RightJoins right join condition
-func (c *Conditions) RightJoins(tableName string, conds ...Expr) *Conditions {
-	return c.Append(RightJoins(tableName, conds...))
+// RightJoinsExpr right join condition
+func (c *Conditions) RightJoinsExpr(tableName string, conds ...Expr) *Conditions {
+	return c.Append(RightJoinsExpr(tableName, conds...))
 }
 
-// RightJoinsX right join condition
-func (c *Conditions) RightJoinsX(tableName, alias string, conds ...Expr) *Conditions {
-	return c.Append(RightJoinsX(tableName, alias, conds...))
+// RightJoinsXExpr right join condition
+func (c *Conditions) RightJoinsXExpr(tableName, alias string, conds ...Expr) *Conditions {
+	return c.Append(RightJoinsXExpr(tableName, alias, conds...))
 }
 
 // Append more condition

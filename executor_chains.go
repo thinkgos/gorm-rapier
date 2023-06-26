@@ -115,62 +115,62 @@ func (x *Executor[T]) TableExpr(fromSubs ...From) *Executor[T] {
 }
 
 func (x *Executor[T]) DistinctExpr(columns ...Expr) *Executor[T] {
-	x.funcs.Distinct(columns...)
+	x.funcs.DistinctExpr(columns...)
 	return x
 }
 
 func (x *Executor[T]) SelectExpr(columns ...Expr) *Executor[T] {
-	x.funcs.Select(columns...)
+	x.funcs.SelectExpr(columns...)
 	return x
 }
 
 func (x *Executor[T]) OrderExpr(columns ...Expr) *Executor[T] {
-	x.funcs.Order(columns...)
+	x.funcs.OrderExpr(columns...)
 	return x
 }
 
 func (x *Executor[T]) GroupExpr(columns ...Expr) *Executor[T] {
-	x.funcs.Group(columns...)
+	x.funcs.GroupExpr(columns...)
 	return x
 }
 
 func (x *Executor[T]) CrossJoinsExpr(tableName string, conds ...Expr) *Executor[T] {
-	x.funcs.CrossJoins(tableName, conds...)
+	x.funcs.CrossJoinsExpr(tableName, conds...)
 	return x
 }
 
 func (x *Executor[T]) CrossJoinsXExpr(tableName, alias string, conds ...Expr) *Executor[T] {
-	x.funcs.CrossJoinsX(tableName, alias, conds...)
+	x.funcs.CrossJoinsXExpr(tableName, alias, conds...)
 	return x
 }
 
 func (x *Executor[T]) InnerJoinsExpr(tableName string, conds ...Expr) *Executor[T] {
-	x.funcs.InnerJoins(tableName, conds...)
+	x.funcs.InnerJoinsExpr(tableName, conds...)
 	return x
 }
 
 func (x *Executor[T]) InnerJoinsXExpr(tableName, alias string, conds ...Expr) *Executor[T] {
-	x.funcs.InnerJoinsX(tableName, alias, conds...)
+	x.funcs.InnerJoinsXExpr(tableName, alias, conds...)
 	return x
 }
 
 func (x *Executor[T]) LeftJoinsExpr(tableName string, conds ...Expr) *Executor[T] {
-	x.funcs.LeftJoins(tableName, conds...)
+	x.funcs.LeftJoinsExpr(tableName, conds...)
 	return x
 }
 
 func (x *Executor[T]) LeftJoinsXExpr(tableName, alias string, conds ...Expr) *Executor[T] {
-	x.funcs.LeftJoinsX(tableName, alias, conds...)
+	x.funcs.LeftJoinsXExpr(tableName, alias, conds...)
 	return x
 }
 
 func (x *Executor[T]) RightJoinsExpr(tableName string, conds ...Expr) *Executor[T] {
-	x.funcs.RightJoins(tableName, conds...)
+	x.funcs.RightJoinsExpr(tableName, conds...)
 	return x
 }
 
 func (x *Executor[T]) RightJoinsXExpr(tableName, alias string, conds ...Expr) *Executor[T] {
-	x.funcs.RightJoinsX(tableName, alias, conds...)
+	x.funcs.RightJoinsXExpr(tableName, alias, conds...)
 	return x
 }
 

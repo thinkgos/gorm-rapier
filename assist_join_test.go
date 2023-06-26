@@ -22,7 +22,7 @@ func Test_Joins(t *testing.T) {
 			name: "inner join - empty conds",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					InnerJoins(xDd.X_TableName()),
+					InnerJoinsExpr(xDd.X_TableName()),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -32,7 +32,7 @@ func Test_Joins(t *testing.T) {
 			name: "cross join",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					CrossJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					CrossJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -42,7 +42,7 @@ func Test_Joins(t *testing.T) {
 			name: "inner join",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					InnerJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					InnerJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -52,7 +52,7 @@ func Test_Joins(t *testing.T) {
 			name: "left join",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					LeftJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					LeftJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -62,7 +62,7 @@ func Test_Joins(t *testing.T) {
 			name: "right join",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					RightJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					RightJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
@@ -72,8 +72,8 @@ func Test_Joins(t *testing.T) {
 			name: "inner join - multiple",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					InnerJoins(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid)),
-					InnerJoins(xDi.X_TableName(), xDi.IsPin.Eq(true)),
+					InnerJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid)),
+					InnerJoinsExpr(xDi.X_TableName(), xDi.IsPin.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},

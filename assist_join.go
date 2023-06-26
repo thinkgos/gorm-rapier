@@ -5,47 +5,47 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-// CrossJoins cross joins condition
-func CrossJoins(tableName string, conds ...Expr) Condition {
-	return CrossJoinsX(tableName, "", conds...)
+// CrossJoinsExpr cross joins condition
+func CrossJoinsExpr(tableName string, conds ...Expr) Condition {
+	return CrossJoinsXExpr(tableName, "", conds...)
 }
 
-// CrossJoinsX cross joins condition
-func CrossJoinsX(tableName, alias string, conds ...Expr) Condition {
-	return joins(clause.CrossJoin, tableName, alias, conds...)
+// CrossJoinsXExpr cross joins condition
+func CrossJoinsXExpr(tableName, alias string, conds ...Expr) Condition {
+	return joinsExpr(clause.CrossJoin, tableName, alias, conds...)
 }
 
-// InnerJoins inner joins condition
-func InnerJoins(tableName string, conds ...Expr) Condition {
-	return InnerJoinsX(tableName, "", conds...)
+// InnerJoinsExpr inner joins condition
+func InnerJoinsExpr(tableName string, conds ...Expr) Condition {
+	return InnerJoinsXExpr(tableName, "", conds...)
 }
 
-// InnerJoinsX inner joins condition
-func InnerJoinsX(tableName, alias string, conds ...Expr) Condition {
-	return joins(clause.InnerJoin, tableName, alias, conds...)
+// InnerJoinsXExpr inner joins condition
+func InnerJoinsXExpr(tableName, alias string, conds ...Expr) Condition {
+	return joinsExpr(clause.InnerJoin, tableName, alias, conds...)
 }
 
-// LeftJoins left join condition
-func LeftJoins(tableName string, conds ...Expr) Condition {
-	return LeftJoinsX(tableName, "", conds...)
+// LeftJoinsExpr left join condition
+func LeftJoinsExpr(tableName string, conds ...Expr) Condition {
+	return LeftJoinsXExpr(tableName, "", conds...)
 }
 
-// LeftJoinsX left join condition
-func LeftJoinsX(tableName, alias string, conds ...Expr) Condition {
-	return joins(clause.LeftJoin, tableName, alias, conds...)
+// LeftJoinsXExpr left join condition
+func LeftJoinsXExpr(tableName, alias string, conds ...Expr) Condition {
+	return joinsExpr(clause.LeftJoin, tableName, alias, conds...)
 }
 
-// RightJoins right join condition
-func RightJoins(tableName string, conds ...Expr) Condition {
-	return RightJoinsX(tableName, "", conds...)
+// RightJoinsExpr right join condition
+func RightJoinsExpr(tableName string, conds ...Expr) Condition {
+	return RightJoinsXExpr(tableName, "", conds...)
 }
 
-// RightJoinsX right join condition
-func RightJoinsX(tableName, alias string, conds ...Expr) Condition {
-	return joins(clause.RightJoin, tableName, alias, conds...)
+// RightJoinsXExpr right join condition
+func RightJoinsXExpr(tableName, alias string, conds ...Expr) Condition {
+	return joinsExpr(clause.RightJoin, tableName, alias, conds...)
 }
 
-func joins(joinType clause.JoinType, tableName, alias string, conds ...Expr) Condition {
+func joinsExpr(joinType clause.JoinType, tableName, alias string, conds ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(conds) == 0 {
 			return db

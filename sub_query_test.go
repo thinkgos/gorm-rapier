@@ -26,7 +26,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in sub query",
 			db: newDb().Model(xDict.X_Model()).
-				Where(xDict.Id.IntoColumns().In(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(xDict.Id.IntoColumns().In(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: []any{float64(100)},
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` IN (SELECT `dict`.`id` FROM `dict` WHERE `dict`.`score` > ?)",
@@ -34,7 +34,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in sub query - (multiple fields)",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NewColumns(xDict.Id, xDict.Name).In(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id, xDict.Name)).Where(xDict.Score.Gt(100)))).
+				Where(NewColumns(xDict.Id, xDict.Name).In(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id, xDict.Name)).Where(xDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: []any{float64(100)},
 			want:     "SELECT * FROM `dict` WHERE (`dict`.`id`,`dict`.`name`) IN (SELECT `dict`.`id`,`dict`.`name` FROM `dict` WHERE `dict`.`score` > ?)",
@@ -42,7 +42,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in sub query - (no field)",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NewColumns().In(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(NewColumns().In(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -74,7 +74,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not in sub query",
 			db: newDb().Model(xDict.X_Model()).
-				Where(xDict.Id.IntoColumns().NotIn(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(xDict.Id.IntoColumns().NotIn(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: []any{float64(100)},
 			want:     "SELECT * FROM `dict` WHERE NOT `dict`.`id` IN (SELECT `dict`.`id` FROM `dict` WHERE `dict`.`score` > ?)",
@@ -82,7 +82,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not in sub query(no fields)",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NewColumns().NotIn(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(NewColumns().NotIn(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE NOT ",
@@ -108,7 +108,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 			db: newDb().Model(xDict.X_Model()).
 				Where(
 					xDict.Id.IntoColumns().Eq(
-						newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Max())),
+						newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Max())),
 					),
 				).
 				Find(&dummy),
@@ -120,7 +120,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 			db: newDb().Model(xDict.X_Model()).
 				Where(
 					NewColumns().Eq(
-						newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Max())),
+						newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Max())),
 					),
 				).
 				Find(&dummy),
@@ -130,7 +130,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "neq",
 			db: newDb().Model(xDict.X_Model()).
-				Where(xDict.Id.IntoColumns().Neq(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Max())))).
+				Where(xDict.Id.IntoColumns().Neq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` <> (SELECT MAX(`dict`.`id`) FROM `dict`)",
@@ -138,7 +138,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "neq(no fields)",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NewColumns().Neq(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Max())))).
+				Where(NewColumns().Neq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -146,7 +146,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "gt",
 			db: newDb().Model(xDict.X_Model()).
-				Where(xDict.Id.IntoColumns().Gt(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(xDict.Id.IntoColumns().Gt(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` > (SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -154,7 +154,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "gt - (no field)",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NewColumns().Gt(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(NewColumns().Gt(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -162,7 +162,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "gte",
 			db: newDb().Model(xDict.X_Model()).
-				Where(xDict.Id.IntoColumns().Gte(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(xDict.Id.IntoColumns().Gte(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` >= (SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -170,7 +170,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "gte - (no field)",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NewColumns().Gte(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(NewColumns().Gte(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -178,7 +178,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "lt",
 			db: newDb().Model(xDict.X_Model()).
-				Where(xDict.Id.IntoColumns().Lt(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(xDict.Id.IntoColumns().Lt(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` < (SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -186,7 +186,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "lt - (no field)",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NewColumns().Lt(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(NewColumns().Lt(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -194,7 +194,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "lte",
 			db: newDb().Model(xDict.X_Model()).
-				Where(xDict.Id.IntoColumns().Lte(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(xDict.Id.IntoColumns().Lte(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` <= (SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -202,7 +202,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "lte - (no field)",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NewColumns().Lte(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(NewColumns().Lte(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -210,7 +210,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "find_in_set",
 			db: newDb().Model(xDict.X_Model()).
-				Where(xDict.Id.IntoColumns().FindInSet(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(xDict.Id.IntoColumns().FindInSet(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE FIND_IN_SET(`dict`.`id`, (SELECT MIN(`dict`.`id`) FROM `dict`))",
@@ -218,7 +218,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "find_in_set - (no field)",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NewColumns().FindInSet(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(NewColumns().FindInSet(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -226,7 +226,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "exist",
 			db: newDb().Model(xDict.X_Model()).
-				Where(Exist(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(Exist(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE EXISTS(SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -234,7 +234,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not exist",
 			db: newDb().Model(xDict.X_Model()).
-				Where(NotExist(newDb().Model(xDict.X_Model()).Scopes(Select(xDict.Id.Min())))).
+				Where(NotExist(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(xDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE NOT EXISTS(SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -278,7 +278,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "raw IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldRaw.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldRaw.Max())))).
+				Where(fieldRaw.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldRaw.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -286,7 +286,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "field IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldField.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldField.Max())))).
+				Where(fieldField.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldField.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -294,7 +294,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "int IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldInt.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldInt.Max())))).
+				Where(fieldInt.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldInt.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -302,7 +302,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "int8 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldInt8.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldInt8.Max())))).
+				Where(fieldInt8.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldInt8.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -310,7 +310,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "int16 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldInt16.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldInt16.Max())))).
+				Where(fieldInt16.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldInt16.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -318,7 +318,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "int32 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldInt32.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldInt32.Max())))).
+				Where(fieldInt32.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldInt32.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -326,7 +326,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "int64 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldInt64.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldInt64.Max())))).
+				Where(fieldInt64.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldInt64.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -334,7 +334,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "uint IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldUint.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldUint.Max())))).
+				Where(fieldUint.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldUint.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -342,7 +342,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "uint8 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldUint8.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldUint8.Max())))).
+				Where(fieldUint8.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldUint8.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -350,7 +350,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "uint16 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldUint16.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldUint16.Max())))).
+				Where(fieldUint16.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldUint16.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -358,7 +358,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "uint32 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldUint32.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldUint32.Max())))).
+				Where(fieldUint32.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldUint32.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -366,7 +366,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "uint64 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldUint64.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldUint64.Max())))).
+				Where(fieldUint64.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldUint64.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -375,7 +375,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "bool IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldBool.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldBool.Max())))).
+				Where(fieldBool.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldBool.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -383,7 +383,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "string IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldString.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldString.Max())))).
+				Where(fieldString.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldString.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -391,7 +391,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "bytes IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldBytes.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldBytes.Max())))).
+				Where(fieldBytes.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldBytes.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -399,7 +399,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "float32 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldFloat32.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldFloat32.Max())))).
+				Where(fieldFloat32.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldFloat32.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -407,7 +407,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "float64 IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldFloat64.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldFloat64.Max())))).
+				Where(fieldFloat64.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldFloat64.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -415,7 +415,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "decimal IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldDecimal.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldDecimal.Max())))).
+				Where(fieldDecimal.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldDecimal.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",
@@ -423,7 +423,7 @@ func Test_Field_IntoColumns(t *testing.T) {
 		{
 			name: "time IntoColumns",
 			db: newDb().Model(xDict.X_Model()).
-				Where(fieldTime.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(Select(fieldDecimal.Max())))).
+				Where(fieldTime.IntoColumns().Eq(newDb().Model(xDict.X_Model()).Scopes(SelectExpr(fieldDecimal.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `age` = (SELECT MAX(`age`) FROM `dict`)",

@@ -153,7 +153,7 @@ func Test_Select(t *testing.T) {
 			name: "select *",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(),
+					SelectExpr(),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -163,7 +163,7 @@ func Test_Select(t *testing.T) {
 			name: "select field",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(
+					SelectExpr(
 						xDict.Id,
 						xDict.CreatedAt.UnixTimestamp().As("created_at"),
 						xDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at1"),
@@ -177,7 +177,7 @@ func Test_Select(t *testing.T) {
 			name: "select field where",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(xDict.Id, xDict.Score),
+					SelectExpr(xDict.Id, xDict.Score),
 				).
 				Where(xDict.Name.Eq(""), xDict.IsPin.Is(true)).
 				Take(&dummy),
@@ -188,7 +188,7 @@ func Test_Select(t *testing.T) {
 			name: "select 1",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(One),
+					SelectExpr(One),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -198,7 +198,7 @@ func Test_Select(t *testing.T) {
 			name: "select COUNT(1)",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(One.Count()),
+					SelectExpr(One.Count()),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -208,7 +208,7 @@ func Test_Select(t *testing.T) {
 			name: "select COUNT(*)",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(Star.Count()),
+					SelectExpr(Star.Count()),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -218,7 +218,7 @@ func Test_Select(t *testing.T) {
 			name: "select AVG(field)",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(xDict.Score.Avg()),
+					SelectExpr(xDict.Score.Avg()),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -228,7 +228,7 @@ func Test_Select(t *testing.T) {
 			name: "update with select field",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(
+					SelectExpr(
 						xDict.Score,
 						xDict.IsPin,
 					),
@@ -260,8 +260,8 @@ func Test_Distinct(t *testing.T) {
 			name: "select * using distinct",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Distinct(),
-					Select(xDict.Id),
+					DistinctExpr(),
+					SelectExpr(xDict.Id),
 				).
 				Take(&Dict{}),
 			wantVars: nil,
@@ -270,7 +270,7 @@ func Test_Distinct(t *testing.T) {
 		{
 			name: "distinct field",
 			db: newDb().Model(xDict.X_Model()).
-				Scopes(Distinct(xDict.Id)).
+				Scopes(DistinctExpr(xDict.Id)).
 				Take(&Dict{}),
 			wantVars: nil,
 			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT 1",
@@ -296,7 +296,7 @@ func Test_Order(t *testing.T) {
 			name: "",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Order(),
+					OrderExpr(),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -306,7 +306,7 @@ func Test_Order(t *testing.T) {
 			name: "",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Order(xDict.Score),
+					OrderExpr(xDict.Score),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -316,7 +316,7 @@ func Test_Order(t *testing.T) {
 			name: "",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Order(xDict.Score.Desc()),
+					OrderExpr(xDict.Score.Desc()),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -326,7 +326,7 @@ func Test_Order(t *testing.T) {
 			name: "",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Order(xDict.Score.Desc(), xDict.Name),
+					OrderExpr(xDict.Score.Desc(), xDict.Name),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -353,7 +353,7 @@ func Test_Group(t *testing.T) {
 			name: "",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Group(),
+					GroupExpr(),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -363,7 +363,7 @@ func Test_Group(t *testing.T) {
 			name: "",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Group(xDict.Name),
+					GroupExpr(xDict.Name),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -373,8 +373,8 @@ func Test_Group(t *testing.T) {
 			name: "",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Select(xDict.Score.Sum()),
-					Group(xDict.Name),
+					SelectExpr(xDict.Score.Sum()),
+					GroupExpr(xDict.Name),
 				).
 				Having(xDict.Score.Sum().Gt(100)).
 				Take(&dummy),
@@ -402,7 +402,7 @@ func Test_Locking(t *testing.T) {
 			name: "",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Group(),
+					GroupExpr(),
 					LockingUpdate(),
 				).
 				Take(&dummy),
@@ -413,7 +413,7 @@ func Test_Locking(t *testing.T) {
 			name: "",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Group(),
+					GroupExpr(),
 					LockingShare(),
 				).
 				Take(&dummy),
