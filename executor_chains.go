@@ -1,116 +1,113 @@
 package assist
 
 import (
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
-
-func (x *Executor[T]) Clauses(conds ...clause.Expression) *Executor[T] {
-	if len(conds) > 0 {
-		x.funcs.Append(GormClauses(conds...))
-	}
-	return x
-}
 
 func (x *Executor[T]) Table(name string, args ...any) *Executor[T] {
 	x.table = GormTable(name, args...)
 	return x
 }
 
+func (x *Executor[T]) TableExpr(fromSubs ...From) *Executor[T] {
+	x.table = TableExpr(fromSubs...)
+	return x
+}
+
+func (x *Executor[T]) Clauses(conds ...clause.Expression) *Executor[T] {
+	x.funcs.Clauses(conds...)
+	return x
+}
+
 func (x *Executor[T]) Distinct(args ...any) *Executor[T] {
-	x.funcs.Append(GormDistinct(args...))
+	x.funcs.Distinct(args...)
 	return x
 }
 
 func (x *Executor[T]) Select(query any, args ...any) *Executor[T] {
-	x.funcs.Append(GormSelect(query, args...))
+	x.funcs.Select(query, args...)
 	return x
 }
 
 func (x *Executor[T]) Omit(columns ...string) *Executor[T] {
-	x.funcs.Append(GormOmit(columns...))
+	x.funcs.Omit(columns...)
 	return x
 }
 
 func (x *Executor[T]) Where(query any, args ...any) *Executor[T] {
-	x.funcs.Append(GormWhere(query, args...))
+	x.funcs.Where(query, args...)
 	return x
 }
 
 func (x *Executor[T]) Not(query any, args ...any) *Executor[T] {
-	x.funcs.Append(GormNot(query, args...))
+	x.funcs.Not(query, args...)
 	return x
 }
 
 func (x *Executor[T]) Or(query any, args ...any) *Executor[T] {
-	x.funcs.Append(GormOr(query, args...))
+	x.funcs.Or(query, args...)
 	return x
 }
 
 func (x *Executor[T]) Joins(query string, args ...any) *Executor[T] {
-	x.funcs.Append(GormJoins(query, args...))
+	x.funcs.Joins(query, args...)
 	return x
 }
 
 func (x *Executor[T]) InnerJoins(query string, args ...any) *Executor[T] {
-	x.funcs.Append(GormInnerJoins(query, args...))
+	x.funcs.InnerJoins(query, args...)
 	return x
 }
 
 func (x *Executor[T]) Group(name string) *Executor[T] {
-	x.funcs.Append(GormGroup(name))
+	x.funcs.Group(name)
 	return x
 }
 
 func (x *Executor[T]) Having(query any, args ...any) *Executor[T] {
-	x.funcs.Append(GormHaving(query, args...))
+	x.funcs.Having(query, args...)
 	return x
 }
 
 func (x *Executor[T]) Order(value any) *Executor[T] {
-	x.funcs.Append(GormOrder(value))
+	x.funcs.Order(value)
 	return x
 }
 
 func (x *Executor[T]) Limit(limit int) *Executor[T] {
-	x.funcs.Append(GormLimit(limit))
+	x.funcs.Limit(limit)
 	return x
 }
 
 func (x *Executor[T]) Offset(offset int) *Executor[T] {
-	x.funcs.Append(GormOffset(offset))
+	x.funcs.Offset(offset)
 	return x
 }
 
-func (x *Executor[T]) Scopes(funcs ...func(*gorm.DB) *gorm.DB) *Executor[T] {
-	if len(funcs) > 0 {
-		x.funcs.Append(funcs...)
+func (x *Executor[T]) Scopes(cs ...Condition) *Executor[T] {
+	if len(cs) > 0 {
+		x.funcs.Scopes(cs...)
 	}
 	return x
 }
 
 func (x *Executor[T]) Preload(query string, args ...any) *Executor[T] {
-	x.funcs.Append(GormPreload(query, args...))
+	x.funcs.Preload(query, args...)
 	return x
 }
 
 func (x *Executor[T]) Attrs(attrs ...any) *Executor[T] {
-	x.funcs.Append(GormAttrs(attrs...))
+	x.funcs.Attrs(attrs...)
 	return x
 }
 
 func (x *Executor[T]) Assign(attrs ...any) *Executor[T] {
-	x.funcs.Append(GormAssign(attrs...))
+	x.funcs.Assign(attrs...)
 	return x
 }
 
 func (x *Executor[T]) Unscoped() *Executor[T] {
-	x.funcs.Append(GormUnscoped())
-	return x
-}
-
-func (x *Executor[T]) TableExpr(fromSubs ...From) *Executor[T] {
-	x.funcs.Table(fromSubs...)
+	x.funcs.Unscoped()
 	return x
 }
 

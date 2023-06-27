@@ -8,7 +8,7 @@ import (
 
 type Executor[T any] struct {
 	db    *gorm.DB
-	table func(*gorm.DB) *gorm.DB
+	table Condition
 	funcs *Conditions
 }
 

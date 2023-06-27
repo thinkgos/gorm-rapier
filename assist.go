@@ -16,8 +16,8 @@ type From struct {
 	SubQuery *gorm.DB
 }
 
-// Table return a table produced by SubQuery.
-func Table(fromSubs ...From) Condition {
+// TableExpr return a table produced by SubQuery.
+func TableExpr(fromSubs ...From) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(fromSubs) == 0 {
 			return db

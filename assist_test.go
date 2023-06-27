@@ -89,7 +89,7 @@ func Test_Table(t *testing.T) {
 			name: "empty table",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Table(),
+					TableExpr(),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -99,7 +99,7 @@ func Test_Table(t *testing.T) {
 			name: "single table",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Table(
+					TableExpr(
 						From{
 							"a",
 							newDb().
@@ -115,7 +115,7 @@ func Test_Table(t *testing.T) {
 			name: "multi table",
 			db: newDb().Model(xDict.X_Model()).
 				Scopes(
-					Table(
+					TableExpr(
 						From{
 							"a",
 							newDb().
