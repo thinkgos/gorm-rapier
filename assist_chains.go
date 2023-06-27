@@ -20,11 +20,11 @@ func (c *Conditions) Build() []Condition {
 	return c.funcs
 }
 
-func (x *Conditions) Clauses(conds ...clause.Expression) *Conditions {
+func (c *Conditions) Clauses(conds ...clause.Expression) *Conditions {
 	if len(conds) > 0 {
-		x.Scopes(GormClauses(conds...))
+		c.Scopes(GormClauses(conds...))
 	}
-	return x
+	return c
 }
 
 // Distinct with field
@@ -37,59 +37,59 @@ func (c *Conditions) Select(query any, args ...any) *Conditions {
 	return c.Scopes(GormSelect(query, args...))
 }
 
-func (x *Conditions) Omit(columns ...string) *Conditions {
-	x.Scopes(GormOmit(columns...))
-	return x
+func (c *Conditions) Omit(columns ...string) *Conditions {
+	c.Scopes(GormOmit(columns...))
+	return c
 }
 
-func (x *Conditions) Where(query any, args ...any) *Conditions {
-	x.Scopes(GormWhere(query, args...))
-	return x
+func (c *Conditions) Where(query any, args ...any) *Conditions {
+	c.Scopes(GormWhere(query, args...))
+	return c
 }
 
-func (x *Conditions) Not(query any, args ...any) *Conditions {
-	x.Scopes(GormNot(query, args...))
-	return x
+func (c *Conditions) Not(query any, args ...any) *Conditions {
+	c.Scopes(GormNot(query, args...))
+	return c
 }
 
-func (x *Conditions) Or(query any, args ...any) *Conditions {
-	x.Scopes(GormOr(query, args...))
-	return x
+func (c *Conditions) Or(query any, args ...any) *Conditions {
+	c.Scopes(GormOr(query, args...))
+	return c
 }
 
-func (x *Conditions) Joins(query string, args ...any) *Conditions {
-	x.Scopes(GormJoins(query, args...))
-	return x
+func (c *Conditions) Joins(query string, args ...any) *Conditions {
+	c.Scopes(GormJoins(query, args...))
+	return c
 }
 
-func (x *Conditions) InnerJoins(query string, args ...any) *Conditions {
-	x.Scopes(GormInnerJoins(query, args...))
-	return x
+func (c *Conditions) InnerJoins(query string, args ...any) *Conditions {
+	c.Scopes(GormInnerJoins(query, args...))
+	return c
 }
 
-func (x *Conditions) Group(name string) *Conditions {
-	x.Scopes(GormGroup(name))
-	return x
+func (c *Conditions) Group(name string) *Conditions {
+	c.Scopes(GormGroup(name))
+	return c
 }
 
-func (x *Conditions) Having(query any, args ...any) *Conditions {
-	x.Scopes(GormHaving(query, args...))
-	return x
+func (c *Conditions) Having(query any, args ...any) *Conditions {
+	c.Scopes(GormHaving(query, args...))
+	return c
 }
 
-func (x *Conditions) Order(value any) *Conditions {
-	x.Scopes(GormOrder(value))
-	return x
+func (c *Conditions) Order(value any) *Conditions {
+	c.Scopes(GormOrder(value))
+	return c
 }
 
-func (x *Conditions) Limit(limit int) *Conditions {
-	x.Scopes(GormLimit(limit))
-	return x
+func (c *Conditions) Limit(limit int) *Conditions {
+	c.Scopes(GormLimit(limit))
+	return c
 }
 
-func (x *Conditions) Offset(offset int) *Conditions {
-	x.Scopes(GormOffset(offset))
-	return x
+func (c *Conditions) Offset(offset int) *Conditions {
+	c.Scopes(GormOffset(offset))
+	return c
 }
 
 // Scopes more condition
@@ -98,24 +98,24 @@ func (c *Conditions) Scopes(cs ...Condition) *Conditions {
 	return c
 }
 
-func (x *Conditions) Preload(query string, args ...any) *Conditions {
-	x.Scopes(GormPreload(query, args...))
-	return x
+func (c *Conditions) Preload(query string, args ...any) *Conditions {
+	c.Scopes(GormPreload(query, args...))
+	return c
 }
 
-func (x *Conditions) Attrs(attrs ...any) *Conditions {
-	x.Scopes(GormAttrs(attrs...))
-	return x
+func (c *Conditions) Attrs(attrs ...any) *Conditions {
+	c.Scopes(GormAttrs(attrs...))
+	return c
 }
 
-func (x *Conditions) Assign(attrs ...any) *Conditions {
-	x.Scopes(GormAssign(attrs...))
-	return x
+func (c *Conditions) Assign(attrs ...any) *Conditions {
+	c.Scopes(GormAssign(attrs...))
+	return c
 }
 
-func (x *Conditions) Unscoped() *Conditions {
-	x.Scopes(GormUnscoped())
-	return x
+func (c *Conditions) Unscoped() *Conditions {
+	c.Scopes(GormUnscoped())
+	return c
 }
 
 // DistinctExpr with field
@@ -136,16 +136,6 @@ func (c *Conditions) OrderExpr(columns ...Expr) *Conditions {
 // GroupExpr with field
 func (c *Conditions) GroupExpr(columns ...Expr) *Conditions {
 	return c.Scopes(GroupExpr(columns...))
-}
-
-// LockingUpdate specify the lock strength to UPDATE
-func (c *Conditions) LockingUpdate() *Conditions {
-	return c.Scopes(LockingUpdate())
-}
-
-// LockingShare specify the lock strength to SHARE
-func (c *Conditions) LockingShare() *Conditions {
-	return c.Scopes(LockingShare())
 }
 
 // CrossJoinsExpr cross joins condition
@@ -186,6 +176,16 @@ func (c *Conditions) RightJoinsExpr(tableName string, conds ...Expr) *Conditions
 // RightJoinsXExpr right join condition
 func (c *Conditions) RightJoinsXExpr(tableName, alias string, conds ...Expr) *Conditions {
 	return c.Scopes(RightJoinsXExpr(tableName, alias, conds...))
+}
+
+// LockingUpdate specify the lock strength to UPDATE
+func (c *Conditions) LockingUpdate() *Conditions {
+	return c.Scopes(LockingUpdate())
+}
+
+// LockingShare specify the lock strength to SHARE
+func (c *Conditions) LockingShare() *Conditions {
+	return c.Scopes(LockingShare())
 }
 
 // Pagination 分页器

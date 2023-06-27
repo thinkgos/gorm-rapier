@@ -102,15 +102,15 @@ func (x *Executor[T]) FindInBatches(dest any, batchSize int, fc func(tx *gorm.DB
 }
 
 func (x *Executor[T]) Create(value any) error {
-	return x.db.Scopes(x.funcs.Build()...).Create(value).Error
+	return x.db.Scopes(x.conditions.Build()...).Create(value).Error
 }
 
 func (x *Executor[T]) CreateInBatches(value any, batchSize int) error {
-	return x.db.Scopes(x.funcs.Build()...).CreateInBatches(value, batchSize).Error
+	return x.db.Scopes(x.conditions.Build()...).CreateInBatches(value, batchSize).Error
 }
 
 func (x *Executor[T]) Save(value any) error {
-	return x.db.Scopes(x.funcs.Build()...).Save(value).Error
+	return x.db.Scopes(x.conditions.Build()...).Save(value).Error
 }
 
 func (x *Executor[T]) Updates(value *T) (rowsAffected int64, err error) {
