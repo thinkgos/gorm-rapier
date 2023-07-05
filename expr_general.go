@@ -6,7 +6,8 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func (e expr) ifNull(value any) expr {
+// IFNULL(expr,?)
+func (e expr) innerIfNull(value any) expr {
 	e.e = clause.Expr{
 		SQL:  "IFNULL(?,?)",
 		Vars: []any{e.RawExpr(), value},
@@ -14,17 +15,36 @@ func (e expr) ifNull(value any) expr {
 	return e
 }
 
-func (e expr) inAny(value any) expr {
-	e.e = intoInExpr(e.RawExpr(), value)
+// expr IN(?,?...)
+func (e expr) innerIn(values []any) expr {
+	e.e = clause.IN{Column: e.RawExpr(), Values: values}
 	return e
 }
 
-func (e expr) notInAny(value any) expr {
-	e.e = clause.Not(intoInExpr(e.RawExpr(), value))
+// expr IN(?,?...)
+func (e expr) innerInAny(value any) expr {
+	e.e = intoClauseIN(e.RawExpr(), value)
 	return e
 }
 
-func (e expr) regexp(value any) expr {
+// expr IN(?,?...)
+func (e expr) innerNotIn(values []any) expr {
+	e.e = clause.NotConditions{
+		Exprs: []clause.Expression{
+			clause.IN{Column: e.RawExpr(), Values: values},
+		},
+	}
+	return e
+}
+
+// expr IN(?,?...)
+func (e expr) innerNotInAny(value any) expr {
+	e.e = clause.Not(intoClauseIN(e.RawExpr(), value))
+	return e
+}
+
+// expr REGEXP ?
+func (e expr) innerRegexp(value any) expr {
 	e.e = clause.Expr{
 		SQL:  "? REGEXP ?",
 		Vars: []any{e.RawExpr(), value},
@@ -32,31 +52,43 @@ func (e expr) regexp(value any) expr {
 	return e
 }
 
-func (e expr) notRegexp(value any) expr {
-	e.e = clause.Not(clause.Expr{
-		SQL:  "? REGEXP ?",
-		Vars: []any{e.RawExpr(), value},
-	})
-	return e
-}
-
-func (e expr) between(values []any) expr {
-	e.e = clause.Expr{
-		SQL:  "? BETWEEN ? AND ?",
-		Vars: append([]any{e.RawExpr()}, values...),
+// NOT(expr REGEXP ?)
+func (e expr) innerNotRegexp(value any) expr {
+	e.e = clause.NotConditions{
+		Exprs: []clause.Expression{
+			clause.Expr{
+				SQL:  "? REGEXP ?",
+				Vars: []any{e.RawExpr(), value},
+			},
+		},
 	}
 	return e
 }
 
-func (e expr) notBetween(values []any) expr {
-	e.e = clause.Not(clause.Expr{
+// expr BETWEEN ? AND ?
+func (e expr) innerBetween(left, right any) expr {
+	e.e = clause.Expr{
 		SQL:  "? BETWEEN ? AND ?",
-		Vars: append([]any{e.RawExpr()}, values...),
-	})
+		Vars: []any{e.RawExpr(), left, right},
+	}
 	return e
 }
 
-func (e expr) sum() expr {
+// NOT (expr BETWEEN ? AND ?)
+func (e expr) innerNotBetween(left, right any) expr {
+	e.e = clause.NotConditions{
+		Exprs: []clause.Expression{
+			clause.Expr{
+				SQL:  "? BETWEEN ? AND ?",
+				Vars: []any{e.RawExpr(), left, right},
+			},
+		},
+	}
+	return e
+}
+
+// SUM(expr)
+func (e expr) innerSum() expr {
 	e.e = clause.Expr{
 		SQL:  "SUM(?)",
 		Vars: []any{e.RawExpr()},
@@ -64,7 +96,10 @@ func (e expr) sum() expr {
 	return e
 }
 
-func (e expr) add(value any) expr {
+// value:
+// time.Duration - DATE_ADD(expr, INTERVAL ? MICROSECOND)
+// other = expr+?
+func (e expr) innerAdd(value any) expr {
 	switch v := value.(type) {
 	case time.Duration:
 		e.e = clause.Expr{
@@ -80,7 +115,10 @@ func (e expr) add(value any) expr {
 	return e
 }
 
-func (e expr) sub(value any) expr {
+// value:
+// time.Duration - DATE_SUB(expr, INTERVAL ? MICROSECOND)
+// other = expr-?
+func (e expr) innerSub(value any) expr {
 	switch v := value.(type) {
 	case time.Duration:
 		e.e = clause.Expr{
@@ -96,7 +134,8 @@ func (e expr) sub(value any) expr {
 	return e
 }
 
-func (e expr) mul(value any) expr {
+// col*? or (expr)*?
+func (e expr) innerMul(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "?*?",
@@ -111,7 +150,8 @@ func (e expr) mul(value any) expr {
 	return e
 }
 
-func (e expr) div(value any) expr {
+// col/? or (expr)/?
+func (e expr) innerDiv(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "?/?",
@@ -126,7 +166,8 @@ func (e expr) div(value any) expr {
 	return e
 }
 
-func (e expr) mod(value any) expr {
+// col%? or (expr)%?
+func (e expr) innerMod(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "?%?",
@@ -141,7 +182,8 @@ func (e expr) mod(value any) expr {
 	return e
 }
 
-func (e expr) floorDiv(value any) expr {
+// col DIV ? or (expr) DIV ?
+func (e expr) innerFloorDiv(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "? DIV ?",
@@ -156,7 +198,8 @@ func (e expr) floorDiv(value any) expr {
 	return e
 }
 
-func (e expr) floor() expr {
+// FLOOR(expr)
+func (e expr) innerFloor() expr {
 	e.e = clause.Expr{
 		SQL:  "FLOOR(?)",
 		Vars: []any{e.RawExpr()},
@@ -164,7 +207,8 @@ func (e expr) floor() expr {
 	return e
 }
 
-func (e expr) round(decimals int) expr {
+// ROUND(expr, ?)
+func (e expr) innerRound(decimals int) expr {
 	e.e = clause.Expr{
 		SQL:  "ROUND(?, ?)",
 		Vars: []any{e.RawExpr(), decimals},
@@ -172,8 +216,8 @@ func (e expr) round(decimals int) expr {
 	return e
 }
 
-// findInSet equal to FIND_IN_SET(expr, targetList)
-func (e expr) findInSet(targetList string) expr {
+// innerFindInSet equal to FIND_IN_SET(expr, targetList)
+func (e expr) innerFindInSet(targetList string) expr {
 	e.e = clause.Expr{
 		SQL:  "FIND_IN_SET(?, ?)",
 		Vars: []any{e.RawExpr(), targetList},
@@ -181,8 +225,8 @@ func (e expr) findInSet(targetList string) expr {
 	return e
 }
 
-// findInSetWith equal to FIND_IN_SET(target, expr)
-func (e expr) findInSetWith(target string) expr {
+// innerFindInSetWith equal to FIND_IN_SET(target, expr)
+func (e expr) innerFindInSetWith(target string) expr {
 	e.e = clause.Expr{
 		SQL:  "FIND_IN_SET(?, ?)",
 		Vars: []any{target, e.RawExpr()},
@@ -190,7 +234,8 @@ func (e expr) findInSetWith(target string) expr {
 	return e
 }
 
-func (e expr) rightShift(value any) expr {
+// col>>? or (expr)>>?
+func (e expr) innerRightShift(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "?>>?",
@@ -205,7 +250,8 @@ func (e expr) rightShift(value any) expr {
 	return e
 }
 
-func (e expr) leftShift(value any) expr {
+// col<<? or (expr)<<?
+func (e expr) innerLeftShift(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "?<<?",
@@ -220,7 +266,8 @@ func (e expr) leftShift(value any) expr {
 	return e
 }
 
-func (e expr) bitXor(value any) expr {
+// col^? or (expr)^?
+func (e expr) innerBitXor(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "?^?",
@@ -235,7 +282,8 @@ func (e expr) bitXor(value any) expr {
 	return e
 }
 
-func (e expr) bitAnd(value any) expr {
+// col&? or (expr)&?
+func (e expr) innerBitAnd(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "?&?",
@@ -250,7 +298,8 @@ func (e expr) bitAnd(value any) expr {
 	return e
 }
 
-func (e expr) bitOr(value any) expr {
+// col|? or (expr)|?
+func (e expr) innerBitOr(value any) expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "?|?",
@@ -265,7 +314,8 @@ func (e expr) bitOr(value any) expr {
 	return e
 }
 
-func (e expr) bitFlip() expr {
+// ~col or ~(expr)
+func (e expr) innerBitFlip() expr {
 	if e.e == nil {
 		e.e = clause.Expr{
 			SQL:  "~?",
@@ -280,7 +330,8 @@ func (e expr) bitFlip() expr {
 	return e
 }
 
-func (e expr) and(value any) expr {
+// expr AND ?
+func (e expr) innerAnd(value any) expr {
 	e.e = clause.Expr{
 		SQL:  "? AND ?",
 		Vars: []any{e.RawExpr(), value},
@@ -288,7 +339,8 @@ func (e expr) and(value any) expr {
 	return e
 }
 
-func (e expr) or(value any) expr {
+// expr OR ?
+func (e expr) innerOr(value any) expr {
 	e.e = clause.Expr{
 		SQL:  "? OR ?",
 		Vars: []any{e.RawExpr(), value},
@@ -296,7 +348,8 @@ func (e expr) or(value any) expr {
 	return e
 }
 
-func (e expr) xor(value any) expr {
+// expr XOR ?
+func (e expr) innerXor(value any) expr {
 	e.e = clause.Expr{
 		SQL:  "? XOR ?",
 		Vars: []any{e.RawExpr(), value},

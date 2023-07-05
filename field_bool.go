@@ -16,7 +16,7 @@ func NewBool(table, column string, opts ...Option) Bool {
 
 // IfNull use IFNULL(expr,?)
 func (field Bool) IfNull(value bool) Expr {
-	return field.ifNull(value)
+	return field.innerIfNull(value)
 }
 
 // Eq equal to, use expr = ?
@@ -39,7 +39,7 @@ func (field Bool) Neq(value bool) Expr {
 
 // FindInSet use FIND_IN_SET(expr, ?)
 func (field Bool) FindInSet(targetList string) Expr {
-	return field.findInSet(targetList)
+	return field.innerFindInSet(targetList)
 }
 
 // Is use expr = ?
@@ -58,32 +58,32 @@ func (field Bool) Not() Expr {
 
 // Xor use expr XOR ?
 func (field Bool) Xor(value bool) Expr {
-	return Bool{field.xor(value)}
+	return Bool{field.innerXor(value)}
 }
 
 // And use expr AND ?
 func (field Bool) And(value bool) Expr {
-	return Bool{field.and(value)}
+	return Bool{field.innerAnd(value)}
 }
 
 // Or use expr OR ?
 func (field Bool) Or(value bool) Expr {
-	return Bool{field.or(value)}
+	return Bool{field.innerOr(value)}
 }
 
 // BitXor use expr expr^?
 func (field Bool) BitXor(value bool) Expr {
-	return Bool{field.bitXor(value)}
+	return Bool{field.innerBitXor(value)}
 }
 
 // BitAnd use expr expr&?
 func (field Bool) BitAnd(value bool) Expr {
-	return Bool{field.bitAnd(value)}
+	return Bool{field.innerBitAnd(value)}
 }
 
 // BitOr use expr expr|?
 func (field Bool) BitOr(value bool) Expr {
-	return Bool{field.bitOr(value)}
+	return Bool{field.innerBitOr(value)}
 }
 
 // IntoColumns columns array with sub method

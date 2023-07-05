@@ -38,7 +38,7 @@ func NewRaw(sql string, vars ...any) Raw {
 
 // IfNull use IFNULL(expr,?)
 func (field Field) IfNull(value any) Expr {
-	return field.ifNull(value)
+	return field.innerIfNull(value)
 }
 
 // Eq equal to, use expr = ?
@@ -97,30 +97,22 @@ func (field Field) Lte(value any) Expr {
 
 // Between use expr BETWEEN ? AND ?
 func (field Field) Between(left any, right any) Expr {
-	return field.between([]any{left, right})
+	return field.innerBetween(left, right)
 }
 
 // NotBetween use NOT (expr BETWEEN ? AND ?)
 func (field Field) NotBetween(left any, right any) Expr {
-	return field.notBetween([]any{left, right})
+	return field.innerNotBetween(left, right)
 }
 
 // In use expr IN (?)
 func (field Field) In(values ...any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerIn(intoAnySlice(values))
 }
 
 // NotIn use expr NOT IN (?)
 func (field Field) NotIn(values ...any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotIn(intoAnySlice(values))
 }
 
 // Like use expr LIKE ?
@@ -143,7 +135,7 @@ func (field Field) NotLike(value any) Expr {
 
 // Sum use SUM(expr)
 func (field Field) Sum() Field {
-	return Field{field.sum()}
+	return Field{field.innerSum()}
 }
 
 // Add use
@@ -152,7 +144,7 @@ func (field Field) Sum() Field {
 //	time.Duration: use DATE_ADD(expr, INTERVAL ? MICROSECOND)
 //	other: use expr+?
 func (field Field) Add(value any) Field {
-	return Field{field.add(value)}
+	return Field{field.innerAdd(value)}
 }
 
 // Sub use below
@@ -161,87 +153,87 @@ func (field Field) Add(value any) Field {
 //	time.Duration: use DATE_SUB(expr, INTERVAL ? MICROSECOND)
 //	other: use expr-?
 func (field Field) Sub(value any) Field {
-	return Field{field.sub(value)}
+	return Field{field.innerSub(value)}
 }
 
 // Mul use expr*?
 func (field Field) Mul(value any) Field {
-	return Field{field.mul(value)}
+	return Field{field.innerMul(value)}
 }
 
 // Div use expr/?
 func (field Field) Div(value any) Field {
-	return Field{field.div(value)}
+	return Field{field.innerDiv(value)}
 }
 
 // Mod use expr%?
 func (field Field) Mod(value any) Field {
-	return Field{field.mod(value)}
+	return Field{field.innerMod(value)}
 }
 
 // FloorDiv use expr DIV ?
 func (field Field) FloorDiv(value any) Field {
-	return Field{field.floorDiv(value)}
+	return Field{field.innerFloorDiv(value)}
 }
 
 // Floor se FLOOR(expr)
 func (field Field) Floor() Field {
-	return Field{field.floor()}
+	return Field{field.innerFloor()}
 }
 
 // Round use ROUND(expr, ?)
 func (field Field) Round(decimals int) Field {
-	return Field{field.round(decimals)}
+	return Field{field.innerRound(decimals)}
 }
 
 // RightShift use expr>>?
 func (field Field) RightShift(value any) Field {
-	return Field{field.rightShift(value)}
+	return Field{field.innerRightShift(value)}
 }
 
 // LeftShift use expr<<?
 func (field Field) LeftShift(value any) Field {
-	return Field{field.leftShift(value)}
+	return Field{field.innerLeftShift(value)}
 }
 
 // BitXor use expr expr^?
 func (field Field) BitXor(value any) Field {
-	return Field{field.bitXor(value)}
+	return Field{field.innerBitXor(value)}
 }
 
 // BitAnd use expr expr&?
 func (field Field) BitAnd(value any) Field {
-	return Field{field.bitAnd(value)}
+	return Field{field.innerBitAnd(value)}
 }
 
 // BitOr use expr expr|?
 func (field Field) BitOr(value any) Field {
-	return Field{field.bitOr(value)}
+	return Field{field.innerBitOr(value)}
 }
 
 // BitFlip use expr ~expr
 func (field Field) BitFlip() Field {
-	return Field{field.bitFlip()}
+	return Field{field.innerBitFlip()}
 }
 
 // Regexp use expr REGEXP ?
 func (field Field) Regexp(value any) Expr {
-	return field.regexp(value)
+	return field.innerRegexp(value)
 }
 
 // NotRegxp use NOT expr REGEXP ?
 func (field Field) NotRegxp(value string) Expr {
-	return field.notRegexp(value)
+	return field.innerNotRegexp(value)
 }
 
 // FindInSet use FIND_IN_SET(expr, ?)
 func (field Field) FindInSet(targetList string) Expr {
-	return field.findInSet(targetList)
+	return field.innerFindInSet(targetList)
 }
 
 // FindInSetWith use FIND_IN_SET(?, expr)
 func (field Field) FindInSetWith(target string) Expr {
-	return field.findInSetWith(target)
+	return field.innerFindInSetWith(target)
 }
 
 // SubstringIndex use SUBSTRING_INDEX(expr,?,?)

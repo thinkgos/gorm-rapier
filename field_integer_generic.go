@@ -21,7 +21,7 @@ func NewInteger[T constraints.Integer](table, column string, opts ...Option) Int
 
 // IfNull use IFNULL(expr,?)
 func (field Integer[T]) IfNull(value T) Expr {
-	return field.ifNull(value)
+	return field.innerIfNull(value)
 }
 
 // Eq equal to, use expr = ?
@@ -80,42 +80,34 @@ func (field Integer[T]) Lte(value T) Expr {
 
 // Between use expr BETWEEN ? AND ?
 func (field Integer[T]) Between(left T, right T) Expr {
-	return field.between([]any{left, right})
+	return field.innerBetween(left, right)
 }
 
 // NotBetween use NOT (expr BETWEEN ? AND ?)
 func (field Integer[T]) NotBetween(left T, right T) Expr {
-	return field.notBetween([]any{left, right})
+	return field.innerNotBetween(left, right)
 }
 
 // In use expr IN (?)
 func (field Integer[T]) In(values ...T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerIn(intoAnySlice(values))
 }
 
 // InAny use expr IN (?)
 // value must be a array/slice
 func (field Integer[T]) InAny(value any) Expr {
-	return field.inAny(value)
+	return field.innerInAny(value)
 }
 
 // NotIn use expr NOT IN (?)
 func (field Integer[T]) NotIn(values ...T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotIn(intoAnySlice(values))
 }
 
 // NotInAny use expr NOT IN (?)
 // value must be a array/slice
 func (field Integer[T]) NotInAny(value any) Expr {
-	return field.notInAny(value)
+	return field.innerNotInAny(value)
 }
 
 // Like use expr LIKE ?
@@ -138,77 +130,77 @@ func (field Integer[T]) NotLike(value T) Expr {
 
 // FindInSet equal to FIND_IN_SET(expr, ?)
 func (field Integer[T]) FindInSet(targetList string) Expr {
-	return field.findInSet(targetList)
+	return field.innerFindInSet(targetList)
 }
 
 // Sum use SUM(expr)
 func (field Integer[T]) Sum() Integer[T] {
-	return Integer[T]{field.sum()}
+	return Integer[T]{field.innerSum()}
 }
 
 // Add use expr+?
 func (field Integer[T]) Add(value T) Integer[T] {
-	return Integer[T]{field.add(value)}
+	return Integer[T]{field.innerAdd(value)}
 }
 
 // Add use expr-?
 func (field Integer[T]) Sub(value T) Integer[T] {
-	return Integer[T]{field.sub(value)}
+	return Integer[T]{field.innerSub(value)}
 }
 
 // Mul use expr*?
 func (field Integer[T]) Mul(value T) Integer[T] {
-	return Integer[T]{field.mul(value)}
+	return Integer[T]{field.innerMul(value)}
 }
 
 // Div use expr/?
 func (field Integer[T]) Div(value T) Integer[T] {
-	return Integer[T]{field.div(value)}
+	return Integer[T]{field.innerDiv(value)}
 }
 
 // Mod use expr%?
 func (field Integer[T]) Mod(value T) Integer[T] {
-	return Integer[T]{field.mod(value)}
+	return Integer[T]{field.innerMod(value)}
 }
 
 // FloorDiv use expr DIV ?
 func (field Integer[T]) FloorDiv(value T) Integer[T] {
-	return Integer[T]{field.floorDiv(value)}
+	return Integer[T]{field.innerFloorDiv(value)}
 }
 
 // Round use ROUND(expr, ?)
 func (field Integer[T]) Round(value int) Integer[T] {
-	return Integer[T]{field.round(value)}
+	return Integer[T]{field.innerRound(value)}
 }
 
 // RightShift use expr>>?
 func (field Integer[T]) RightShift(value T) Integer[T] {
-	return Integer[T]{field.rightShift(value)}
+	return Integer[T]{field.innerRightShift(value)}
 }
 
 // LeftShift use expr<<?
 func (field Integer[T]) LeftShift(value T) Integer[T] {
-	return Integer[T]{field.leftShift(value)}
+	return Integer[T]{field.innerLeftShift(value)}
 }
 
 // BitXor use expr expr^?
 func (field Integer[T]) BitXor(value T) Integer[T] {
-	return Integer[T]{field.bitXor(value)}
+	return Integer[T]{field.innerBitXor(value)}
 }
 
 // BitAnd use expr expr&?
 func (field Integer[T]) BitAnd(value T) Integer[T] {
-	return Integer[T]{field.bitAnd(value)}
+	return Integer[T]{field.innerBitAnd(value)}
 }
 
 // BitOr use expr expr|?
 func (field Integer[T]) BitOr(value T) Integer[T] {
-	return Integer[T]{field.bitOr(value)}
+	return Integer[T]{field.innerBitOr(value)}
 }
 
 // BitFlip use expr ~expr
 func (field Integer[T]) BitFlip() Integer[T] {
-	return Integer[T]{field.bitFlip()}
+	return Integer[T]{field.innerBitFlip()}
 }
 
 // FromUnixTime use FromUnixTime(unix_timestamp[, format])

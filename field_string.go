@@ -20,7 +20,7 @@ func NewString(table, column string, opts ...Option) String {
 
 // IfNull use IFNULL(expr,?)
 func (field String) IfNull(value string) Expr {
-	return field.ifNull(value)
+	return field.innerIfNull(value)
 }
 
 // Eq equal to, use expr = ?
@@ -79,42 +79,34 @@ func (field String) Lte(value string) Expr {
 
 // Between use expr BETWEEN ? AND ?
 func (field String) Between(left, right string) Expr {
-	return field.between([]any{left, right})
+	return field.innerBetween(left, right)
 }
 
 // NotBetween use NOT (expr BETWEEN ? AND ?)
 func (field String) NotBetween(left, right string) Expr {
-	return field.notBetween([]any{left, right})
+	return field.innerNotBetween(left, right)
 }
 
 // In use expr IN (?)
 func (field String) In(values ...string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerIn(intoAnySlice(values))
 }
 
 // InAny use expr IN (?)
 // value must be a array/slice
 func (field String) InAny(value any) Expr {
-	return field.inAny(value)
+	return field.innerInAny(value)
 }
 
 // NotIn use expr NOT IN (?)
 func (field String) NotIn(values ...string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotIn(intoAnySlice(values))
 }
 
 // NotInAny use expr NOT IN (?)
 // value must be a array/slice
 func (field String) NotInAny(value any) Expr {
-	return field.notInAny(value)
+	return field.innerNotInAny(value)
 }
 
 // Like use expr LIKE ?
@@ -157,22 +149,22 @@ func (field String) NotLike(value string) Expr {
 
 // Regexp use expr REGEXP ?
 func (field String) Regexp(value string) Expr {
-	return field.regexp(value)
+	return field.innerRegexp(value)
 }
 
 // NotRegxp use NOT expr REGEXP ?
 func (field String) NotRegxp(value string) Expr {
-	return field.notRegexp(value)
+	return field.innerNotRegexp(value)
 }
 
 // FindInSet equal to FIND_IN_SET(expr, ?)
 func (field String) FindInSet(targetList string) Expr {
-	return field.findInSet(targetList)
+	return field.innerFindInSet(targetList)
 }
 
 // FindInSetWith equal to FIND_IN_SET(?, expr)
 func (field String) FindInSetWith(target string) Expr {
-	return field.findInSetWith(target)
+	return field.innerFindInSetWith(target)
 }
 
 // SubstringIndex use SUBSTRING_INDEX(expr,?,?)

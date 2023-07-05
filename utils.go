@@ -53,7 +53,7 @@ func IntoExpression(conds ...Expr) []clause.Expression {
 	return exprs
 }
 
-func intoAnySlice[T any](values ...T) []any {
+func intoAnySlice[T any](values []T) []any {
 	slices := make([]any, len(values))
 	for i, v := range values {
 		slices[i] = v
@@ -77,8 +77,8 @@ func IntoIntegerSlice[T constraints.Integer, R constraints.Integer](values []T) 
 	return slices
 }
 
-// clause.IN{} expression
-func intoInExpr(column, value any) clause.Expression {
+// intoClauseIN clause.IN{} OR EmptyExpr() expression
+func intoClauseIN(column, value any) clause.Expression {
 	reflectValue := reflect.Indirect(reflect.ValueOf(value))
 	for reflectValue.Kind() == reflect.Ptr {
 		reflectValue = reflectValue.Elem()

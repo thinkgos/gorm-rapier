@@ -20,7 +20,7 @@ func NewBytes(table, column string, opts ...Option) Bytes {
 
 // IfNull use IFNULL(expr,?)
 func (field Bytes) IfNull(value []byte) Expr {
-	return field.ifNull(value)
+	return field.innerIfNull(value)
 }
 
 // Eq equal to, use expr = ?
@@ -79,42 +79,34 @@ func (field Bytes) Lte(value []byte) Expr {
 
 // Between use expr BETWEEN ? AND ?
 func (field Bytes) Between(left []byte, right []byte) Expr {
-	return field.between([]any{left, right})
+	return field.innerBetween(left, right)
 }
 
 // NotBetween use NOT (expr BETWEEN ? AND ?)
 func (field Bytes) NotBetween(left []byte, right []byte) Expr {
-	return field.notBetween([]any{left, right})
+	return field.innerNotBetween(left, right)
 }
 
 // In use expr IN (?)
 func (field Bytes) In(values ...[]byte) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerIn(intoAnySlice(values))
 }
 
 // InAny use expr IN (?)
 // value must be a array/slice
 func (field Bytes) InAny(value any) Expr {
-	return field.inAny(value)
+	return field.innerInAny(value)
 }
 
 // NotIn use expr NOT IN (?)
 func (field Bytes) NotIn(values ...[]byte) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotIn(intoAnySlice(values))
 }
 
 // NotInAny use expr NOT IN (?)
 // value must be a array/slice
 func (field Bytes) NotInAny(value any) Expr {
-	return field.notInAny(value)
+	return field.innerNotInAny(value)
 }
 
 // Like use expr LIKE ?
@@ -157,22 +149,22 @@ func (field Bytes) NotLike(value string) Expr {
 
 // Regexp use expr REGEXP ?
 func (field Bytes) Regexp(value string) Expr {
-	return field.regexp(value)
+	return field.innerRegexp(value)
 }
 
 // NotRegxp use NOT expr REGEXP ?
 func (field Bytes) NotRegxp(value string) Expr {
-	return field.notRegexp(value)
+	return field.innerNotRegexp(value)
 }
 
 // FindInSet FIND_IN_SET(expr, ?)
 func (field Bytes) FindInSet(targetList string) Expr {
-	return field.findInSet(targetList)
+	return field.innerFindInSet(targetList)
 }
 
 // FindInSetWith FIND_IN_SET(?, expr)
 func (field Bytes) FindInSetWith(target string) Expr {
-	return field.findInSetWith(target)
+	return field.innerFindInSetWith(target)
 }
 
 // SubstringIndex use SUBSTRING_INDEX(expr,?,?)

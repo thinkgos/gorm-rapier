@@ -19,7 +19,7 @@ func NewFloat[T constraints.Float | ~string](table, column string, opts ...Optio
 
 // IfNull use IFNULL(expr,?)
 func (field Float[T]) IfNull(value T) Expr {
-	return field.ifNull(value)
+	return field.innerIfNull(value)
 }
 
 // Eq equal to, use expr = ?
@@ -78,42 +78,34 @@ func (field Float[T]) Lte(value T) Expr {
 
 // Between use expr BETWEEN ? AND ?
 func (field Float[T]) Between(left T, right T) Expr {
-	return field.between([]any{left, right})
+	return field.innerBetween(left, right)
 }
 
 // NotBetween use NOT (expr BETWEEN ? AND ?).
 func (field Float[T]) NotBetween(left T, right T) Expr {
-	return field.notBetween([]any{left, right})
+	return field.innerNotBetween(left, right)
 }
 
 // In use expr IN (?)
 func (field Float[T]) In(values ...T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerIn(intoAnySlice(values))
 }
 
 // InAny use expr IN (?)
 // value must be a array/slice
 func (field Float[T]) InAny(value any) Expr {
-	return field.inAny(value)
+	return field.innerInAny(value)
 }
 
 // NotIn use expr NOT IN (?)
 func (field Float[T]) NotIn(values ...T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotIn(intoAnySlice(values))
 }
 
 // NotInAny use expr NOT IN (?)
 // value must be a array/slice
 func (field Float[T]) NotInAny(value any) Expr {
-	return field.notInAny(value)
+	return field.innerNotInAny(value)
 }
 
 // Like use expr LIKE ?
@@ -136,47 +128,47 @@ func (field Float[T]) NotLike(value T) Expr {
 
 // FindInSet use FIND_IN_SET(expr, ?)
 func (field Float[T]) FindInSet(targetList string) Expr {
-	return field.findInSet(targetList)
+	return field.innerFindInSet(targetList)
 }
 
 // Sum use SUM(expr)
 func (field Float[T]) Sum() Float[T] {
-	return Float[T]{field.sum()}
+	return Float[T]{field.innerSum()}
 }
 
 // Add use expr+?
 func (field Float[T]) Add(value T) Float[T] {
-	return Float[T]{field.add(value)}
+	return Float[T]{field.innerAdd(value)}
 }
 
 // Sub use expr-?
 func (field Float[T]) Sub(value T) Float[T] {
-	return Float[T]{field.sub(value)}
+	return Float[T]{field.innerSub(value)}
 }
 
 // Mul use expr*?
 func (field Float[T]) Mul(value T) Float[T] {
-	return Float[T]{field.mul(value)}
+	return Float[T]{field.innerMul(value)}
 }
 
 // Div use expr/?
 func (field Float[T]) Div(value T) Float[T] {
-	return Float[T]{field.div(value)}
+	return Float[T]{field.innerDiv(value)}
 }
 
 // FloorDiv use expr DIV ?
 func (field Float[T]) FloorDiv(value T) Int {
-	return Int{field.floorDiv(value)}
+	return Int{field.innerFloorDiv(value)}
 }
 
 // Floor se FLOOR(expr)
 func (field Float[T]) Floor() Int {
-	return Int{field.floor()}
+	return Int{field.innerFloor()}
 }
 
 // Round use ROUND(expr, ?)
 func (field Float[T]) Round(decimals int) Float[T] {
-	return Float[T]{field.round(decimals)}
+	return Float[T]{field.innerRound(decimals)}
 }
 
 // AddCol use expr1 + expr2

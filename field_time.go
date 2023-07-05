@@ -16,7 +16,7 @@ func NewTime(table, column string, opts ...Option) Time {
 
 // IfNull use IFNULL(expr,?)
 func (field Time) IfNull(value time.Time) Expr {
-	return field.ifNull(value)
+	return field.innerIfNull(value)
 }
 
 // Eq equal to, use expr = ?
@@ -75,62 +75,54 @@ func (field Time) Lte(value time.Time) Expr {
 
 // Between use expr BETWEEN ? AND ?
 func (field Time) Between(left time.Time, right time.Time) Expr {
-	return field.between([]any{left, right})
+	return field.innerBetween(left, right)
 }
 
 // NotBetween use NOT (expr BETWEEN ? AND ?)
 func (field Time) NotBetween(left time.Time, right time.Time) Expr {
-	return field.notBetween([]any{left, right})
+	return field.innerNotBetween(left, right)
 }
 
 // In use expr IN (?)
 func (field Time) In(values ...time.Time) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerIn(intoAnySlice(values))
 }
 
 // InAny use expr IN (?)
 // value must be a array/slice
 func (field Time) InAny(value any) Expr {
-	return field.inAny(value)
+	return field.innerInAny(value)
 }
 
 // NotIn use expr NOT IN (?)
 func (field Time) NotIn(values ...time.Time) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.IN{Column: field.RawExpr(), Values: intoAnySlice(values...)}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotIn(intoAnySlice(values))
 }
 
 // NotInAny use expr NOT IN (?)
 // value must be a array/slice
 func (field Time) NotInAny(value any) Expr {
-	return field.notInAny(value)
+	return field.innerNotInAny(value)
 }
 
 // Sum use SUM(expr)
 func (field Time) Sum() Time {
-	return Time{field.sum()}
+	return Time{field.innerSum()}
 }
 
 // Add use DATE_ADD(date, INTERVAL ? MICROSECOND)
 func (field Time) Add(value time.Duration) Time {
-	return Time{field.add(value)}
+	return Time{field.innerAdd(value)}
 }
 
 // Sub use DATE_SUB(date, INTERVAL ? MICROSECOND)
 func (field Time) Sub(value time.Duration) Time {
-	return Time{field.sub(value)}
+	return Time{field.innerSub(value)}
 }
 
 // FindInSet use FIND_IN_SET(expr, ?)
 func (field Time) FindInSet(targetList string) Expr {
-	return field.findInSet(targetList)
+	return field.innerFindInSet(targetList)
 }
 
 // UnixTimestamp use UnixTimestamp(date)
