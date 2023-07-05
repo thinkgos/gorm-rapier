@@ -41,58 +41,34 @@ func (field Field) IfNull(value any) Expr {
 	return field.innerIfNull(value)
 }
 
-// Eq equal to, use expr = ?
+// Eq use expr = ?
 func (field Field) Eq(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Eq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerEq(value)
 }
 
-// Neq not equal to, use expr <> ?
+// Neq use expr <> ?
 func (field Field) Neq(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Neq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNeq(value)
 }
 
-// Gt greater than, use expr > ?
+// Gt use expr > ?
 func (field Field) Gt(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGt(value)
 }
 
-// Gte greater or equal to, use expr >= ?
+// Gte use expr >= ?
 func (field Field) Gte(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGte(value)
 }
 
-// Lt less than, use expr < ?
+// Lt use expr < ?
 func (field Field) Lt(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLt(value)
 }
 
-// Lte less or equal to, use expr <= ?
+// Lte use expr <= ?
 func (field Field) Lte(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLte(value)
 }
 
 // Between use expr BETWEEN ? AND ?
@@ -117,20 +93,12 @@ func (field Field) NotIn(values ...any) Expr {
 
 // Like use expr LIKE ?
 func (field Field) Like(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Like{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLike(value)
 }
 
 // NotLike use expr NOT LIKE ?
 func (field Field) NotLike(value any) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.Like{Column: field.RawExpr(), Value: value}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotLike(value)
 }
 
 // Sum use SUM(expr)
@@ -559,27 +527,27 @@ func (field Field) MonthName() String {
 
 // AddCol use expr1 + expr2
 func (e Field) AddCol(col Expr) Field {
-	return Field{e.addCol(col)}
+	return Field{e.innerAddCol(col)}
 }
 
 // SubCol use expr1 - expr2
 func (e Field) SubCol(col Expr) Field {
-	return Field{e.subCol(col)}
+	return Field{e.innerSubCol(col)}
 }
 
 // MulCol use (expr1) * (expr2)
 func (e Field) MulCol(col Expr) Field {
-	return Field{e.mulCol(col)}
+	return Field{e.innerMulCol(col)}
 }
 
 // DivCol use (expr1) / (expr2)
 func (e Field) DivCol(col Expr) Field {
-	return Field{e.divCol(col)}
+	return Field{e.innerDivCol(col)}
 }
 
 // ConcatCol use CONCAT(expr1,exp2...exprN)
 func (e Field) ConcatCol(cols ...Expr) Field {
-	return Field{e.concatCol(cols...)}
+	return Field{e.innerConcatCol(cols...)}
 }
 
 // IntoColumns columns array with sub method

@@ -25,56 +25,32 @@ func (field String) IfNull(value string) Expr {
 
 // Eq equal to, use expr = ?
 func (field String) Eq(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Eq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerEq(value)
 }
 
 // Neq not equal to, use expr <> ?
 func (field String) Neq(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Neq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNeq(value)
 }
 
 // Gt greater than, use expr > ?
 func (field String) Gt(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGt(value)
 }
 
 // Gte greater or equal to, use expr >= ?
 func (field String) Gte(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGte(value)
 }
 
 // Lt less than, use expr < ?
 func (field String) Lt(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLt(value)
 }
 
 // Lte less or equal to, use expr <= ?
 func (field String) Lte(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLte(value)
 }
 
 // Between use expr BETWEEN ? AND ?
@@ -111,40 +87,24 @@ func (field String) NotInAny(value any) Expr {
 
 // Like use expr LIKE ?
 func (field String) Like(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Like{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLike(value)
 }
 
 // FuzzyLike use expr LIKE ?, ? contain prefix % and suffix %
 // e.g. expr LIKE %value%
 func (field String) FuzzyLike(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Like{Column: field.RawExpr(), Value: "%" + value + "%"},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLike("%" + value + "%")
 }
 
 // LeftLike use expr LIKE ?, ? contain suffix %.
 // e.g. expr LIKE value%
 func (field String) LeftLike(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Like{Column: field.RawExpr(), Value: value + "%"},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLike(value + "%")
 }
 
 // NotLike use expr NOT LIKE ?
 func (field String) NotLike(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.Like{Column: field.RawExpr(), Value: value}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotLike(value)
 }
 
 // Regexp use expr REGEXP ?
@@ -284,27 +244,27 @@ func (field String) RTrimSpace() String {
 
 // AddCol use expr1 + expr2
 func (e String) AddCol(col Expr) String {
-	return String{e.addCol(col)}
+	return String{e.innerAddCol(col)}
 }
 
 // SubCol use expr1 - expr2
 func (e String) SubCol(col Expr) String {
-	return String{e.subCol(col)}
+	return String{e.innerSubCol(col)}
 }
 
 // MulCol use (expr1) * (expr2)
 func (e String) MulCol(col Expr) String {
-	return String{e.mulCol(col)}
+	return String{e.innerMulCol(col)}
 }
 
 // DivCol use (expr1) / (expr2)
 func (e String) DivCol(col Expr) String {
-	return String{e.divCol(col)}
+	return String{e.innerDivCol(col)}
 }
 
 // ConcatCol use CONCAT(expr1,exp2...exprN)
 func (e String) ConcatCol(cols ...Expr) String {
-	return String{e.concatCol(cols...)}
+	return String{e.innerConcatCol(cols...)}
 }
 
 // IntoColumns columns array with sub method

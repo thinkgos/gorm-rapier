@@ -60,8 +60,8 @@ func (e expr) GteCol(e2 Expr) Expr {
 	return e
 }
 
-// addCol use expr1 + expr2
-func (e expr) addCol(e2 Expr) expr {
+// expr1 + expr2
+func (e expr) innerAddCol(e2 Expr) expr {
 	e.e = clause.Expr{
 		SQL:  "? + ?",
 		Vars: []any{e.RawExpr(), e2.RawExpr()},
@@ -69,8 +69,8 @@ func (e expr) addCol(e2 Expr) expr {
 	return e
 }
 
-// subCol use expr1 - expr2
-func (e expr) subCol(e2 Expr) expr {
+// expr1 - expr2
+func (e expr) innerSubCol(e2 Expr) expr {
 	e.e = clause.Expr{
 		SQL:  "? - ?",
 		Vars: []any{e.RawExpr(), e2.RawExpr()},
@@ -78,8 +78,8 @@ func (e expr) subCol(e2 Expr) expr {
 	return e
 }
 
-// mulCol use (expr1) * (expr2)
-func (e expr) mulCol(e2 Expr) expr {
+// use (expr1) * (expr2)
+func (e expr) innerMulCol(e2 Expr) expr {
 	e.e = clause.Expr{
 		SQL:  "(?) * (?)",
 		Vars: []any{e.RawExpr(), e2.RawExpr()},
@@ -87,8 +87,8 @@ func (e expr) mulCol(e2 Expr) expr {
 	return e
 }
 
-// divCol use (expr1) / (expr2)
-func (e expr) divCol(e2 Expr) expr {
+// (expr1) / (expr2)
+func (e expr) innerDivCol(e2 Expr) expr {
 	e.e = clause.Expr{
 		SQL:  "(?) / (?)",
 		Vars: []any{e.RawExpr(), e2.RawExpr()},
@@ -96,8 +96,8 @@ func (e expr) divCol(e2 Expr) expr {
 	return e
 }
 
-// concatCol use CONCAT(expr1,exp2...exprN)
-func (e expr) concatCol(es ...Expr) expr {
+// CONCAT(expr1,exp2...exprN)
+func (e expr) innerConcatCol(es ...Expr) expr {
 	sqlBuilder := strings.Builder{}
 	sqlBuilder.Grow(8 + 2*len(es) + 1)
 	vars := make([]any, 0, len(es)+1)

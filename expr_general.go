@@ -15,6 +15,42 @@ func (e expr) innerIfNull(value any) expr {
 	return e
 }
 
+// expr = ?
+func (e expr) innerEq(value any) expr {
+	e.e = clause.Eq{Column: e.RawExpr(), Value: value}
+	return e
+}
+
+// expr <> ?
+func (e expr) innerNeq(value any) expr {
+	e.e = clause.Neq{Column: e.RawExpr(), Value: value}
+	return e
+}
+
+// expr > ?
+func (e expr) innerGt(value any) expr {
+	e.e = clause.Gt{Column: e.RawExpr(), Value: value}
+	return e
+}
+
+// use expr >= ?
+func (e expr) innerGte(value any) expr {
+	e.e = clause.Gte{Column: e.RawExpr(), Value: value}
+	return e
+}
+
+// expr < ?
+func (e expr) innerLt(value any) expr {
+	e.e = clause.Lt{Column: e.RawExpr(), Value: value}
+	return e
+}
+
+// expr <= ?
+func (e expr) innerLte(value any) expr {
+	e.e = clause.Lte{Column: e.RawExpr(), Value: value}
+	return e
+}
+
 // expr IN(?,?...)
 func (e expr) innerIn(values []any) expr {
 	e.e = clause.IN{Column: e.RawExpr(), Values: values}
@@ -39,7 +75,32 @@ func (e expr) innerNotIn(values []any) expr {
 
 // expr IN(?,?...)
 func (e expr) innerNotInAny(value any) expr {
-	e.e = clause.Not(intoClauseIN(e.RawExpr(), value))
+	e.e = clause.NotConditions{
+		Exprs: []clause.Expression{
+			intoClauseIN(e.RawExpr(), value),
+		},
+	}
+	return e
+}
+
+// expr LIKE ?
+func (e expr) innerLike(value any) expr {
+	e.e = clause.Like{
+		Column: e.RawExpr(),
+		Value:  value,
+	}
+	return e
+}
+
+// expr NOT LIKE ?
+func (e expr) innerNotLike(value any) expr {
+	e.e = clause.NotConditions{
+		Exprs: []clause.Expression{clause.Like{
+			Column: e.RawExpr(),
+			Value:  value,
+		},
+		},
+	}
 	return e
 }
 

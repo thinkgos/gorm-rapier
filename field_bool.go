@@ -21,20 +21,12 @@ func (field Bool) IfNull(value bool) Expr {
 
 // Eq equal to, use expr = ?
 func (field Bool) Eq(value bool) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Eq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerEq(value)
 }
 
 // Neq not equal to, use expr <> ?
 func (field Bool) Neq(value bool) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Neq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNeq(value)
 }
 
 // FindInSet use FIND_IN_SET(expr, ?)

@@ -2,7 +2,6 @@ package assist
 
 import (
 	"golang.org/x/exp/constraints"
-	"gorm.io/gorm/clause"
 )
 
 // Float type field
@@ -24,56 +23,32 @@ func (field Float[T]) IfNull(value T) Expr {
 
 // Eq equal to, use expr = ?
 func (field Float[T]) Eq(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Eq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerEq(value)
 }
 
 // Neq not equal to, use expr <> ?
 func (field Float[T]) Neq(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Neq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNeq(value)
 }
 
 // Gt greater than, use expr > ?
 func (field Float[T]) Gt(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGt(value)
 }
 
 // Gte greater or equal to, use expr >= ?
 func (field Float[T]) Gte(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGte(value)
 }
 
 // Lt less than, use expr < ?
 func (field Float[T]) Lt(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLt(value)
 }
 
 // Lte less or equal to, use expr <= ?
 func (field Float[T]) Lte(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLte(value)
 }
 
 // Between use expr BETWEEN ? AND ?
@@ -110,20 +85,12 @@ func (field Float[T]) NotInAny(value any) Expr {
 
 // Like use expr LIKE ?
 func (field Float[T]) Like(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Like{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLike(value)
 }
 
 // NotLike use expr NOT LIKE ?
 func (field Float[T]) NotLike(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.Like{Column: field.RawExpr(), Value: value}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotLike(value)
 }
 
 // FindInSet use FIND_IN_SET(expr, ?)
@@ -173,22 +140,22 @@ func (field Float[T]) Round(decimals int) Float[T] {
 
 // AddCol use expr1 + expr2
 func (e Float[T]) AddCol(col Expr) Float[T] {
-	return Float[T]{e.addCol(col)}
+	return Float[T]{e.innerAddCol(col)}
 }
 
 // SubCol use expr1 - expr2
 func (e Float[T]) SubCol(col Expr) Float[T] {
-	return Float[T]{e.subCol(col)}
+	return Float[T]{e.innerSubCol(col)}
 }
 
 // MulCol use (expr1) * (expr2)
 func (e Float[T]) MulCol(col Expr) Float[T] {
-	return Float[T]{e.mulCol(col)}
+	return Float[T]{e.innerMulCol(col)}
 }
 
 // DivCol use (expr1) / (expr2)
 func (e Float[T]) DivCol(col Expr) Float[T] {
-	return Float[T]{e.divCol(col)}
+	return Float[T]{e.innerDivCol(col)}
 }
 
 // IntoColumns columns array with sub method

@@ -21,56 +21,32 @@ func (field Time) IfNull(value time.Time) Expr {
 
 // Eq equal to, use expr = ?
 func (field Time) Eq(value time.Time) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Eq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerEq(value)
 }
 
 // Neq not equal to, use expr <> ?
 func (field Time) Neq(value time.Time) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Neq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNeq(value)
 }
 
 // Gt greater than, use expr > ?
 func (field Time) Gt(value time.Time) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGt(value)
 }
 
 // Gte greater or equal to, use expr >= ?
 func (field Time) Gte(value time.Time) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGte(value)
 }
 
 // Lt less than, use expr < ?
 func (field Time) Lt(value time.Time) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLt(value)
 }
 
 // Lte less or equal to, use expr <= ?
 func (field Time) Lte(value time.Time) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLte(value)
 }
 
 // Between use expr BETWEEN ? AND ?
@@ -303,22 +279,22 @@ func (field Time) MonthName() String {
 
 // AddCol use expr1 + expr2
 func (e Time) AddCol(col Expr) Time {
-	return Time{e.addCol(col)}
+	return Time{e.innerAddCol(col)}
 }
 
 // SubCol use expr1 - expr2
 func (e Time) SubCol(col Expr) Time {
-	return Time{e.subCol(col)}
+	return Time{e.innerSubCol(col)}
 }
 
 // MulCol use (expr1) * (expr2)
 func (e Time) MulCol(col Expr) Time {
-	return Time{e.mulCol(col)}
+	return Time{e.innerMulCol(col)}
 }
 
 // DivCol use (expr1) / (expr2)
 func (e Time) DivCol(col Expr) Time {
-	return Time{e.divCol(col)}
+	return Time{e.innerDivCol(col)}
 }
 
 // IntoColumns columns array with sub method

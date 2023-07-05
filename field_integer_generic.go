@@ -26,56 +26,32 @@ func (field Integer[T]) IfNull(value T) Expr {
 
 // Eq equal to, use expr = ?
 func (field Integer[T]) Eq(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Eq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerEq(value)
 }
 
 // Neq not equal to, use expr <> ?
 func (field Integer[T]) Neq(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Neq{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNeq(value)
 }
 
 // Gt greater than, use expr > ?
 func (field Integer[T]) Gt(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGt(value)
 }
 
 // Gte greater or equal to, use expr >= ?
 func (field Integer[T]) Gte(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Gte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerGte(value)
 }
 
 // Lt less than, use expr < ?
 func (field Integer[T]) Lt(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lt{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLt(value)
 }
 
 // Lte less or equal to, use expr <= ?
 func (field Integer[T]) Lte(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Lte{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLte(value)
 }
 
 // Between use expr BETWEEN ? AND ?
@@ -112,20 +88,12 @@ func (field Integer[T]) NotInAny(value any) Expr {
 
 // Like use expr LIKE ?
 func (field Integer[T]) Like(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Like{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLike(value)
 }
 
 // NotLike use expr NOT LIKE ?
 func (field Integer[T]) NotLike(value T) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.Like{Column: field.RawExpr(), Value: value}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotLike(value)
 }
 
 // FindInSet equal to FIND_IN_SET(expr, ?)
@@ -234,22 +202,22 @@ func (field Integer[T]) FromDays() Time {
 
 // AddCol use expr1 + expr2
 func (e Integer[T]) AddCol(col Expr) Integer[T] {
-	return Integer[T]{e.addCol(col)}
+	return Integer[T]{e.innerAddCol(col)}
 }
 
 // SubCol use expr1 - expr2
 func (e Integer[T]) SubCol(col Expr) Integer[T] {
-	return Integer[T]{e.subCol(col)}
+	return Integer[T]{e.innerSubCol(col)}
 }
 
 // MulCol use (expr1) * (expr2)
 func (e Integer[T]) MulCol(col Expr) Integer[T] {
-	return Integer[T]{e.mulCol(col)}
+	return Integer[T]{e.innerMulCol(col)}
 }
 
 // DivCol use (expr1) / (expr2)
 func (e Integer[T]) DivCol(col Expr) Integer[T] {
-	return Integer[T]{e.divCol(col)}
+	return Integer[T]{e.innerDivCol(col)}
 }
 
 // IntoColumns columns array with sub method
