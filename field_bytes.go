@@ -87,40 +87,24 @@ func (field Bytes) NotInAny(value any) Expr {
 
 // Like use expr LIKE ?
 func (field Bytes) Like(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Like{Column: field.RawExpr(), Value: value},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLike(value)
 }
 
 // FuzzyLike use expr LIKE ?, ? contain prefix % and suffix %
 // e.g. expr LIKE %value%
 func (field Bytes) FuzzyLike(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Like{Column: field.RawExpr(), Value: "%" + value + "%"},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLike("%" + value + "%")
 }
 
 // LeftLike use expr LIKE ?, ? contain suffix %.
 // e.g. expr LIKE value%
 func (field Bytes) LeftLike(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Like{Column: field.RawExpr(), Value: value + "%"},
-		buildOpts: field.buildOpts,
-	}
+	return field.innerLike(value + "%")
 }
 
 // NotLike use expr NOT LIKE ?
 func (field Bytes) NotLike(value string) Expr {
-	return expr{
-		col:       field.col,
-		e:         clause.Not(clause.Like{Column: field.RawExpr(), Value: value}),
-		buildOpts: field.buildOpts,
-	}
+	return field.innerNotLike(value)
 }
 
 // Regexp use expr REGEXP ?

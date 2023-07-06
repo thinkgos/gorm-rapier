@@ -417,3 +417,39 @@ func (e expr) innerXor(value any) expr {
 	}
 	return e
 }
+
+// TRIM(BOTH ? FROM ?)
+func (e expr) innerTrim(remStr string) expr {
+	e.e = clause.Expr{SQL: "TRIM(BOTH ? FROM ?)", Vars: []any{remStr, e.RawExpr()}}
+	return e
+}
+
+// TRIM(LEADING ? FROM ?)
+func (e expr) innerLTrim(remStr string) expr {
+	e.e = clause.Expr{SQL: "TRIM(LEADING ? FROM ?)", Vars: []any{remStr, e.RawExpr()}}
+	return e
+}
+
+// TRIM(TRAILING ? FROM ?)
+func (e expr) innerRTrim(remStr string) expr {
+	e.e = clause.Expr{SQL: "TRIM(TRAILING ? FROM ?)", Vars: []any{remStr, e.RawExpr()}}
+	return e
+}
+
+// TRIM(?)
+func (e expr) innerTrimSpace() expr {
+	e.e = clause.Expr{SQL: "TRIM(?)", Vars: []any{e.RawExpr()}}
+	return e
+}
+
+// LTRIM(?)
+func (e expr) innerLTrimSpace() expr {
+	e.e = clause.Expr{SQL: "LTRIM(?)", Vars: []any{e.RawExpr()}}
+	return e
+}
+
+// RTRIM(?)
+func (e expr) innerRTrimSpace() expr {
+	e.e = clause.Expr{SQL: "RTRIM(?)", Vars: []any{e.RawExpr()}}
+	return e
+}

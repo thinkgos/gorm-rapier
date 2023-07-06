@@ -178,68 +178,32 @@ func (field String) Concat(before, after string) String {
 
 // Trim use TRIM(BOTH ? FROM ?)
 func (field String) Trim(remStr string) String {
-	return String{
-		expr{
-			col:       field.col,
-			e:         clause.Expr{SQL: "TRIM(BOTH ? FROM ?)", Vars: []any{remStr, field.RawExpr()}},
-			buildOpts: field.buildOpts,
-		},
-	}
+	return String{field.innerTrim(remStr)}
 }
 
 // LTrim use TRIM(LEADING ? FROM ?)
 func (field String) LTrim(remStr string) String {
-	return String{
-		expr{
-			col:       field.col,
-			e:         clause.Expr{SQL: "TRIM(LEADING ? FROM ?)", Vars: []any{remStr, field.RawExpr()}},
-			buildOpts: field.buildOpts,
-		},
-	}
+	return String{field.innerLTrim(remStr)}
 }
 
 // RTrim use TRIM(TRAILING ? FROM ?)
 func (field String) RTrim(remStr string) String {
-	return String{
-		expr{
-			col:       field.col,
-			e:         clause.Expr{SQL: "TRIM(TRAILING ? FROM ?)", Vars: []any{remStr, field.RawExpr()}},
-			buildOpts: field.buildOpts,
-		},
-	}
+	return String{field.innerRTrim(remStr)}
 }
 
 // TrimSpace use TRIM(?)
 func (field String) TrimSpace() String {
-	return String{
-		expr{
-			col:       field.col,
-			e:         clause.Expr{SQL: "TRIM(?)", Vars: []any{field.RawExpr()}},
-			buildOpts: field.buildOpts,
-		},
-	}
+	return String{field.innerTrimSpace()}
 }
 
 // LTrimSpace use LTRIM(?)
 func (field String) LTrimSpace() String {
-	return String{
-		expr{
-			col:       field.col,
-			e:         clause.Expr{SQL: "LTRIM(?)", Vars: []any{field.RawExpr()}},
-			buildOpts: field.buildOpts,
-		},
-	}
+	return String{field.innerLTrimSpace()}
 }
 
 // RTrimSpace use RTRIM(?)
 func (field String) RTrimSpace() String {
-	return String{
-		expr{
-			col:       field.col,
-			e:         clause.Expr{SQL: "RTRIM(?)", Vars: []any{field.RawExpr()}},
-			buildOpts: field.buildOpts,
-		},
-	}
+	return String{field.innerRTrimSpace()}
 }
 
 // AddCol use expr1 + expr2
