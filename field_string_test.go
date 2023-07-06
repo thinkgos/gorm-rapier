@@ -10,6 +10,8 @@ func Test_Expr_String(t *testing.T) {
 	value5 := []TestString{TestString(value1), TestString(value2), TestString(value3)}
 	value6 := []int{1, 2, 3}
 
+	value4Ptr := &value4
+
 	tests := []struct {
 		name     string
 		expr     Expr
@@ -79,6 +81,12 @@ func Test_Expr_String(t *testing.T) {
 		{
 			name:     "in any current type",
 			expr:     NewString("", "name").InAny(value4),
+			wantVars: []any{value1, value2, value3},
+			want:     "`name` IN (?,?,?)",
+		},
+		{
+			name:     "in any current type with ptr prt two",
+			expr:     NewString("", "name").InAny(&value4Ptr),
 			wantVars: []any{value1, value2, value3},
 			want:     "`name` IN (?,?,?)",
 		},
