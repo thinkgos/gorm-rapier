@@ -153,6 +153,22 @@ func (field String) Replace(from, to string) String {
 	}
 }
 
+// Hidden use CONCAT(LEFT(expr,left),pad,RIGHT(expr,right))
+// detail see innerHidden
+func (field String) Hidden(left, right int, pad string) String {
+	return String{field.innerHidden(left, right, pad)}
+}
+
+// HiddenSuffix use CONCAT(LEFT(expr,left),pad)
+func (field String) HiddenSuffix(left int, pad string) String {
+	return String{field.innerHiddenSuffix(left, pad)}
+}
+
+// HiddenPrefix use CONCAT(pad,RIGHT(expr,right))
+func (field String) HiddenPrefix(right int, pad string) String {
+	return String{field.innerHiddenPrefix(right, pad)}
+}
+
 // Concat use CONCAT(?,?,?)
 func (field String) Concat(before, after string) String {
 	var e clause.Expression
@@ -207,28 +223,28 @@ func (field String) RTrimSpace() String {
 }
 
 // AddCol use expr1 + expr2
-func (e String) AddCol(col Expr) String {
-	return String{e.innerAddCol(col)}
+func (field String) AddCol(col Expr) String {
+	return String{field.innerAddCol(col)}
 }
 
 // SubCol use expr1 - expr2
-func (e String) SubCol(col Expr) String {
-	return String{e.innerSubCol(col)}
+func (field String) SubCol(col Expr) String {
+	return String{field.innerSubCol(col)}
 }
 
 // MulCol use (expr1) * (expr2)
-func (e String) MulCol(col Expr) String {
-	return String{e.innerMulCol(col)}
+func (field String) MulCol(col Expr) String {
+	return String{field.innerMulCol(col)}
 }
 
 // DivCol use (expr1) / (expr2)
-func (e String) DivCol(col Expr) String {
-	return String{e.innerDivCol(col)}
+func (field String) DivCol(col Expr) String {
+	return String{field.innerDivCol(col)}
 }
 
 // ConcatCol use CONCAT(expr1,exp2...exprN)
-func (e String) ConcatCol(cols ...Expr) String {
-	return String{e.innerConcatCol(cols...)}
+func (field String) ConcatCol(cols ...Expr) String {
+	return String{field.innerConcatCol(cols...)}
 }
 
 // IntoColumns columns array with sub method

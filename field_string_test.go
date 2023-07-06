@@ -221,6 +221,24 @@ func Test_Expr_String(t *testing.T) {
 			want:     "CONCAT(?,REPLACE(`address`,?,?),?)",
 		},
 		{
+			name:     "hidden with star",
+			expr:     NewString("", "address").Hidden(2, 3, "******"),
+			wantVars: []any{2, "******", 3},
+			want:     "CONCAT(LEFT(`address`,?),?,RIGHT(`address`,?))",
+		},
+		{
+			name:     "hidden suffix with star",
+			expr:     NewString("", "address").HiddenSuffix(2, "******"),
+			wantVars: []any{2, "******"},
+			want:     "CONCAT(LEFT(`address`,?),?)",
+		},
+		{
+			name:     "hidden prefix with star",
+			expr:     NewString("", "address").HiddenPrefix(3, "******"),
+			wantVars: []any{"******", 3},
+			want:     "CONCAT(?,RIGHT(`address`,?))",
+		},
+		{
 			name:     "trim",
 			expr:     NewString("", "address").Trim("abc"),
 			wantVars: []any{"abc"},

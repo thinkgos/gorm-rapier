@@ -453,3 +453,29 @@ func (e expr) innerRTrimSpace() expr {
 	e.e = clause.Expr{SQL: "RTRIM(?)", Vars: []any{e.RawExpr()}}
 	return e
 }
+
+// left > 0 && right > 0  -- CONCAT(LEFT(expr,left),pad,RIGHT(expr,right))
+// left > 0 && right <= 0 -- CONCAT(LEFT(expr,left),pad)
+// right > 0 && left <= 0 -- CONCAT(pad,RIGHT(expr,right))
+func (e expr) innerHidden(left, right int, pad string) expr {
+	value := e.RawExpr()
+	switch {
+	case left > 0 && right > 0:
+		e.e = clause.Expr{SQL: "CONCAT(LEFT(?,?),?,RIGHT(?,?))", Vars: []any{value, left, pad, value, right}}
+	case left > 0 && right <= 0:
+		e.e = clause.Expr{SQL: "CONCAT(LEFT(?,?),?)", Vars: []any{value, left, pad}}
+	case right > 0 && left <= 0:
+		e.e = clause.Expr{SQL: "CONCAT(?,RIGHT(?,?))", Vars: []any{pad, value, right}}
+	}
+	return e
+}
+
+// CONCAT(LEFT(expr,left),pad)
+func (e expr) innerHiddenSuffix(left int, pad string) expr {
+	return e.innerHidden(left, 0, pad)
+}
+
+// CONCAT(pad,RIGHT(expr,right))
+func (e expr) innerHiddenPrefix(right int, pad string) expr {
+	return e.innerHidden(0, right, pad)
+}
