@@ -75,6 +75,10 @@ func (x *Executor[T]) Pluck(column string, value any) error {
 	return x.IntoDB().Pluck(column, value).Error
 }
 
+func (x *Executor[T]) PluckExpr(column Expr, value any) error {
+	return x.IntoDB().Pluck(column.ColumnName(), value).Error
+}
+
 func (x *Executor[T]) Exist() (exist bool, err error) {
 	err = x.IntoDB().
 		Select("1").
@@ -419,5 +423,65 @@ func (x *Executor[T]) PluckUint64(column string) (slice []uint64, err error) {
 
 func (x *Executor[T]) PluckString(column string) (slice []string, err error) {
 	err = x.Pluck(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprBool(column Expr) (slice []bool, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprInt(column Expr) (slice []int, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprInt8(column Expr) (slice []int8, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprInt16(column Expr) (slice []int16, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprInt32(column Expr) (slice []int32, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprInt64(column Expr) (slice []int64, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprUint(column Expr) (slice []uint, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprUint8(column Expr) (slice []uint8, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprUint16(column Expr) (slice []uint16, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprUint32(column Expr) (slice []uint32, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprUint64(column Expr) (slice []uint64, err error) {
+	err = x.PluckExpr(column, &slice)
+	return
+}
+
+func (x *Executor[T]) PluckExprString(column Expr) (slice []string, err error) {
+	err = x.PluckExpr(column, &slice)
 	return
 }
