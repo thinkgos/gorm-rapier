@@ -8,6 +8,33 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+func SubQuery(db *gorm.DB) Field {
+	return Field{
+		expr{
+			e: clause.Expr{
+				SQL:  "(?)",
+				Vars: []any{db},
+			},
+		},
+	}
+}
+
+// Exist equivalent EXISTS(subQuery)
+func Exist(subQuery *gorm.DB) Expr {
+	return expr{e: clause.Expr{
+		SQL:  "EXISTS(?)",
+		Vars: []any{subQuery},
+	}}
+}
+
+// NotExist equivalent NOT EXISTS(subQuery)
+func NotExist(subQuery *gorm.DB) Expr {
+	return expr{e: clause.Expr{
+		SQL:  "NOT EXISTS(?)",
+		Vars: []any{subQuery},
+	}}
+}
+
 func containsSubQuery(columns []Expr, subQuery *gorm.DB) Expr {
 	switch len(columns) {
 	case 0:
@@ -52,32 +79,6 @@ func containsValues(columns []Expr, value Value) Expr {
 	}
 }
 
-// compareOperator compare operator
-type compareOperator string
-
-const (
-	// eqOp =
-	eqOp compareOperator = " = "
-	// neqOp <>
-	neqOp compareOperator = " <> "
-	// gtOp >
-	gtOp compareOperator = " > "
-	// gteOp >=
-	gteOp compareOperator = " >= "
-	// ltOp <
-	ltOp compareOperator = " < "
-	// lteOp <=
-	lteOp compareOperator = " <= "
-)
-
-// compareSubQuery compare with sub query
-func compareSubQuery(op compareOperator, column Expr, subQuery *gorm.DB) Expr {
-	return expr{e: clause.Expr{
-		SQL:  fmt.Sprint("?", op, "(?)"),
-		Vars: []any{column.RawExpr(), subQuery},
-	}}
-}
-
 // Columns columns array
 type Columns []Expr
 
@@ -105,7 +106,38 @@ func (cs Columns) NotIn(subQueryOrValue any) Expr {
 	return Not(cs.In(subQueryOrValue))
 }
 
+// compareOperator compare operator
+type compareOperator string
+
+const (
+	// eqOp =
+	eqOp compareOperator = " = "
+	// neqOp <>
+	neqOp compareOperator = " <> "
+	// gtOp >
+	gtOp compareOperator = " > "
+	// gteOp >=
+	gteOp compareOperator = " >= "
+	// ltOp <
+	ltOp compareOperator = " < "
+	// lteOp <=
+	lteOp compareOperator = " <= "
+)
+
+// compareSubQuery compare with sub query
+func compareSubQuery(op compareOperator, column Expr, subQuery *gorm.DB) Expr {
+	return expr{e: clause.Expr{
+		SQL:  fmt.Sprint("?", op, "(?)"),
+		Vars: []any{column.RawExpr(), subQuery},
+	}}
+}
+
 // Eq  equivalent column = (subQuery)
+// Deprecated:
+//
+// use follow expression instead.
+// EqCol(SubQuery(db))
+// EqCol(Executor.IntoSubQuery(db))
 func (cs Columns) Eq(subQuery *gorm.DB) Expr {
 	if len(cs) == 0 {
 		return EmptyExpr()
@@ -114,6 +146,11 @@ func (cs Columns) Eq(subQuery *gorm.DB) Expr {
 }
 
 // Neq equivalent column <> (subQuery)
+// Deprecated:
+//
+// use follow expression instead.
+// NeqCol(SubQuery(db))
+// NeqCol(Executor.IntoSubQuery(db))
 func (cs Columns) Neq(subQuery *gorm.DB) Expr {
 	if len(cs) == 0 {
 		return EmptyExpr()
@@ -121,7 +158,12 @@ func (cs Columns) Neq(subQuery *gorm.DB) Expr {
 	return compareSubQuery(neqOp, cs[0], subQuery)
 }
 
-// Gt  equivalent column > (subQuery)
+// Gt equivalent column > (subQuery)
+// Deprecated:
+//
+// use follow expression instead.
+// GtCol(SubQuery(db))
+// GtCol(Executor.IntoSubQuery(db))
 func (cs Columns) Gt(subQuery *gorm.DB) Expr {
 	if len(cs) == 0 {
 		return EmptyExpr()
@@ -130,6 +172,11 @@ func (cs Columns) Gt(subQuery *gorm.DB) Expr {
 }
 
 // Gte  equivalent column >= (subQuery)
+// Deprecated:
+//
+// use follow expression instead.
+// GteCol(SubQuery(db))
+// GteCol(Executor.IntoSubQuery(db))
 func (cs Columns) Gte(subQuery *gorm.DB) Expr {
 	if len(cs) == 0 {
 		return EmptyExpr()
@@ -138,6 +185,11 @@ func (cs Columns) Gte(subQuery *gorm.DB) Expr {
 }
 
 // Lt  equivalent column < (subQuery)
+// Deprecated:
+//
+// use follow expression instead.
+// LtCol(SubQuery(db))
+// LtCol(Executor.IntoSubQuery(db))
 func (cs Columns) Lt(subQuery *gorm.DB) Expr {
 	if len(cs) == 0 {
 		return EmptyExpr()
@@ -146,6 +198,11 @@ func (cs Columns) Lt(subQuery *gorm.DB) Expr {
 }
 
 // Lte equivalent column <= (subQuery)
+// Deprecated:
+//
+// use follow expression instead.
+// LteCol(SubQuery(db))
+// LteCol(Executor.IntoSubQuery(db))
 func (cs Columns) Lte(subQuery *gorm.DB) Expr {
 	if len(cs) == 0 {
 		return EmptyExpr()
@@ -161,21 +218,5 @@ func (cs Columns) FindInSet(subQuery *gorm.DB) Expr {
 	return expr{e: clause.Expr{
 		SQL:  "FIND_IN_SET(?, (?))",
 		Vars: []any{cs[0].RawExpr(), subQuery},
-	}}
-}
-
-// Exist equivalent EXISTS(subQuery)
-func Exist(subQuery *gorm.DB) Expr {
-	return expr{e: clause.Expr{
-		SQL:  "EXISTS(?)",
-		Vars: []any{subQuery},
-	}}
-}
-
-// NotExist equivalent NOT EXISTS(subQuery)
-func NotExist(subQuery *gorm.DB) Expr {
-	return expr{e: clause.Expr{
-		SQL:  "NOT EXISTS(?)",
-		Vars: []any{subQuery},
 	}}
 }

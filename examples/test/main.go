@@ -26,6 +26,10 @@ func main() {
 	xDict := model.X_Dict()
 
 	_, err := xDict.X_Executor(db).
+		SelectExpr(
+			xDict.Id,
+			xDict.X_Executor(db).SelectExpr(xDict.Key).Where(xDict.Id.Eq(1)).IntoSubQueryExpr().As("aaa"),
+		).
 		Where(
 			xDict.Id.Eq(100),
 			xDict.Key.IntoColumns().Eq(xDict.X_Executor(db).Where(xDict.Id.Eq(1)).IntoDB()),
@@ -51,9 +55,6 @@ func main() {
 			Remark: "remark",
 		})
 	checkError(err)
-
-	log.Printf("%+v", xDict.Key.Count().IfNull(0))
-	log.Printf("%+v", xDict.Key)
 }
 
 func checkError(err error) {

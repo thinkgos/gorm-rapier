@@ -231,3 +231,60 @@ func Test_Executor_Expr(t *testing.T) {
 		})
 	}
 }
+
+func Test_Executor_SubQuery(t *testing.T) {
+	var dummy Dict
+
+	tests := []struct {
+		name     string
+		db       *gorm.DB
+		wantVars []any
+		want     string
+	}{
+		{
+			name: "sub query: IntoSubQueryExpr",
+			db: xDict.X_Executor(newDb()).
+				Where(
+					xDict.Id.EqCol(
+						xDict.X_Executor(db).
+							SelectExpr(xDict.Id).
+							Where(xDict.Pid.Eq(100)).
+							IntoSubQueryExpr(),
+					),
+				).
+				IntoDB().
+				Take(&dummy),
+			wantVars: []any{int64(100)},
+			want:     "SELECT * FROM `dict` WHERE `dict`.`id` = (SELECT `dict`.`id` FROM `dict` WHERE `dict`.`pid` = ?) LIMIT 1",
+		},
+		{
+			name: "sub query: IntoExistExpr",
+			db: newDb().Model(xDict.X_Model()).
+				Where(
+					xDict.X_Executor(newDb()).
+						SelectExpr(xDict.Id.Min()).
+						IntoExistExpr(),
+				).
+				Find(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` WHERE EXISTS(SELECT MIN(`dict`.`id`) FROM `dict`)",
+		},
+		{
+			name: "sub query: IntoNotExistExpr",
+			db: newDb().Model(xDict.X_Model()).
+				Where(
+					xDict.X_Executor(newDb()).
+						SelectExpr(xDict.Id.Min()).
+						IntoNotExistExpr(),
+				).
+				Find(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` WHERE NOT EXISTS(SELECT MIN(`dict`.`id`) FROM `dict`)",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+		})
+	}
+}
