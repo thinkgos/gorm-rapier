@@ -77,8 +77,3 @@ func (field Bool) BitAnd(value bool) Expr {
 func (field Bool) BitOr(value bool) Expr {
 	return Bool{field.innerBitOr(value)}
 }
-
-// IntoColumns columns array with sub method
-func (field Bool) IntoColumns() Columns {
-	return NewColumns(field)
-}

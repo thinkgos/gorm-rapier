@@ -35,50 +35,6 @@ func NotExist(subQuery *gorm.DB) Expr {
 	}}
 }
 
-func containsSubQuery(columns []Expr, subQuery *gorm.DB) Expr {
-	switch len(columns) {
-	case 0:
-		return EmptyExpr()
-	case 1:
-		return expr{e: clause.Expr{
-			SQL:  "? IN (?)",
-			Vars: []any{columns[0].RawExpr(), subQuery},
-		}}
-	default: // len(columns) > 0
-		placeholders := make([]string, len(columns))
-		cols := make([]any, len(columns))
-		for i, c := range columns {
-			placeholders[i], cols[i] = "?", c.RawExpr()
-		}
-		return expr{e: clause.Expr{
-			SQL:  fmt.Sprintf("(%s) IN (?)", strings.Join(placeholders, ",")),
-			Vars: append(cols, subQuery),
-		}}
-	}
-}
-
-func containsValues(columns []Expr, value Value) Expr {
-	switch len(columns) {
-	case 0:
-		return EmptyExpr()
-	case 1:
-		return expr{e: clause.Expr{
-			SQL:  "? IN (?)",
-			Vars: []any{columns[0].RawExpr(), clause.Expr(value)},
-		}}
-	default: // len(columns) > 0
-		vars := make([]string, len(columns))
-		queryCols := make([]any, len(columns))
-		for i, c := range columns {
-			vars[i], queryCols[i] = "?", c.RawExpr()
-		}
-		return expr{e: clause.Expr{
-			SQL:  fmt.Sprintf("(%s) IN (?)", strings.Join(vars, ", ")),
-			Vars: append(queryCols, clause.Expr(value)),
-		}}
-	}
-}
-
 // Columns columns array
 type Columns []Expr
 
@@ -91,9 +47,9 @@ func NewColumns(cols ...Expr) Columns { return cols }
 func (cs Columns) In(subQueryOrValue any) Expr {
 	switch v := subQueryOrValue.(type) {
 	case Value:
-		return containsValues(cs, v)
+		return containsValues("IN", cs, v)
 	case *gorm.DB:
-		return containsSubQuery(cs, v)
+		return containsSubQuery("IN", cs, v)
 	default:
 		return EmptyExpr()
 	}
@@ -103,120 +59,56 @@ func (cs Columns) In(subQueryOrValue any) Expr {
 // when len(columns) == 1, equal to NOT columns[0] IN (subQuery/value)
 // when len(columns) > 1, equal to NOT (columns[0], columns[1], ...) IN (subQuery/value)
 func (cs Columns) NotIn(subQueryOrValue any) Expr {
-	return Not(cs.In(subQueryOrValue))
-}
-
-// compareOperator compare operator
-type compareOperator string
-
-const (
-	// eqOp =
-	eqOp compareOperator = " = "
-	// neqOp <>
-	neqOp compareOperator = " <> "
-	// gtOp >
-	gtOp compareOperator = " > "
-	// gteOp >=
-	gteOp compareOperator = " >= "
-	// ltOp <
-	ltOp compareOperator = " < "
-	// lteOp <=
-	lteOp compareOperator = " <= "
-)
-
-// compareSubQuery compare with sub query
-func compareSubQuery(op compareOperator, column Expr, subQuery *gorm.DB) Expr {
-	return expr{e: clause.Expr{
-		SQL:  fmt.Sprint("?", op, "(?)"),
-		Vars: []any{column.RawExpr(), subQuery},
-	}}
-}
-
-// Eq  equivalent column = (subQuery)
-// Deprecated:
-//
-// use follow expression instead.
-// EqCol(SubQuery(db))
-// EqCol(Executor.IntoSubQuery(db))
-func (cs Columns) Eq(subQuery *gorm.DB) Expr {
-	if len(cs) == 0 {
+	switch v := subQueryOrValue.(type) {
+	case Value:
+		return containsValues("NOT IN", cs, v)
+	case *gorm.DB:
+		return containsSubQuery("NOT IN", cs, v)
+	default:
 		return EmptyExpr()
 	}
-	return compareSubQuery(eqOp, cs[0], subQuery)
 }
 
-// Neq equivalent column <> (subQuery)
-// Deprecated:
-//
-// use follow expression instead.
-// NeqCol(SubQuery(db))
-// NeqCol(Executor.IntoSubQuery(db))
-func (cs Columns) Neq(subQuery *gorm.DB) Expr {
-	if len(cs) == 0 {
+func containsSubQuery(op string, columns []Expr, subQuery *gorm.DB) Expr {
+	switch len(columns) {
+	case 0:
 		return EmptyExpr()
+	case 1:
+		return expr{e: clause.Expr{
+			SQL:  fmt.Sprintf("? %s (?)", op),
+			Vars: []any{columns[0].RawExpr(), subQuery},
+		}}
+	default: // len(columns) > 0
+		placeholders := make([]string, len(columns))
+		cols := make([]any, len(columns))
+		for i, c := range columns {
+			placeholders[i], cols[i] = "?", c.RawExpr()
+		}
+		return expr{e: clause.Expr{
+			SQL:  fmt.Sprintf("(%s) %s (?)", strings.Join(placeholders, ","), op),
+			Vars: append(cols, subQuery),
+		}}
 	}
-	return compareSubQuery(neqOp, cs[0], subQuery)
 }
 
-// Gt equivalent column > (subQuery)
-// Deprecated:
-//
-// use follow expression instead.
-// GtCol(SubQuery(db))
-// GtCol(Executor.IntoSubQuery(db))
-func (cs Columns) Gt(subQuery *gorm.DB) Expr {
-	if len(cs) == 0 {
+func containsValues(op string, columns []Expr, value Value) Expr {
+	switch len(columns) {
+	case 0:
 		return EmptyExpr()
+	case 1:
+		return expr{e: clause.Expr{
+			SQL:  fmt.Sprintf("? %s (?)", op),
+			Vars: []any{columns[0].RawExpr(), clause.Expr(value)},
+		}}
+	default: // len(columns) > 0
+		vars := make([]string, len(columns))
+		queryCols := make([]any, len(columns))
+		for i, c := range columns {
+			vars[i], queryCols[i] = "?", c.RawExpr()
+		}
+		return expr{e: clause.Expr{
+			SQL:  fmt.Sprintf("(%s) %s (?)", strings.Join(vars, ", "), op),
+			Vars: append(queryCols, clause.Expr(value)),
+		}}
 	}
-	return compareSubQuery(gtOp, cs[0], subQuery)
-}
-
-// Gte  equivalent column >= (subQuery)
-// Deprecated:
-//
-// use follow expression instead.
-// GteCol(SubQuery(db))
-// GteCol(Executor.IntoSubQuery(db))
-func (cs Columns) Gte(subQuery *gorm.DB) Expr {
-	if len(cs) == 0 {
-		return EmptyExpr()
-	}
-	return compareSubQuery(gteOp, cs[0], subQuery)
-}
-
-// Lt  equivalent column < (subQuery)
-// Deprecated:
-//
-// use follow expression instead.
-// LtCol(SubQuery(db))
-// LtCol(Executor.IntoSubQuery(db))
-func (cs Columns) Lt(subQuery *gorm.DB) Expr {
-	if len(cs) == 0 {
-		return EmptyExpr()
-	}
-	return compareSubQuery(ltOp, cs[0], subQuery)
-}
-
-// Lte equivalent column <= (subQuery)
-// Deprecated:
-//
-// use follow expression instead.
-// LteCol(SubQuery(db))
-// LteCol(Executor.IntoSubQuery(db))
-func (cs Columns) Lte(subQuery *gorm.DB) Expr {
-	if len(cs) == 0 {
-		return EmptyExpr()
-	}
-	return compareSubQuery(lteOp, cs[0], subQuery)
-}
-
-// FindInSet FIND_IN_SET(column, (subQuery))
-func (cs Columns) FindInSet(subQuery *gorm.DB) Expr {
-	if len(cs) == 0 {
-		return EmptyExpr()
-	}
-	return expr{e: clause.Expr{
-		SQL:  "FIND_IN_SET(?, (?))",
-		Vars: []any{cs[0].RawExpr(), subQuery},
-	}}
 }

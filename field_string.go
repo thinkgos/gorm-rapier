@@ -246,8 +246,3 @@ func (field String) DivCol(col Expr) String {
 func (field String) ConcatCol(cols ...Expr) String {
 	return String{field.innerConcatCol(cols...)}
 }
-
-// IntoColumns columns array with sub method
-func (field String) IntoColumns() Columns {
-	return NewColumns(field)
-}

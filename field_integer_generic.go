@@ -219,8 +219,3 @@ func (e Integer[T]) MulCol(col Expr) Integer[T] {
 func (e Integer[T]) DivCol(col Expr) Integer[T] {
 	return Integer[T]{e.innerDivCol(col)}
 }
-
-// IntoColumns columns array with sub method
-func (field Integer[T]) IntoColumns() Columns {
-	return NewColumns(field)
-}

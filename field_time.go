@@ -296,8 +296,3 @@ func (e Time) MulCol(col Expr) Time {
 func (e Time) DivCol(col Expr) Time {
 	return Time{e.innerDivCol(col)}
 }
-
-// IntoColumns columns array with sub method
-func (field Time) IntoColumns() Columns {
-	return NewColumns(field)
-}

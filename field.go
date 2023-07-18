@@ -513,8 +513,3 @@ func (e Field) DivCol(col Expr) Field {
 func (e Field) ConcatCol(cols ...Expr) Field {
 	return Field{e.innerConcatCol(cols...)}
 }
-
-// IntoColumns columns array with sub method
-func (field Field) IntoColumns() Columns {
-	return NewColumns(field)
-}

@@ -157,8 +157,3 @@ func (e Float[T]) MulCol(col Expr) Float[T] {
 func (e Float[T]) DivCol(col Expr) Float[T] {
 	return Float[T]{e.innerDivCol(col)}
 }
-
-// IntoColumns columns array with sub method
-func (field Float[T]) IntoColumns() Columns {
-	return NewColumns(field)
-}
