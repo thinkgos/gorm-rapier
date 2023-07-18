@@ -224,6 +224,20 @@ func Test_Field_Expr_Col(t *testing.T) {
 			expr: NewField("user", "id").GteCol(NewField("userB", "new_id")),
 			want: "`user`.`id` >= `userB`.`new_id`",
 		},
+
+		{
+			name:     "find_in_set",
+			expr:     NewField("", "address").FindInSetCol(NewField("userB", "new_id")),
+			wantVars: nil,
+			want:     "FIND_IN_SET(`address`, `userB`.`new_id`)",
+		},
+		{
+			name:     "find_in_set with",
+			expr:     NewField("", "address").FindInSetColWith(NewField("userB", "new_id")),
+			wantVars: nil,
+			want:     "FIND_IN_SET(`userB`.`new_id`, `address`)",
+		},
+
 		{
 			name: "add",
 			expr: NewField("", "id").AddCol(NewField("", "new_id")),
