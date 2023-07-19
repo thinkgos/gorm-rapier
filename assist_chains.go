@@ -184,5 +184,3 @@ func (c *Conditions) LockingShare() *Conditions {
 func (c *Conditions) Pagination(page, perPage int64, maxPages ...int64) *Conditions {
 	return c.Scopes(Pagination(page, perPage, maxPages...))
 }
-
-
