@@ -105,6 +105,30 @@ func (x *Executor[T]) CreateInBatches(value any, batchSize int) error {
 	return x.db.Scopes(x.conditions.Build()...).CreateInBatches(value, batchSize).Error
 }
 
+func (x *Executor[T]) FirstOrInit(dest any) (rowsAffected int64, err error) {
+	db := x.IntoDB()
+	if x.attrs != nil {
+		db = x.attrs(db)
+	}
+	if x.assigns != nil {
+		db = x.assigns(db)
+	}
+	db = db.FirstOrInit(dest)
+	return db.RowsAffected, db.Error
+}
+
+func (x *Executor[T]) FirstOrCreate(dest any) (rowsAffected int64, err error) {
+	db := x.IntoDB()
+	if x.attrs != nil {
+		db = x.attrs(db)
+	}
+	if x.assigns != nil {
+		db = x.assigns(db)
+	}
+	db = db.FirstOrCreate(dest)
+	return db.RowsAffected, db.Error
+}
+
 func (x *Executor[T]) Save(value any) error {
 	return x.db.Scopes(x.conditions.Build()...).Save(value).Error
 }

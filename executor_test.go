@@ -42,7 +42,6 @@ func Test_Executor_Stand(t *testing.T) {
 		_, err := xDict.X_Executor(newDb()).
 			Debug().
 			Where(xDict.Id.Eq(1)).
-			IntoAttrExecutor().
 			Attrs(&Dict{
 				Name: "aaaa",
 				Sort: 1111,
@@ -54,7 +53,6 @@ func Test_Executor_Stand(t *testing.T) {
 		_, err = xDict.X_Executor(newDb()).
 			Debug().
 			Where(xDict.Id.Eq(1)).
-			IntoAttrExecutor().
 			AttrsExpr(
 				xDict.Name.Value("bbbb"),
 				xDict.Sort.Value(2222),
@@ -69,7 +67,6 @@ func Test_Executor_Stand(t *testing.T) {
 		_, err := xDict.X_Executor(newDb()).
 			Debug().
 			Where(xDict.Id.Eq(1)).
-			IntoAttrExecutor().
 			Assign(&Dict{
 				Name: "aaaa",
 				Sort: 1111,
@@ -81,7 +78,6 @@ func Test_Executor_Stand(t *testing.T) {
 		_, err = xDict.X_Executor(newDb()).
 			Debug().
 			Where(xDict.Id.Eq(1)).
-			IntoAttrExecutor().
 			AssignExpr(
 				xDict.Name.Value("bbbb"),
 				xDict.Sort.Value(2222),
@@ -381,10 +377,11 @@ func Test_Executor_Update_Assign(t *testing.T) {
 				).
 				updatesExpr(
 					xDict.Sort.Value(100),
+					xDict.IsPin.value(true),
 					xDict.Score.Add(10),
 				),
-			wantVars: []any{uint16(100), float64(10), int64(1)},
-			want:     "UPDATE `dict` SET `sort`=?,`score`=`dict`.`score`+? WHERE `dict`.`id` = ?",
+			wantVars: []any{uint16(100), true, float64(10), int64(1)},
+			want:     "UPDATE `dict` SET `sort`=?,`is_pin`=?,`score`=`dict`.`score`+? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updateColumnExpr: value",
@@ -420,10 +417,11 @@ func Test_Executor_Update_Assign(t *testing.T) {
 				).
 				updateColumnsExpr(
 					xDict.Sort.Value(100),
+					xDict.IsPin.value(true),
 					xDict.Score.Add(10),
 				),
-			wantVars: []any{uint16(100), float64(10), int64(1)},
-			want:     "UPDATE `dict` SET `sort`=?,`score`=`dict`.`score`+? WHERE `dict`.`id` = ?",
+			wantVars: []any{uint16(100), true, float64(10), int64(1)},
+			want:     "UPDATE `dict` SET `sort`=?,`is_pin`=?,`score`=`dict`.`score`+? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updatesExpr: SubQuery",
