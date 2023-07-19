@@ -10,11 +10,6 @@ var columnDisableRaw Option = func(col clause.Column) clause.Column {
 	return col
 }
 
-var columnEnableRaw Option = func(col clause.Column) clause.Column {
-	col.Raw = true
-	return col
-}
-
 func intoClauseColumn(table, column string, opts ...Option) clause.Column {
 	col := clause.Column{Table: table, Name: column}
 	for _, opt := range opts {
