@@ -816,7 +816,7 @@ func Test_SetExpr_Field(t *testing.T) {
 				newDb().Table("`user`").Select("`address`").Where("`id` = ?", 100),
 			),
 			wantVars: []any{100},
-			want:     "address=(SELECT `address` FROM `user` WHERE `id` = ?)",
+			want:     "`address`=(SELECT `address` FROM `user` WHERE `id` = ?)",
 		},
 	}
 	for _, tt := range tests {

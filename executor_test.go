@@ -374,6 +374,18 @@ func Test_Executor_Update_Assign(t *testing.T) {
 			wantVars: []any{uint16(100), float64(10), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=?,`score`=`dict`.`score`+? WHERE `dict`.`id` = ?",
 		},
+		{
+			name: "updatesExpr: SubQuery",
+			db: xDict.X_Executor(newDb()).
+				Where(
+					xDict.Id.Eq(1),
+				).
+				updatesExpr(
+					xDict.Score.SetSubQuery(xDict.X_Executor(newDb()).SelectExpr(xDict.Score).Where(xDict.Id.Eq(2)).IntoDB()),
+				),
+			wantVars: []any{int64(2), int64(1)},
+			want:     "UPDATE `dict` SET `score`=(SELECT `dict`.`score` FROM `dict` WHERE `dict`.`id` = ?) WHERE `dict`.`id` = ?",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

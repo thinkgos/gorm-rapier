@@ -50,6 +50,7 @@ func buildAssignSet(db *gorm.DB, exprs []SetExpr) (set clause.Set) {
 			Table: "", // FIXME: when need table?.
 			Name:  expr.ColumnName(),
 		}
+
 		switch e := expr.SetExpr().(type) {
 		case clause.Expr:
 			set = append(set, clause.Assignment{
@@ -65,7 +66,6 @@ func buildAssignSet(db *gorm.DB, exprs []SetExpr) (set clause.Set) {
 			set = append(set, e...)
 		}
 	}
-
 	stmt := db.Session(&gorm.Session{}).Statement
 	stmt.Dest = map[string]interface{}{}
 	return append(set, callbacks.ConvertToAssignments(stmt)...)
