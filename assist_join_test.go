@@ -20,7 +20,7 @@ func Test_Joins(t *testing.T) {
 	}{
 		{
 			name: "inner join - empty conds",
-			db: newDb().Model( &Dict{}).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					InnerJoinsExpr(xDd.X_TableName()),
 				).
@@ -30,7 +30,7 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "cross join",
-			db: newDb().Model( &Dict{}).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					CrossJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
@@ -40,7 +40,7 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "inner join",
-			db: newDb().Model( &Dict{}).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					InnerJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
@@ -50,7 +50,7 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "left join",
-			db: newDb().Model( &Dict{}).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					LeftJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
@@ -60,7 +60,7 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "right join",
-			db: newDb().Model( &Dict{}).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					RightJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
 				).
@@ -70,7 +70,7 @@ func Test_Joins(t *testing.T) {
 		},
 		{
 			name: "inner join - multiple",
-			db: newDb().Model( &Dict{}).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					InnerJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid)),
 					InnerJoinsExpr(xDi.X_TableName(), xDi.IsPin.Eq(true)),
