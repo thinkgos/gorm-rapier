@@ -41,6 +41,36 @@ type Columns []Expr
 // NewColumns new columns instance.
 func NewColumns(cols ...Expr) Columns { return cols }
 
+// SetSubQuery set with subQuery
+func (cs Columns) Set(subQuery *gorm.DB) AssignExpr {
+	if len(cs) == 0 {
+		return expr{
+			e: clause.Set{},
+		}
+	}
+	cols := make([]string, len(cs))
+	for i, v := range cs {
+		cols[i] = v.BuildColumn(subQuery.Statement)
+	}
+
+	name := cols[0]
+	if len(cols) > 1 {
+		name = "(" + strings.Join(cols, ",") + ")"
+	}
+
+	return expr{
+		e: clause.Set{
+			{
+				Column: clause.Column{
+					Name: name,
+					Raw:  true,
+				},
+				Value: gorm.Expr("(?)", subQuery),
+			},
+		},
+	}
+}
+
 // IN return contains subQuery or value
 // when len(columns) == 1, equal to columns[0] IN (subQuery/value)
 // when len(columns) > 1, equal to (columns[0], columns[1], ...) IN (subQuery/value)

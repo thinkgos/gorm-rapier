@@ -39,6 +39,39 @@ func Test_Expr_Integer(t *testing.T) {
 	})
 }
 
+func Test_AssignExpr_Integer(t *testing.T) {
+	t.Run("int", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[int])
+	})
+	t.Run("int8", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[int8])
+	})
+	t.Run("int16", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[int16])
+	})
+	t.Run("int32", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[int32])
+	})
+	t.Run("int64", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[int64])
+	})
+	t.Run("uint", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[uint])
+	})
+	t.Run("uint8", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[uint8])
+	})
+	t.Run("uint16", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[uint16])
+	})
+	t.Run("uint32", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[uint32])
+	})
+	t.Run("uint64", func(t *testing.T) {
+		testAssignExprInteger(t, NewInteger[uint64])
+	})
+}
+
 func testExprInteger[T constraints.Integer](
 	t *testing.T,
 	newInteger func(table, column string, opts ...Option) Integer[T],
@@ -340,6 +373,41 @@ func testExprInteger[T constraints.Integer](
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+		})
+	}
+}
+
+func testAssignExprInteger[T constraints.Integer](
+	t *testing.T,
+	newInteger func(table, column string, opts ...Option) Integer[T],
+) {
+	var zeroValue T
+	var value T = 5
+
+	tests := []struct {
+		name     string
+		expr     Expr
+		wantVars []any
+		want     string
+	}{
+		{
+			name:     "Value",
+			expr:     newInteger("user", "address").Value(value),
+			wantVars: []any{value},
+			want:     "`address` = ?",
+		},
+		{
+			name:     "Value",
+			expr:     newInteger("user", "address").ValueZero(),
+			wantVars: []any{zeroValue},
+			want:     "`address` = ?",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+			})
 		})
 	}
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func Test_buildSelectValue(t *testing.T) {
-	t.Run("", func(t *testing.T) {
+	t.Run("empty", func(t *testing.T) {
 		db := newDb()
 		query, args := buildSelectValue(db.Statement)
 		if query != "" {
@@ -16,6 +16,46 @@ func Test_buildSelectValue(t *testing.T) {
 		if len(args) != 0 {
 			t.Errorf("Vars expects %+v got %v", nil, args)
 		}
+	})
+	t.Run("fields", func(t *testing.T) {
+		db := newDb()
+		query, args := buildSelectValue(db.Statement, xDict.Id, xDict.Name.Length().As("name"))
+		if want := "`dict`.`id`"; query != want {
+			t.Errorf("SQL expects %v got %v", want, query)
+		}
+		if wantArg1 := any("LENGTH(`dict`.`name`) AS `name`"); len(args) != 1 && args[0] != wantArg1 {
+			t.Errorf("Vars expects %+v got %v", []any{wantArg1}, args)
+		}
+	})
+}
+
+func Test_buildColumnsValue(t *testing.T) {
+	t.Run("empty", func(t *testing.T) {
+		db := newDb()
+		query := buildColumnsValue(db)
+		if query != "" {
+			t.Errorf("SQL expects %v got %v", "", query)
+		}
+	})
+	t.Run("fields", func(t *testing.T) {
+		db := newDb()
+		query := buildColumnsValue(db, xDict.Id, xDict.Name)
+		if want := "`dict`.`id`,`dict`.`name`"; query != want {
+			t.Errorf("SQL expects %v got %v", want, query)
+		}
+	})
+}
+
+func Test_buildAssignSet(t *testing.T) {
+	t.Run("empty", func(t *testing.T) {
+		db := newDb()
+		query := buildAssignSet(
+			db,
+			[]AssignExpr{
+				xDict.Pid.Value(100),
+				xDict.Score.Add(1),
+			})
+		t.Logf("%+v", query)
 	})
 }
 

@@ -5,6 +5,9 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+var _ Expr = (*expr)(nil)
+var _ AssignExpr = (*expr)(nil)
+
 // BuildOption build option
 type BuildOption uint
 
@@ -92,11 +95,15 @@ func (e expr) BuildWithArgs(stmt *gorm.Statement) (string, []any) {
 	return newStmt.SQL.String(), newStmt.Vars
 }
 
-func (e expr) RawExpr() expression {
+func (e expr) RawExpr() any {
 	if e.e == nil {
 		return e.col
 	}
 	return e.e
+}
+
+func (e expr) AssignExpr() any {
+	return e.Expression()
 }
 
 func (e expr) withAppendBuildOpts(opts ...BuildOption) expr {

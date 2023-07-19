@@ -246,3 +246,13 @@ func (field String) DivCol(col Expr) String {
 func (field String) ConcatCol(cols ...Expr) String {
 	return String{field.innerConcatCol(cols...)}
 }
+
+// Value set value
+func (field String) Value(value string) AssignExpr {
+	return field.value(value)
+}
+
+// ValueZero set value zero
+func (field String) ValueZero() AssignExpr {
+	return field.value("")
+}

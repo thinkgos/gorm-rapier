@@ -36,6 +36,36 @@ func Test_Expr_Float(t *testing.T) {
 	})
 }
 
+func Test_AssignExpr_Float(t *testing.T) {
+	t.Run("float32", func(t *testing.T) {
+		testAssignExprFloat(
+			t,
+			NewFloat[float32],
+			func() (float32, float32) {
+				return 0, 2.0
+			},
+		)
+	})
+	t.Run("float64", func(t *testing.T) {
+		testAssignExprFloat(
+			t,
+			NewFloat[float64],
+			func() (float64, float64) {
+				return 0, 2.0
+			},
+		)
+	})
+	t.Run("decimal", func(t *testing.T) {
+		testAssignExprFloat(
+			t,
+			NewFloat[string],
+			func() (string, string) {
+				return "", "2.0"
+			},
+		)
+	})
+}
+
 func testExprFloat[T constraints.Float | ~string](
 	t *testing.T,
 	newFloat func(table, column string, opts ...Option) Float[T],
@@ -284,6 +314,41 @@ func testExprFloat[T constraints.Float | ~string](
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+		})
+	}
+}
+
+func testAssignExprFloat[T constraints.Float | ~string](
+	t *testing.T,
+	newFloat func(table, column string, opts ...Option) Float[T],
+	getTestValue func() (T, T),
+) {
+	zeroValue, value := getTestValue()
+
+	tests := []struct {
+		name     string
+		expr     Expr
+		wantVars []any
+		want     string
+	}{
+		{
+			name:     "Value",
+			expr:     newFloat("user", "address").Value(value),
+			wantVars: []any{value},
+			want:     "`address` = ?",
+		},
+		{
+			name:     "Value",
+			expr:     newFloat("user", "address").ValueZero(),
+			wantVars: []any{zeroValue},
+			want:     "`address` = ?",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+			})
 		})
 	}
 }

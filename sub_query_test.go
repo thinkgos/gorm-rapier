@@ -6,6 +6,63 @@ import (
 	"gorm.io/gorm"
 )
 
+func Test_Columns_SubQuery_Assign(t *testing.T) {
+	tests := []struct {
+		name     string
+		db       *gorm.DB
+		wantVars []any
+		want     string
+	}{
+		{
+			name: "set: empty columns",
+			db: newDb().Model(xDict.X_Model()).
+				Where(xDict.Id.Eq(1)).
+				Clauses(buildAssignSet(
+					newDb(),
+					[]AssignExpr{
+						NewColumns().
+							Set(
+								newDb().Model(&Dict{}).
+									Scopes(SelectExpr(
+										xDict.Sort,
+										xDict.IsPin,
+									)),
+							),
+					},
+				)).
+				Updates(map[string]interface{}{}),
+			wantVars: []any{int64(1)},
+			want:     "UPDATE `dict` SET `id`=`id` WHERE `dict`.`id` = ?",
+		},
+		{
+			name: "set: sub query",
+			db: newDb().Model(xDict.X_Model()).
+				Where(xDict.Id.Eq(1)).
+				Clauses(buildAssignSet(
+					newDb(),
+					[]AssignExpr{
+						NewColumns(xDict.Sort, xDict.IsPin).
+							Set(
+								newDb().Model(&Dict{}).
+									Scopes(SelectExpr(
+										xDict.Sort,
+										xDict.IsPin,
+									)),
+							),
+					},
+				)).
+				Updates(map[string]interface{}{}),
+			wantVars: []any{int64(1)},
+			want:     "UPDATE `dict` SET (`sort`,`is_pin`)=(SELECT `dict`.`sort`,`dict`.`is_pin` FROM `dict`) WHERE `dict`.`id` = ?",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+		})
+	}
+}
+
 func Test_Columns_SubQuery(t *testing.T) {
 	var dummy []Dict
 

@@ -296,3 +296,13 @@ func (e Time) MulCol(col Expr) Time {
 func (e Time) DivCol(col Expr) Time {
 	return Time{e.innerDivCol(col)}
 }
+
+// Value set value
+func (field Time) Value(value time.Time) AssignExpr {
+	return field.value(value)
+}
+
+// ValueZero set value zero
+func (field Time) ValueZero() AssignExpr {
+	return field.value(time.Time{})
+}

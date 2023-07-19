@@ -38,22 +38,13 @@ func main() {
 	checkError(err)
 
 	_, err = xDict.X_Executor(db).
-		SelectExpr(
-			xDict.Key,
-			xDict.Name,
-			xDict.IsPin,
-			xDict.Remark,
-		).
 		Where(
 			xDict.Id.Eq(100),
 		).
-		Updates(&model.Dict{
-			Id:     0,
-			Key:    "123",
-			Name:   "456",
-			IsPin:  false,
-			Remark: "remark",
-		})
+		UpdatesExpr(
+			xDict.Key.Value("1000"),
+			xDict.IsPin.Value(false),
+		)
 	checkError(err)
 }
 
