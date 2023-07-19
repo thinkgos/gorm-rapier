@@ -365,10 +365,10 @@ func Test_Executor_Update_Assign(t *testing.T) {
 				).
 				updateExpr(
 					xDict.Sort,
-					xDict.Sort.Add(100),
+					xDict.Score.Add(100),
 				),
-			wantVars: []any{uint16(100), int64(1)},
-			want:     "UPDATE `dict` SET `sort`=`dict`.`sort`+? WHERE `dict`.`id` = ?",
+			wantVars: []any{float64(100), int64(1)},
+			want:     "UPDATE `dict` SET `sort`=`dict`.`score`+? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updatesExpr: value",
@@ -380,9 +380,10 @@ func Test_Executor_Update_Assign(t *testing.T) {
 					xDict.Sort.Value(100),
 					xDict.IsPin.value(true),
 					xDict.Score.Add(10),
+					xDict.CreatedAt.ValueNull(),
 				),
-			wantVars: []any{uint16(100), true, float64(10), int64(1)},
-			want:     "UPDATE `dict` SET `sort`=?,`is_pin`=?,`score`=`dict`.`score`+? WHERE `dict`.`id` = ?",
+			wantVars: []any{uint16(100), true, float64(10), nil, int64(1)},
+			want:     "UPDATE `dict` SET `sort`=?,`is_pin`=?,`score`=`dict`.`score`+?,`created_at`=? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updateColumnExpr: value",

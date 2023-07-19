@@ -11,3 +11,15 @@ func (e expr) value(value any) SetExpr {
 	}
 	return e
 }
+
+func (e expr) ValueNull() SetExpr {
+	e.e = clause.Set{
+		{
+			Column: clause.Column{
+				Name: e.col.Name,
+			},
+			Value: nil,
+		},
+	}
+	return e
+}
