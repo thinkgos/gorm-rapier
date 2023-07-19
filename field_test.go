@@ -811,10 +811,16 @@ func Test_SetExpr_Field(t *testing.T) {
 			want:     "`address` = ?",
 		},
 		{
-			name:     "Value",
+			name:     "Value: null",
 			expr:     NewField("user", "address").ValueNull(),
 			wantVars: []any{nil},
 			want:     "`address`=?",
+		},
+		{
+			name:     "Value: any",
+			expr:     NewField("user", "sex").ValueAny(1),
+			wantVars: []any{1},
+			want:     "`sex`=?",
 		},
 		{
 			name: "SetSubQuery",

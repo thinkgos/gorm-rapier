@@ -23,3 +23,15 @@ func (e expr) ValueNull() SetExpr {
 	}
 	return e
 }
+
+func (e expr) ValueAny(value any) SetExpr {
+	e.e = clause.Set{
+		{
+			Column: clause.Column{
+				Name: e.col.Name,
+			},
+			Value: value,
+		},
+	}
+	return e
+}
