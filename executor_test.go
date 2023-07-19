@@ -337,7 +337,7 @@ func Test_Executor_SubQuery(t *testing.T) {
 	}
 }
 
-func Test_Executor_Update_Assign(t *testing.T) {
+func Test_Executor_Update_SetExpr(t *testing.T) {
 	tests := []struct {
 		name     string
 		db       *gorm.DB
@@ -347,90 +347,72 @@ func Test_Executor_Update_Assign(t *testing.T) {
 		{
 			name: "updateExpr: value",
 			db: xDict.X_Executor(newDb()).
-				Where(
-					xDict.Id.Eq(1),
-				).
-				updateExpr(
-					xDict.Sort,
-					int(100),
-				),
+				Where(xDict.Id.Eq(1)).
+				updateExpr(xDict.Sort, int(100)),
 			wantVars: []any{int(100), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updateExpr: SetExpr",
+			name: "updateExpr: value gorm.Expr",
 			db: xDict.X_Executor(newDb()).
-				Where(
-					xDict.Id.Eq(1),
-				).
-				updateExpr(
-					xDict.Sort,
-					xDict.Score.Add(100),
-				),
+				Where(xDict.Id.Eq(1)).
+				updateExpr(xDict.Sort, gorm.Expr("`sort`+?", 100)),
+			wantVars: []any{int(100), int64(1)},
+			want:     "UPDATE `dict` SET `sort`=`sort`+? WHERE `dict`.`id` = ?",
+		},
+		{
+			name: "updateExpr: value SetExpr",
+			db: xDict.X_Executor(newDb()).
+				Where(xDict.Id.Eq(1)).
+				updateExpr(xDict.Sort, xDict.Score.Add(100)),
 			wantVars: []any{float64(100), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=`dict`.`score`+? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updatesExpr: value",
+			name: "updatesExpr: value SetExpr",
 			db: xDict.X_Executor(newDb()).
-				Where(
-					xDict.Id.Eq(1),
-				).
+				Where(xDict.Id.Eq(1)).
 				updatesExpr(
-					xDict.Sort.Value(100),
-					xDict.IsPin.value(true),
+					xDict.Name.Value("abc"),
 					xDict.Score.Add(10),
+					xDict.Sort.ValueAny(gorm.Expr("`sort`+?", 100)),
 					xDict.CreatedAt.ValueNull(),
 				),
-			wantVars: []any{uint16(100), true, float64(10), nil, int64(1)},
-			want:     "UPDATE `dict` SET `sort`=?,`is_pin`=?,`score`=`dict`.`score`+?,`created_at`=? WHERE `dict`.`id` = ?",
+			wantVars: []any{"abc", float64(10), int(100), nil, int64(1)},
+			want:     "UPDATE `dict` SET `name`=?,`score`=`dict`.`score`+?,`sort`=`sort`+?,`created_at`=? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updateColumnExpr: value",
 			db: xDict.X_Executor(newDb()).
-				Where(
-					xDict.Id.Eq(1),
-				).
-				updateColumnExpr(
-					xDict.Sort,
-					int(100),
-				),
+				Where(xDict.Id.Eq(1)).
+				updateColumnExpr(xDict.Sort, int(100)),
 			wantVars: []any{int(100), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updateColumnExpr: SetExpr",
+			name: "updateColumnExpr: value SetExpr",
 			db: xDict.X_Executor(newDb()).
-				Where(
-					xDict.Id.Eq(1),
-				).
-				updateColumnExpr(
-					xDict.Sort,
-					xDict.Sort.Add(100),
-				),
+				Where(xDict.Id.Eq(1)).
+				updateColumnExpr(xDict.Sort, xDict.Sort.Add(100)),
 			wantVars: []any{uint16(100), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=`dict`.`sort`+? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updateColumnsExpr: value",
+			name: "updateColumnsExpr: value SetExpr",
 			db: xDict.X_Executor(newDb()).
-				Where(
-					xDict.Id.Eq(1),
-				).
+				Where(xDict.Id.Eq(1)).
 				updateColumnsExpr(
 					xDict.Sort.Value(100),
-					xDict.IsPin.value(true),
 					xDict.Score.Add(10),
+					xDict.CreatedAt.ValueAny(nil),
 				),
-			wantVars: []any{uint16(100), true, float64(10), int64(1)},
-			want:     "UPDATE `dict` SET `sort`=?,`is_pin`=?,`score`=`dict`.`score`+? WHERE `dict`.`id` = ?",
+			wantVars: []any{uint16(100), float64(10), nil, int64(1)},
+			want:     "UPDATE `dict` SET `sort`=?,`score`=`dict`.`score`+?,`created_at`=? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updatesExpr: SubQuery",
 			db: xDict.X_Executor(newDb()).
-				Where(
-					xDict.Id.Eq(1),
-				).
+				Where(xDict.Id.Eq(1)).
 				updatesExpr(
 					xDict.Score.SetSubQuery(xDict.X_Executor(newDb()).SelectExpr(xDict.Score).Where(xDict.Id.Eq(2)).IntoDB()),
 				),
