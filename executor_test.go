@@ -42,6 +42,7 @@ func Test_Executor_Stand(t *testing.T) {
 		_, err := xDict.X_Executor(newDb()).
 			Debug().
 			Where(xDict.Id.Eq(1)).
+			IntoAttrExecutor().
 			Attrs(&Dict{
 				Name: "aaaa",
 				Sort: 1111,
@@ -53,6 +54,7 @@ func Test_Executor_Stand(t *testing.T) {
 		_, err = xDict.X_Executor(newDb()).
 			Debug().
 			Where(xDict.Id.Eq(1)).
+			IntoAttrExecutor().
 			AttrsExpr(
 				xDict.Name.Value("bbbb"),
 				xDict.Sort.Value(2222),
@@ -67,6 +69,7 @@ func Test_Executor_Stand(t *testing.T) {
 		_, err := xDict.X_Executor(newDb()).
 			Debug().
 			Where(xDict.Id.Eq(1)).
+			IntoAttrExecutor().
 			Assign(&Dict{
 				Name: "aaaa",
 				Sort: 1111,
@@ -78,6 +81,7 @@ func Test_Executor_Stand(t *testing.T) {
 		_, err = xDict.X_Executor(newDb()).
 			Debug().
 			Where(xDict.Id.Eq(1)).
+			IntoAttrExecutor().
 			AssignExpr(
 				xDict.Name.Value("bbbb"),
 				xDict.Sort.Value(2222),
