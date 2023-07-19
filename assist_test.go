@@ -249,6 +249,58 @@ func Test_Select(t *testing.T) {
 	}
 }
 
+func Test_Omit(t *testing.T) {
+	var dummy Dict
+
+	tests := []struct {
+		name     string
+		db       *gorm.DB
+		wantVars []any
+		want     string
+	}{
+		{
+			name: "select *",
+			db: newDb().Model(xDict.X_Model()).
+				Scopes(
+					OmitExpr(),
+				).
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` LIMIT 1",
+		},
+		{
+			name: "omit field",
+			db: newDb().Model(xDict.X_Model()).
+				Scopes(
+					OmitExpr(
+						xDict.CreatedAt,
+					),
+				).
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort` FROM `dict` LIMIT 1",
+		},
+		{
+			name: "omit more fields",
+			db: newDb().Model(xDict.X_Model()).
+				Scopes(
+					OmitExpr(
+						xDict.Score,
+						xDict.CreatedAt,
+					),
+				).
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`is_pin`,`dict`.`sort` FROM `dict` LIMIT 1",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+		})
+	}
+}
+
 func Test_Distinct(t *testing.T) {
 	tests := []struct {
 		name     string

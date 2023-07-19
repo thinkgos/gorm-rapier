@@ -111,6 +111,11 @@ func (x *Executor[T]) SelectExpr(columns ...Expr) *Executor[T] {
 	return x
 }
 
+func (x *Executor[T]) OmitExpr(columns ...Expr) *Executor[T] {
+	x.conditions.OmitExpr(columns...)
+	return x
+}
+
 func (x *Executor[T]) OrderExpr(columns ...Expr) *Executor[T] {
 	x.conditions.OrderExpr(columns...)
 	return x

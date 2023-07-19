@@ -81,6 +81,14 @@ func buildAttrsValue(attrs []SetExpr) []any {
 	return values
 }
 
+func buildColumnName(columns ...Expr) []string {
+	vs := make([]string, 0, len(columns))
+	for _, v := range columns {
+		vs = append(vs, v.ColumnName())
+	}
+	return vs
+}
+
 // IntoExpression convert Expr to clause.Expression
 func IntoExpression(conds ...Expr) []clause.Expression {
 	exprs := make([]clause.Expression, len(conds))

@@ -20,6 +20,7 @@ func Test_Executor_Stand(t *testing.T) {
 			Select([]string{"id", "pid", "name"}).
 			Distinct().
 			Omit("sort").
+			OmitExpr(xDict.Sort).
 			Where("id = ?", 1).
 			Scopes(func(d *gorm.DB) *gorm.DB {
 				return d.Where("score > ?", 10)

@@ -118,6 +118,11 @@ func (c *Conditions) SelectExpr(columns ...Expr) *Conditions {
 	return c.Scopes(SelectExpr(columns...))
 }
 
+// OmitExpr with field
+func (c *Conditions) OmitExpr(columns ...Expr) *Conditions {
+	return c.Scopes(OmitExpr(columns...))
+}
+
 // OrderExpr with field
 func (c *Conditions) OrderExpr(columns ...Expr) *Conditions {
 	return c.Scopes(OrderExpr(columns...))

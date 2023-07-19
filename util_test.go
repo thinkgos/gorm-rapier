@@ -59,6 +59,18 @@ func Test_buildAssignSet(t *testing.T) {
 	})
 }
 
+func Test_buildColumnName(t *testing.T) {
+	t.Run("empty", func(t *testing.T) {
+		got := buildColumnName(
+			xDict.Pid,
+			xDict.Score,
+		)
+		if want := []string{"pid", "score"}; !reflect.DeepEqual(got, want) {
+			t.Errorf("column name expects %+v got %v", want, got)
+		}
+	})
+}
+
 func Test_IntoSlice(t *testing.T) {
 	t.Run("", func(t *testing.T) {
 		want := []int{1, 2, 3}

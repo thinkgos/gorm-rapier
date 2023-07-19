@@ -46,6 +46,16 @@ func SelectExpr(columns ...Expr) Condition {
 	}
 }
 
+// OmitExpr with field
+func OmitExpr(columns ...Expr) Condition {
+	return func(db *gorm.DB) *gorm.DB {
+		if len(columns) == 0 {
+			return db
+		}
+		return db.Omit(buildColumnName(columns...)...)
+	}
+}
+
 // DistinctExpr with field
 func DistinctExpr(columns ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
