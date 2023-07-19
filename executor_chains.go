@@ -96,16 +96,6 @@ func (x *Executor[T]) Preload(query string, args ...any) *Executor[T] {
 	return x
 }
 
-func (x *Executor[T]) Attrs(attrs ...any) *Executor[T] {
-	x.conditions.Attrs(attrs...)
-	return x
-}
-
-func (x *Executor[T]) Assign(attrs ...any) *Executor[T] {
-	x.conditions.Assign(attrs...)
-	return x
-}
-
 func (x *Executor[T]) Unscoped() *Executor[T] {
 	x.conditions.Unscoped()
 	return x
@@ -128,16 +118,6 @@ func (x *Executor[T]) OrderExpr(columns ...Expr) *Executor[T] {
 
 func (x *Executor[T]) GroupExpr(columns ...Expr) *Executor[T] {
 	x.conditions.GroupExpr(columns...)
-	return x
-}
-
-func (x *Executor[T]) AttrsExpr(attrs ...SetExpr) *Executor[T] {
-	x.conditions.AttrsExpr(attrs...)
-	return x
-}
-
-func (x *Executor[T]) AssignExpr(attrs ...SetExpr) *Executor[T] {
-	x.conditions.AssignExpr(attrs...)
 	return x
 }
 

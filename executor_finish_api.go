@@ -51,14 +51,6 @@ func (x *Executor[T]) First(dest any) error {
 	return x.IntoDB().First(dest).Error
 }
 
-func (x *Executor[T]) FirstOrInit(dest any) error {
-	return x.IntoDB().FirstOrInit(dest).Error
-}
-
-func (x *Executor[T]) FirstOrCreate(dest any) error {
-	return x.IntoDB().FirstOrCreate(dest).Error
-}
-
 func (x *Executor[T]) Take(dest any) error {
 	return x.IntoDB().Take(dest).Error
 }

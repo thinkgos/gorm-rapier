@@ -389,39 +389,6 @@ func Test_Group(t *testing.T) {
 	}
 }
 
-// func Test_Assign(t *testing.T) {
-// 	var dummy Dict
-
-// 	tests := []struct {
-// 		name     string
-// 		db       *gorm.DB
-// 		wantVars []any
-// 		want     string
-// 	}{
-// 		{
-// 			name: "",
-// 			db: newDb().Model(xDict.X_Model()).
-// 				Where("`id` = ?", 10).
-// 				// Scopes(
-// 				// 	AttrsExpr(
-// 				// 		xDict.IsPin.Value(true),
-// 				// 		xDict.Sort.Value(100),
-// 				// 	),
-// 				// ).
-// 				Attrs(&Dict{IsPin: true, Sort: 100}).
-// 				FirstOrCreate(&dummy),
-// 			wantVars: nil,
-// 			want:     "SELECT * FROM `dict` LIMIT 1",
-// 		},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
-// 			fmt.Printf("%#v", dummy)
-// 		})
-// 	}
-// }
-
 func Test_Locking(t *testing.T) {
 	var dummy Dict
 

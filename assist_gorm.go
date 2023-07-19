@@ -101,18 +101,6 @@ func GormPreload(query string, args ...any) Condition {
 	}
 }
 
-func GormAttrs(attrs ...any) Condition {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Attrs(attrs...)
-	}
-}
-
-func GormAssign(attrs ...any) Condition {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Assign(attrs...)
-	}
-}
-
 func GormUnscoped() Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Unscoped()

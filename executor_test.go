@@ -9,7 +9,7 @@ import (
 )
 
 func Test_Executor_Stand(t *testing.T) {
-	t.Run("empty", func(t *testing.T) {
+	t.Run("executor", func(t *testing.T) {
 		err := xDict.X_Executor(newDb()).
 			Debug().
 			WithContext(context.Background()).
@@ -20,8 +20,6 @@ func Test_Executor_Stand(t *testing.T) {
 			Select([]string{"id", "pid", "name"}).
 			Distinct().
 			Omit("sort").
-			Assign("a").
-			Attrs("b").
 			Where("id = ?", 1).
 			Scopes(func(d *gorm.DB) *gorm.DB {
 				return d.Where("score > ?", 10)
@@ -36,6 +34,55 @@ func Test_Executor_Stand(t *testing.T) {
 			Limit(10).
 			Offset(2).
 			Find(&[]Dict{})
+		if err != nil {
+			t.Error(err)
+		}
+	})
+	t.Run("attr executor: attr", func(t *testing.T) {
+		_, err := xDict.X_Executor(newDb()).
+			Debug().
+			Where(xDict.Id.Eq(1)).
+			Attrs(&Dict{
+				Name: "aaaa",
+				Sort: 1111,
+			}).
+			FirstOrCreate(&Dict{})
+		if err != nil {
+			t.Error(err)
+		}
+		_, err = xDict.X_Executor(newDb()).
+			Debug().
+			Where(xDict.Id.Eq(1)).
+			AttrsExpr(
+				xDict.Name.Value("bbbb"),
+				xDict.Sort.Value(2222),
+			).
+			FirstOrCreate(&Dict{})
+		if err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("attr executor: assign", func(t *testing.T) {
+		_, err := xDict.X_Executor(newDb()).
+			Debug().
+			Where(xDict.Id.Eq(1)).
+			Assign(&Dict{
+				Name: "aaaa",
+				Sort: 1111,
+			}).
+			FirstOrInit(&Dict{})
+		if err != nil {
+			t.Error(err)
+		}
+		_, err = xDict.X_Executor(newDb()).
+			Debug().
+			Where(xDict.Id.Eq(1)).
+			AssignExpr(
+				xDict.Name.Value("bbbb"),
+				xDict.Sort.Value(2222),
+			).
+			FirstOrInit(&Dict{})
 		if err != nil {
 			t.Error(err)
 		}

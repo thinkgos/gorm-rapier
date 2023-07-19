@@ -103,16 +103,6 @@ func (c *Conditions) Preload(query string, args ...any) *Conditions {
 	return c
 }
 
-func (c *Conditions) Attrs(attrs ...any) *Conditions {
-	c.Scopes(GormAttrs(attrs...))
-	return c
-}
-
-func (c *Conditions) Assign(attrs ...any) *Conditions {
-	c.Scopes(GormAssign(attrs...))
-	return c
-}
-
 func (c *Conditions) Unscoped() *Conditions {
 	c.Scopes(GormUnscoped())
 	return c
@@ -136,16 +126,6 @@ func (c *Conditions) OrderExpr(columns ...Expr) *Conditions {
 // GroupExpr with field
 func (c *Conditions) GroupExpr(columns ...Expr) *Conditions {
 	return c.Scopes(GroupExpr(columns...))
-}
-
-func (c *Conditions) AttrsExpr(attrs ...SetExpr) *Conditions {
-	c.Scopes(AttrsExpr(attrs...))
-	return c
-}
-
-func (c *Conditions) AssignExpr(attrs ...SetExpr) *Conditions {
-	c.Scopes(AssignExpr(attrs...))
-	return c
 }
 
 // CrossJoinsExpr cross joins condition
@@ -204,3 +184,5 @@ func (c *Conditions) LockingShare() *Conditions {
 func (c *Conditions) Pagination(page, perPage int64, maxPages ...int64) *Conditions {
 	return c.Scopes(Pagination(page, perPage, maxPages...))
 }
+
+
