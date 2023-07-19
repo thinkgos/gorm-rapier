@@ -798,6 +798,8 @@ func Test_Expr_Field(t *testing.T) {
 }
 
 func Test_SetExpr_Field(t *testing.T) {
+	var nullTime *time.Time
+
 	tests := []struct {
 		name     string
 		expr     Expr
@@ -820,6 +822,18 @@ func Test_SetExpr_Field(t *testing.T) {
 			name:     "Value: any",
 			expr:     NewField("user", "sex").ValueAny(1),
 			wantVars: []any{1},
+			want:     "`sex`=?",
+		},
+		{
+			name:     "Value: any null",
+			expr:     NewField("user", "sex").ValueAny(nil),
+			wantVars: []any{nil},
+			want:     "`sex`=?",
+		},
+		{
+			name:     "Value: any null value",
+			expr:     NewField("user", "sex").ValueAny(nullTime),
+			wantVars: []any{nullTime},
 			want:     "`sex`=?",
 		},
 		{

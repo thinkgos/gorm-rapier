@@ -338,6 +338,8 @@ func Test_Executor_SubQuery(t *testing.T) {
 }
 
 func Test_Executor_Update_SetExpr(t *testing.T) {
+	var nullString *string
+
 	tests := []struct {
 		name     string
 		db       *gorm.DB
@@ -404,10 +406,11 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 				updateColumnsExpr(
 					xDict.Sort.Value(100),
 					xDict.Score.Add(10),
+					xDict.Name.ValueAny(nullString),
 					xDict.CreatedAt.ValueAny(nil),
 				),
-			wantVars: []any{uint16(100), float64(10), nil, int64(1)},
-			want:     "UPDATE `dict` SET `sort`=?,`score`=`dict`.`score`+?,`created_at`=? WHERE `dict`.`id` = ?",
+			wantVars: []any{uint16(100), float64(10), nullString, nil, int64(1)},
+			want:     "UPDATE `dict` SET `sort`=?,`score`=`dict`.`score`+?,`name`=?,`created_at`=? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updatesExpr: SubQuery",
