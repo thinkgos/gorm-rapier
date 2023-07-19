@@ -303,7 +303,7 @@ func Test_Field_Expr_Col(t *testing.T) {
 	}
 }
 
-func Test_Field_Expr(t *testing.T) {
+func Test_Expr_Field(t *testing.T) {
 	var value1 int = 1
 	var value2 int = 2
 	var value3 int = 3
@@ -630,7 +630,6 @@ func Test_Field_Expr(t *testing.T) {
 			wantVars: []any{"[", "address", "path", "]"},
 			want:     "CONCAT(?,REPLACE(`address`,?,?),?)",
 		},
-
 		{
 			name:     "trim",
 			expr:     NewField("", "address").Trim("abc"),
@@ -649,7 +648,6 @@ func Test_Field_Expr(t *testing.T) {
 			wantVars: []any{"abc"},
 			want:     "TRIM(TRAILING ? FROM `address`)",
 		},
-
 		{
 			name:     "trim space",
 			expr:     NewField("", "address").TrimSpace(),
@@ -788,6 +786,37 @@ func Test_Field_Expr(t *testing.T) {
 			expr:     NewField("", "created_at").MonthName(),
 			wantVars: nil,
 			want:     "MONTHNAME(`created_at`)",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+			})
+		})
+	}
+}
+
+func Test_SetExpr_Field(t *testing.T) {
+	tests := []struct {
+		name     string
+		expr     Expr
+		wantVars []any
+		want     string
+	}{
+		{
+			name:     "Value",
+			expr:     NewField("user", "address").Value("abc"),
+			wantVars: []any{"abc"},
+			want:     "`address` = ?",
+		},
+		{
+			name: "SetSubQuery",
+			expr: NewField("user", "address").SetSubQuery(
+				newDb().Table("`user`").Select("`address`").Where("`id` = ?", 100),
+			),
+			wantVars: []any{100},
+			want:     "`address`=(SELECT `address` FROM `user` WHERE `id` = ?)",
 		},
 	}
 	for _, tt := range tests {

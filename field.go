@@ -513,3 +513,8 @@ func (e Field) DivCol(col Expr) Field {
 func (e Field) ConcatCol(cols ...Expr) Field {
 	return Field{e.innerConcatCol(cols...)}
 }
+
+// Value set value
+func (field Field) Value(value any) SetExpr {
+	return field.value(value)
+}

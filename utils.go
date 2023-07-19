@@ -6,6 +6,7 @@ import (
 
 	"golang.org/x/exp/constraints"
 	"gorm.io/gorm"
+	"gorm.io/gorm/callbacks"
 	"gorm.io/gorm/clause"
 )
 
@@ -40,6 +41,44 @@ func buildColumnsValue(db *gorm.DB, columns ...Expr) string {
 	}
 
 	return stmt.SQL.String()
+}
+
+// buildAssignSet build all set
+func buildAssignSet(db *gorm.DB, exprs []SetExpr) (set clause.Set) {
+	for _, expr := range exprs {
+		column := clause.Column{
+			Table: "", // FIXME: when need table?.
+			Name:  expr.ColumnName(),
+		}
+
+		switch e := expr.SetExpr().(type) {
+		case clause.Expr:
+			set = append(set, clause.Assignment{
+				Column: column,
+				Value:  e,
+			})
+		case clause.Eq:
+			set = append(set, clause.Assignment{
+				Column: column,
+				Value:  e.Value,
+			})
+		case clause.Set:
+			set = append(set, e...)
+		}
+	}
+	stmt := db.Session(&gorm.Session{}).Statement
+	stmt.Dest = map[string]interface{}{}
+	return append(set, callbacks.ConvertToAssignments(stmt)...)
+}
+
+func buildAttrsValue(attrs []SetExpr) []any {
+	values := make([]any, 0, len(attrs))
+	for _, attr := range attrs {
+		if e, ok := attr.SetExpr().(clause.Eq); ok {
+			values = append(values, e)
+		}
+	}
+	return values
 }
 
 // IntoExpression convert Expr to clause.Expression

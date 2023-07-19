@@ -157,3 +157,15 @@ func (e Float[T]) MulCol(col Expr) Float[T] {
 func (e Float[T]) DivCol(col Expr) Float[T] {
 	return Float[T]{e.innerDivCol(col)}
 }
+
+// Value set value
+func (field Float[T]) Value(value T) SetExpr {
+	return field.value(value)
+}
+
+// ValueZero set value zero
+func (field Float[T]) ValueZero() SetExpr {
+	var zero T
+
+	return field.value(zero)
+}

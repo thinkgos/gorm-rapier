@@ -147,6 +147,26 @@ func (x *Executor[T]) UpdateColumn(column string, value any) (rowsAffected int64
 	return result.RowsAffected, result.Error
 }
 
+func (x *Executor[T]) UpdateExpr(column Expr, value any) (rowsAffected int64, err error) {
+	result := x.updateExpr(column, value)
+	return result.RowsAffected, result.Error
+}
+
+func (x *Executor[T]) UpdatesExpr(columns ...SetExpr) (rowsAffected int64, err error) {
+	result := x.updatesExpr(columns...)
+	return result.RowsAffected, result.Error
+}
+
+func (x *Executor[T]) UpdateColumnExpr(column Expr, value any) (rowsAffected int64, err error) {
+	result := x.updateColumnExpr(column, value)
+	return result.RowsAffected, result.Error
+}
+
+func (x *Executor[T]) UpdateColumnsExpr(columns ...SetExpr) (rowsAffected int64, err error) {
+	result := x.updateColumnsExpr(columns...)
+	return result.RowsAffected, result.Error
+}
+
 func (x *Executor[T]) Delete() (rowsAffected int64, err error) {
 	var t T
 
@@ -484,4 +504,44 @@ func (x *Executor[T]) PluckExprUint64(column Expr) (slice []uint64, err error) {
 func (x *Executor[T]) PluckExprString(column Expr) (slice []string, err error) {
 	err = x.PluckExpr(column, &slice)
 	return
+}
+
+// ------------------------- inner finish api ---------------------------------------
+
+func (x *Executor[T]) updateExpr(column Expr, value any) *gorm.DB {
+	db := x.IntoDB()
+	columnName := column.BuildColumn(db.Statement, WithoutQuote)
+
+	switch v := value.(type) {
+	case SetExpr:
+		return db.Update(columnName, v.SetExpr())
+	default:
+		return db.Update(columnName, v)
+	}
+}
+
+func (x *Executor[T]) updatesExpr(columns ...SetExpr) *gorm.DB {
+	db := x.IntoDB()
+	return db.
+		Clauses(buildAssignSet(db, columns)).
+		Omit("*").
+		Updates(map[string]interface{}{})
+}
+
+func (x *Executor[T]) updateColumnExpr(column Expr, value any) *gorm.DB {
+	db := x.IntoDB()
+	columnName := column.BuildColumn(db.Statement, WithoutQuote)
+	switch v := value.(type) {
+	case SetExpr:
+		return db.UpdateColumn(columnName, v.SetExpr())
+	default:
+		return db.UpdateColumn(columnName, v)
+	}
+}
+
+func (x *Executor[T]) updateColumnsExpr(columns ...SetExpr) *gorm.DB {
+	db := x.IntoDB()
+	return db.Clauses(buildAssignSet(db, columns)).
+		Omit("*").
+		UpdateColumns(map[string]interface{}{})
 }

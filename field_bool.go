@@ -77,3 +77,13 @@ func (field Bool) BitAnd(value bool) Expr {
 func (field Bool) BitOr(value bool) Expr {
 	return Bool{field.innerBitOr(value)}
 }
+
+// Value set value
+func (field Bool) Value(value bool) SetExpr {
+	return field.value(value)
+}
+
+// ValueZero set value zero
+func (field Bool) ValueZero() SetExpr {
+	return field.value(false)
+}

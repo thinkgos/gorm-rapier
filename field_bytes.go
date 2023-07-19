@@ -141,3 +141,13 @@ func (field Bytes) SubstringIndex(delim string, count int) Bytes {
 		},
 	}
 }
+
+// Value set value
+func (field Bytes) Value(value []byte) SetExpr {
+	return field.value(value)
+}
+
+// ValueZero set value zero
+func (field Bytes) ValueZero() SetExpr {
+	return field.value([]byte{})
+}

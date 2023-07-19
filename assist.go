@@ -78,6 +78,26 @@ func GroupExpr(columns ...Expr) Condition {
 	}
 }
 
+// AttrsExpr with SetExpr
+func AttrsExpr(attrs ...SetExpr) Condition {
+	return func(db *gorm.DB) *gorm.DB {
+		if len(attrs) == 0 {
+			return db
+		}
+		return db.Attrs(buildAttrsValue(attrs)...)
+	}
+}
+
+// AssignExpr with SetExpr
+func AssignExpr(attrs ...SetExpr) Condition {
+	return func(db *gorm.DB) *gorm.DB {
+		if len(attrs) == 0 {
+			return db
+		}
+		return db.Assign(buildAttrsValue(attrs)...)
+	}
+}
+
 // LockingUpdate specify the lock strength to UPDATE
 func LockingUpdate() Condition {
 	return func(db *gorm.DB) *gorm.DB {

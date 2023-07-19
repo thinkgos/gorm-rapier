@@ -219,3 +219,15 @@ func (e Integer[T]) MulCol(col Expr) Integer[T] {
 func (e Integer[T]) DivCol(col Expr) Integer[T] {
 	return Integer[T]{e.innerDivCol(col)}
 }
+
+// Value set value
+func (field Integer[T]) Value(value T) SetExpr {
+	return field.value(value)
+}
+
+// ValueZero set value zero
+func (field Integer[T]) ValueZero() SetExpr {
+	var zero T
+
+	return field.value(zero)
+}

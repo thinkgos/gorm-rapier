@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func Test_Time(t *testing.T) {
+func Test_Expr_Time(t *testing.T) {
 	value1, _ := time.Parse("2006-01-02 15:04:05", "2021-06-29 15:11:49")
 	value2 := value1.Add(1 * time.Hour)
 	value3 := value1.Add(2 * time.Hour)
@@ -304,6 +304,38 @@ func Test_Time(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+		})
+	}
+}
+
+func Test_SetExpr_Time(t *testing.T) {
+	var zeroValue time.Time
+	value1, _ := time.Parse("2006-01-02 15:04:05", "2021-06-29 15:11:49")
+
+	tests := []struct {
+		name     string
+		expr     Expr
+		wantVars []any
+		want     string
+	}{
+		{
+			name:     "Value",
+			expr:     NewTime("user", "created_at").Value(value1),
+			wantVars: []any{value1},
+			want:     "`created_at` = ?",
+		},
+		{
+			name:     "Value",
+			expr:     NewTime("user", "created_at").ValueZero(),
+			wantVars: []any{zeroValue},
+			want:     "`created_at` = ?",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+			})
 		})
 	}
 }

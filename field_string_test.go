@@ -346,3 +346,32 @@ func Test_Expr_String(t *testing.T) {
 		})
 	}
 }
+
+func Test_SetExpr_String(t *testing.T) {
+	tests := []struct {
+		name     string
+		expr     Expr
+		wantVars []any
+		want     string
+	}{
+		{
+			name:     "Value",
+			expr:     NewString("user", "address").Value("abc"),
+			wantVars: []any{"abc"},
+			want:     "`address` = ?",
+		},
+		{
+			name:     "Value",
+			expr:     NewString("user", "address").ValueZero(),
+			wantVars: []any{""},
+			want:     "`address` = ?",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+			})
+		})
+	}
+}

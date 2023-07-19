@@ -90,3 +90,32 @@ func Test_Bool(t *testing.T) {
 		})
 	}
 }
+
+func Test_SetExpr_Bool(t *testing.T) {
+	tests := []struct {
+		name     string
+		expr     Expr
+		wantVars []any
+		want     string
+	}{
+		{
+			name:     "Value",
+			expr:     NewBool("user", "male").Value(true),
+			wantVars: []any{true},
+			want:     "`male` = ?",
+		},
+		{
+			name:     "Value",
+			expr:     NewBool("user", "male").ValueZero(),
+			wantVars: []any{false},
+			want:     "`male` = ?",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+			})
+		})
+	}
+}
