@@ -307,7 +307,7 @@ func Test_Executor_SubQuery(t *testing.T) {
 		},
 		{
 			name: "sub query: IntoExistExpr",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Where(
 					xDict.X_Executor(newDb()).
 						SelectExpr(xDict.Id.Min()).
@@ -319,7 +319,7 @@ func Test_Executor_SubQuery(t *testing.T) {
 		},
 		{
 			name: "sub query: IntoNotExistExpr",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Where(
 					xDict.X_Executor(newDb()).
 						SelectExpr(xDict.Id.Min()).

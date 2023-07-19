@@ -8,6 +8,9 @@ import (
 	"gorm.io/gorm"
 )
 
+var xDict = New_X_Dict("dict")
+var xDictItem = New_X_DictItem("dict_item")
+
 type Dict struct {
 	Id        int64
 	Pid       int64
@@ -22,24 +25,22 @@ func (*Dict) TableName() string {
 	return "dict"
 }
 
-var xDict = New_X_Dict("dict")
-
-type X_DictImpl struct {
+type Dict_Active struct {
 	// private fields
 	xTableName string
 
 	ALL       Asterisk
 	Id        Int64
 	Pid       Int64
+	Name      String
 	Score     Float64
 	IsPin     Bool
 	Sort      Uint16
-	Name      String
 	CreatedAt Time
 }
 
-func New_X_Dict(tableName string) X_DictImpl {
-	return X_DictImpl{
+func New_X_Dict(tableName string) Dict_Active {
+	return Dict_Active{
 		xTableName: tableName,
 
 		ALL:       NewAsterisk(tableName),
@@ -53,23 +54,68 @@ func New_X_Dict(tableName string) X_DictImpl {
 	}
 }
 
-func X_Dict() X_DictImpl {
+func X_Dict() Dict_Active {
 	return xDict
 }
 
-func (*X_DictImpl) As(alias string) X_DictImpl {
+func (*Dict_Active) As(alias string) Dict_Active {
 	return New_X_Dict(alias)
 }
 
-func (*X_DictImpl) X_Model() *Dict {
-	return &Dict{}
-}
-
-func (x *X_DictImpl) X_TableName() string {
+func (x *Dict_Active) X_TableName() string {
 	return x.xTableName
 }
-func (*X_DictImpl) X_Executor(db *gorm.DB) *Executor[Dict] {
+func (*Dict_Active) X_Executor(db *gorm.DB) *Executor[Dict] {
 	return NewExecutor[Dict](db)
+}
+
+type DictItem struct {
+	Id        int64
+	DictId    int64
+	DictName  string
+	Name      string
+	Sort      uint32
+	IsEnabled bool
+}
+
+type DictItem_Active struct {
+	// private fields
+	xTableName string
+
+	ALL       Asterisk
+	Id        Int64
+	DictId    Int64
+	DictName  String
+	Name      String
+	Sort      Uint32
+	IsEnabled Bool
+}
+
+func New_X_DictItem(tableName string) DictItem_Active {
+	return DictItem_Active{
+		xTableName: tableName,
+
+		ALL:       NewAsterisk(tableName),
+		Id:        NewInt64(tableName, "id"),
+		DictId:    NewInt64(tableName, "dict_id"),
+		DictName:  NewString(tableName, "dict_name"),
+		Name:      NewString(tableName, "name"),
+		Sort:      NewUint32(tableName, "sort"),
+		IsEnabled: NewBool(tableName, "is_enabled"),
+	}
+}
+
+func X_DictItem() DictItem_Active {
+	return xDictItem
+}
+func (*DictItem_Active) As(alias string) DictItem_Active {
+	return New_X_DictItem(alias)
+}
+func (x *DictItem_Active) X_TableName() string {
+	return x.xTableName
+}
+func (*DictItem_Active) X_Executor(db *gorm.DB) *Executor[DictItem] {
+	return NewExecutor[DictItem](db)
 }
 
 func newDb() *gorm.DB {
@@ -87,7 +133,7 @@ func Test_Table(t *testing.T) {
 	}{
 		{
 			name: "empty table",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					TableExpr(),
 				).
@@ -97,13 +143,13 @@ func Test_Table(t *testing.T) {
 		},
 		{
 			name: "single table",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					TableExpr(
 						From{
 							"a",
 							newDb().
-								Model(xDict.X_Model()),
+								Model(&Dict{}),
 						},
 					),
 				).
@@ -113,18 +159,18 @@ func Test_Table(t *testing.T) {
 		},
 		{
 			name: "multi table",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					TableExpr(
 						From{
 							"a",
 							newDb().
-								Model(xDict.X_Model()),
+								Model(&Dict{}),
 						},
 						From{
 							"b",
 							newDb().
-								Model(xDict.X_Model()),
+								Model(&Dict{}),
 						},
 					),
 				).
@@ -151,7 +197,7 @@ func Test_Select(t *testing.T) {
 	}{
 		{
 			name: "select *",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					SelectExpr(),
 				).
@@ -161,7 +207,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select field",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					SelectExpr(
 						xDict.Id,
@@ -175,7 +221,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select field where",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					SelectExpr(xDict.Id, xDict.Score),
 				).
@@ -186,7 +232,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select 1",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					SelectExpr(One),
 				).
@@ -196,7 +242,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select COUNT(1)",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					SelectExpr(One.Count()),
 				).
@@ -206,7 +252,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select COUNT(*)",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					SelectExpr(Star.Count()),
 				).
@@ -216,7 +262,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "select AVG(field)",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					SelectExpr(xDict.Score.Avg()),
 				).
@@ -226,7 +272,7 @@ func Test_Select(t *testing.T) {
 		},
 		{
 			name: "update with select field",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					SelectExpr(
 						xDict.Score,
@@ -260,7 +306,7 @@ func Test_Omit(t *testing.T) {
 	}{
 		{
 			name: "select *",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					OmitExpr(),
 				).
@@ -270,7 +316,7 @@ func Test_Omit(t *testing.T) {
 		},
 		{
 			name: "omit field",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					OmitExpr(
 						xDict.CreatedAt,
@@ -282,7 +328,7 @@ func Test_Omit(t *testing.T) {
 		},
 		{
 			name: "omit more fields",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					OmitExpr(
 						xDict.Score,
@@ -310,7 +356,7 @@ func Test_Distinct(t *testing.T) {
 	}{
 		{
 			name: "select * using distinct",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					DistinctExpr(),
 					SelectExpr(xDict.Id),
@@ -321,7 +367,7 @@ func Test_Distinct(t *testing.T) {
 		},
 		{
 			name: "distinct field",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(DistinctExpr(xDict.Id)).
 				Take(&Dict{}),
 			wantVars: nil,
@@ -346,7 +392,7 @@ func Test_Order(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					OrderExpr(),
 				).
@@ -356,7 +402,7 @@ func Test_Order(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					OrderExpr(xDict.Score),
 				).
@@ -366,7 +412,7 @@ func Test_Order(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					OrderExpr(xDict.Score.Desc()),
 				).
@@ -376,7 +422,7 @@ func Test_Order(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					OrderExpr(xDict.Score.Desc(), xDict.Name),
 				).
@@ -403,7 +449,7 @@ func Test_Group(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					GroupExpr(),
 				).
@@ -413,7 +459,7 @@ func Test_Group(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					GroupExpr(xDict.Name),
 				).
@@ -423,7 +469,7 @@ func Test_Group(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					SelectExpr(xDict.Score.Sum()),
 					GroupExpr(xDict.Name),
@@ -452,7 +498,7 @@ func Test_Locking(t *testing.T) {
 	}{
 		{
 			name: "",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					GroupExpr(),
 					LockingUpdate(),
@@ -463,7 +509,7 @@ func Test_Locking(t *testing.T) {
 		},
 		{
 			name: "",
-			db: newDb().Model(xDict.X_Model()).
+			db: newDb().Model(&Dict{}).
 				Scopes(
 					GroupExpr(),
 					LockingShare(),
