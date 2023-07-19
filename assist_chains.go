@@ -138,6 +138,16 @@ func (c *Conditions) GroupExpr(columns ...Expr) *Conditions {
 	return c.Scopes(GroupExpr(columns...))
 }
 
+func (c *Conditions) AttrsExpr(attrs ...SetExpr) *Conditions {
+	c.Scopes(AttrsExpr(attrs...))
+	return c
+}
+
+func (c *Conditions) AssignExpr(attrs ...SetExpr) *Conditions {
+	c.Scopes(AssignExpr(attrs...))
+	return c
+}
+
 // CrossJoinsExpr cross joins condition
 func (c *Conditions) CrossJoinsExpr(tableName string, conds ...Expr) *Conditions {
 	return c.Scopes(CrossJoinsExpr(tableName, conds...))

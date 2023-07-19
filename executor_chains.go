@@ -131,6 +131,16 @@ func (x *Executor[T]) GroupExpr(columns ...Expr) *Executor[T] {
 	return x
 }
 
+func (x *Executor[T]) AttrsExpr(attrs ...SetExpr) *Executor[T] {
+	x.conditions.AttrsExpr(attrs...)
+	return x
+}
+
+func (x *Executor[T]) AssignExpr(attrs ...SetExpr) *Executor[T] {
+	x.conditions.AssignExpr(attrs...)
+	return x
+}
+
 func (x *Executor[T]) CrossJoinsExpr(tableName string, conds ...Expr) *Executor[T] {
 	x.conditions.CrossJoinsExpr(tableName, conds...)
 	return x

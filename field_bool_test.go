@@ -91,7 +91,7 @@ func Test_Bool(t *testing.T) {
 	}
 }
 
-func Test_AssignExpr_Bool(t *testing.T) {
+func Test_SetExpr_Bool(t *testing.T) {
 	tests := []struct {
 		name     string
 		expr     Expr

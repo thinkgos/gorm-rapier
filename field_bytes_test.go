@@ -193,7 +193,7 @@ func Test_Bytes(t *testing.T) {
 	}
 }
 
-func Test_Bytes_AssignExpr(t *testing.T) {
+func Test_Bytes_SetExpr(t *testing.T) {
 	tests := []struct {
 		name     string
 		expr     Expr

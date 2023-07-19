@@ -515,6 +515,6 @@ func (e Field) ConcatCol(cols ...Expr) Field {
 }
 
 // Value set value
-func (field Field) Value(value any) AssignExpr {
+func (field Field) Value(value any) SetExpr {
 	return field.value(value)
 }

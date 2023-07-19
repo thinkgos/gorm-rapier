@@ -248,11 +248,11 @@ func (field String) ConcatCol(cols ...Expr) String {
 }
 
 // Value set value
-func (field String) Value(value string) AssignExpr {
+func (field String) Value(value string) SetExpr {
 	return field.value(value)
 }
 
 // ValueZero set value zero
-func (field String) ValueZero() AssignExpr {
+func (field String) ValueZero() SetExpr {
 	return field.value("")
 }

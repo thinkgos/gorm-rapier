@@ -51,7 +51,7 @@ func Test_buildAssignSet(t *testing.T) {
 		db := newDb()
 		query := buildAssignSet(
 			db,
-			[]AssignExpr{
+			[]SetExpr{
 				xDict.Pid.Value(100),
 				xDict.Score.Add(1),
 			})

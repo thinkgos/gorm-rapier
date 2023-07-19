@@ -159,12 +159,12 @@ func (e Float[T]) DivCol(col Expr) Float[T] {
 }
 
 // Value set value
-func (field Float[T]) Value(value T) AssignExpr {
+func (field Float[T]) Value(value T) SetExpr {
 	return field.value(value)
 }
 
 // ValueZero set value zero
-func (field Float[T]) ValueZero() AssignExpr {
+func (field Float[T]) ValueZero() SetExpr {
 	var zero T
 
 	return field.value(zero)

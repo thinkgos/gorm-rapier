@@ -6,7 +6,7 @@ import (
 )
 
 var _ Expr = (*expr)(nil)
-var _ AssignExpr = (*expr)(nil)
+var _ SetExpr = (*expr)(nil)
 
 // BuildOption build option
 type BuildOption uint
@@ -102,7 +102,7 @@ func (e expr) RawExpr() any {
 	return e.e
 }
 
-func (e expr) AssignExpr() any {
+func (e expr) SetExpr() any {
 	return e.Expression()
 }
 

@@ -797,7 +797,7 @@ func Test_Expr_Field(t *testing.T) {
 	}
 }
 
-func Test_AssignExpr_Field(t *testing.T) {
+func Test_SetExpr_Field(t *testing.T) {
 	tests := []struct {
 		name     string
 		expr     Expr

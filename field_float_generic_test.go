@@ -36,9 +36,9 @@ func Test_Expr_Float(t *testing.T) {
 	})
 }
 
-func Test_AssignExpr_Float(t *testing.T) {
+func Test_SetExpr_Float(t *testing.T) {
 	t.Run("float32", func(t *testing.T) {
-		testAssignExprFloat(
+		testSetExprFloat(
 			t,
 			NewFloat[float32],
 			func() (float32, float32) {
@@ -47,7 +47,7 @@ func Test_AssignExpr_Float(t *testing.T) {
 		)
 	})
 	t.Run("float64", func(t *testing.T) {
-		testAssignExprFloat(
+		testSetExprFloat(
 			t,
 			NewFloat[float64],
 			func() (float64, float64) {
@@ -56,7 +56,7 @@ func Test_AssignExpr_Float(t *testing.T) {
 		)
 	})
 	t.Run("decimal", func(t *testing.T) {
-		testAssignExprFloat(
+		testSetExprFloat(
 			t,
 			NewFloat[string],
 			func() (string, string) {
@@ -318,7 +318,7 @@ func testExprFloat[T constraints.Float | ~string](
 	}
 }
 
-func testAssignExprFloat[T constraints.Float | ~string](
+func testSetExprFloat[T constraints.Float | ~string](
 	t *testing.T,
 	newFloat func(table, column string, opts ...Option) Float[T],
 	getTestValue func() (T, T),

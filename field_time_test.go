@@ -308,7 +308,7 @@ func Test_Expr_Time(t *testing.T) {
 	}
 }
 
-func Test_AssignExpr_Time(t *testing.T) {
+func Test_SetExpr_Time(t *testing.T) {
 	var zeroValue time.Time
 	value1, _ := time.Parse("2006-01-02 15:04:05", "2021-06-29 15:11:49")
 

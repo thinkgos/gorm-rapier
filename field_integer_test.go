@@ -35,35 +35,35 @@ func Test_Expr_Integer_For_Field(t *testing.T) {
 	})
 }
 
-func Test_AssignExpr_Integer_For_Field(t *testing.T) {
+func Test_SetExpr_Integer_For_Field(t *testing.T) {
 	t.Run("int", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[int])
+		testSetExprInteger(t, NewInteger[int])
 	})
 	t.Run("int8", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[int8])
+		testSetExprInteger(t, NewInteger[int8])
 	})
 	t.Run("int16", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[int16])
+		testSetExprInteger(t, NewInteger[int16])
 	})
 	t.Run("int32", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[int32])
+		testSetExprInteger(t, NewInteger[int32])
 	})
 	t.Run("int64", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[int64])
+		testSetExprInteger(t, NewInteger[int64])
 	})
 	t.Run("uint", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[uint])
+		testSetExprInteger(t, NewInteger[uint])
 	})
 	t.Run("uint8", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[uint8])
+		testSetExprInteger(t, NewInteger[uint8])
 	})
 	t.Run("uint16", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[uint16])
+		testSetExprInteger(t, NewInteger[uint16])
 	})
 	t.Run("uint32", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[uint32])
+		testSetExprInteger(t, NewInteger[uint32])
 	})
 	t.Run("uint64", func(t *testing.T) {
-		testAssignExprInteger(t, NewInteger[uint64])
+		testSetExprInteger(t, NewInteger[uint64])
 	})
 }

@@ -17,8 +17,8 @@ type Expr interface {
 	BuildWithArgs(*gorm.Statement) (query string, args []any)
 }
 
-type AssignExpr interface {
+type SetExpr interface {
 	Expr
 
-	AssignExpr() any
+	SetExpr() any
 }

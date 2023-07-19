@@ -310,7 +310,7 @@ func Test_Executor_Update_Assign(t *testing.T) {
 			want:     "UPDATE `dict` SET `sort`=? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updateExpr: AssignExpr",
+			name: "updateExpr: SetExpr",
 			db: xDict.X_Executor(newDb()).
 				Where(
 					xDict.Id.Eq(1),
@@ -349,7 +349,7 @@ func Test_Executor_Update_Assign(t *testing.T) {
 			want:     "UPDATE `dict` SET `sort`=? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updateColumnExpr: AssignExpr",
+			name: "updateColumnExpr: SetExpr",
 			db: xDict.X_Executor(newDb()).
 				Where(
 					xDict.Id.Eq(1),
