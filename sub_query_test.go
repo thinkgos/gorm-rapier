@@ -30,7 +30,7 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 							),
 					},
 				)).
-				Updates(map[string]interface{}{}),
+				Updates(map[string]any{}),
 			wantVars: []any{int64(1)},
 			want:     "UPDATE `dict` SET `id`=`id` WHERE `dict`.`id` = ?",
 		},
@@ -51,7 +51,7 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 							),
 					},
 				)).
-				Updates(map[string]interface{}{}),
+				Updates(map[string]any{}),
 			wantVars: []any{int64(1)},
 			want:     "UPDATE `dict` SET (`sort`,`is_pin`)=(SELECT `dict`.`sort`,`dict`.`is_pin` FROM `dict`) WHERE `dict`.`id` = ?",
 		},

@@ -66,15 +66,24 @@ func (x *Executor[T]) AssignExpr(attrs ...SetExpr) *Executor[T] {
 	return x
 }
 
-func (x *Executor[T]) IntoDB() (db *gorm.DB) {
+// IntoDB with model or table
+func (x *Executor[T]) IntoDB() *gorm.DB {
 	if x.table == nil {
 		var t T
-
-		db = x.db.Model(&t)
+		x.db = innerModel(t)(x.db)
 	} else {
-		db = x.db.Scopes(x.table)
+		x.db = x.table(x.db)
 	}
-	return db.Scopes(x.conditions.Build()...)
+	return x.intoRaw()
+}
+
+// intoRaw without model or table
+func (x *Executor[T]) intoRaw() *gorm.DB {
+	db := x.db
+	for _, f := range x.conditions.Build() {
+		db = f(db)
+	}
+	return db
 }
 
 /****************************************************************************/
@@ -100,5 +109,14 @@ func innerAssign(attrs ...any) Condition {
 func innerAssignExpr(attrs ...SetExpr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Assign(buildAttrsValue(attrs)...)
+	}
+}
+
+func innerModel[T any](t T) Condition {
+	return func(db *gorm.DB) *gorm.DB {
+		db = db.Model(&t)
+		err := db.Statement.Parse(t)
+		_ = db.AddError(err)
+		return db
 	}
 }

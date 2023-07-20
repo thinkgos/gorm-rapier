@@ -67,7 +67,7 @@ func buildAssignSet(db *gorm.DB, exprs []SetExpr) (set clause.Set) {
 		}
 	}
 	stmt := db.Session(&gorm.Session{}).Statement
-	stmt.Dest = map[string]interface{}{}
+	stmt.Dest = map[string]any{}
 	return append(set, callbacks.ConvertToAssignments(stmt)...)
 }
 

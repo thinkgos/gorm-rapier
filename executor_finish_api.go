@@ -98,11 +98,11 @@ func (x *Executor[T]) FindInBatches(dest any, batchSize int, fc func(tx *gorm.DB
 }
 
 func (x *Executor[T]) Create(value any) error {
-	return x.db.Scopes(x.conditions.Build()...).Create(value).Error
+	return x.intoRaw().Create(value).Error
 }
 
 func (x *Executor[T]) CreateInBatches(value any, batchSize int) error {
-	return x.db.Scopes(x.conditions.Build()...).CreateInBatches(value, batchSize).Error
+	return x.intoRaw().CreateInBatches(value, batchSize).Error
 }
 
 func (x *Executor[T]) FirstOrInit(dest any) (rowsAffected int64, err error) {
@@ -130,7 +130,7 @@ func (x *Executor[T]) FirstOrCreate(dest any) (rowsAffected int64, err error) {
 }
 
 func (x *Executor[T]) Save(value any) error {
-	return x.db.Scopes(x.conditions.Build()...).Save(value).Error
+	return x.intoRaw().Save(value).Error
 }
 
 func (x *Executor[T]) Updates(value *T) (rowsAffected int64, err error) {
@@ -541,7 +541,7 @@ func (x *Executor[T]) updatesExpr(columns ...SetExpr) *gorm.DB {
 	return db.
 		Clauses(buildAssignSet(db, columns)).
 		Omit("*").
-		Updates(map[string]interface{}{})
+		Updates(map[string]any{})
 }
 
 func (x *Executor[T]) updateColumnExpr(column Expr, value any) *gorm.DB {
@@ -559,5 +559,5 @@ func (x *Executor[T]) updateColumnsExpr(columns ...SetExpr) *gorm.DB {
 	db := x.IntoDB()
 	return db.Clauses(buildAssignSet(db, columns)).
 		Omit("*").
-		UpdateColumns(map[string]interface{}{})
+		UpdateColumns(map[string]any{})
 }
