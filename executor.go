@@ -116,7 +116,9 @@ func innerModel[T any](t T) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		db = db.Model(&t)
 		err := db.Statement.Parse(t)
-		_ = db.AddError(err)
+		if err != nil {
+			_ = db.AddError(err)
+		}
 		return db
 	}
 }

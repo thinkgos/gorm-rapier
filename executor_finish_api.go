@@ -557,6 +557,7 @@ func (x *Executor[T]) updateColumnExpr(column Expr, value any) *gorm.DB {
 
 func (x *Executor[T]) updateColumnsExpr(columns ...SetExpr) *gorm.DB {
 	db := x.IntoDB()
+	db.Statement.SkipHooks = true
 	return db.Clauses(buildAssignSet(db, columns)).
 		Omit("*").
 		UpdateColumns(map[string]any{})
