@@ -844,6 +844,13 @@ func Test_SetExpr_Field(t *testing.T) {
 			wantVars: []any{100},
 			want:     "`address`=(SELECT `address` FROM `user` WHERE `id` = ?)",
 		},
+		// Col
+		{
+			name:     "SetCol",
+			expr:     NewField("user", "id").SetCol(NewField("user", "new_id")),
+			wantVars: nil,
+			want:     "`id`=`user`.`new_id`",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

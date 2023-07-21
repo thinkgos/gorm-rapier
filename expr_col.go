@@ -78,6 +78,19 @@ func (e expr) FindInSetColWith(e2 Expr) Expr {
 	return e
 }
 
+// SetCol expr1=expr2
+func (e expr) SetCol(e2 Expr) SetExpr {
+	e.e = clause.Set{
+		{
+			Column: clause.Column{
+				Name: e.col.Name,
+			},
+			Value: e2.RawExpr(),
+		},
+	}
+	return e
+}
+
 // expr1 + expr2
 func (e expr) innerAddCol(e2 Expr) expr {
 	e.e = clause.Expr{
