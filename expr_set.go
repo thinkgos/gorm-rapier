@@ -5,10 +5,6 @@ import (
 )
 
 func (e expr) value(value any) SetExpr {
-	// e.e = clause.Eq{
-	// 	Column: e.col.Name,
-	// 	Value:  value,
-	// }
 	e.e = clause.Set{
 		{
 			Column: clause.Column{
