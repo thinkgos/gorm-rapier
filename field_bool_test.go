@@ -92,6 +92,7 @@ func Test_Bool(t *testing.T) {
 }
 
 func Test_SetExpr_Bool(t *testing.T) {
+	value := true
 	tests := []struct {
 		name     string
 		expr     Expr
@@ -102,6 +103,18 @@ func Test_SetExpr_Bool(t *testing.T) {
 			name:     "Value",
 			expr:     NewBool("user", "male").Value(true),
 			wantVars: []any{true},
+			want:     "`male`=?",
+		},
+		{
+			name:     "ValuePointer: null",
+			expr:     NewBool("user", "male").ValuePointer(nil),
+			wantVars: []any{(*bool)(nil)},
+			want:     "`male`=?",
+		},
+		{
+			name:     "ValuePointer: pointer",
+			expr:     NewBool("user", "male").ValuePointer(&value),
+			wantVars: []any{&value},
 			want:     "`male`=?",
 		},
 		{

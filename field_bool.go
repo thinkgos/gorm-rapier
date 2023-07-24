@@ -83,6 +83,11 @@ func (field Bool) Value(value bool) SetExpr {
 	return field.value(value)
 }
 
+// Value set value use pointer
+func (field Bool) ValuePointer(value *bool) SetExpr {
+	return field.value(value)
+}
+
 // ValueZero set value zero
 func (field Bool) ValueZero() SetExpr {
 	return field.value(false)

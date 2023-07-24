@@ -302,6 +302,11 @@ func (field Time) Value(value time.Time) SetExpr {
 	return field.value(value)
 }
 
+// ValuePointer set value use pointer
+func (field Time) ValuePointer(value *time.Time) SetExpr {
+	return field.value(value)
+}
+
 // ValueZero set value zero
 func (field Time) ValueZero() SetExpr {
 	return field.value(time.Time{})

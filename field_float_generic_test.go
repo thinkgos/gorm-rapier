@@ -338,6 +338,18 @@ func testSetExprFloat[T constraints.Float | ~string](
 			want:     "`address`=?",
 		},
 		{
+			name:     "ValuePointer: null",
+			expr:     newFloat("user", "address").ValuePointer(nil),
+			wantVars: []any{(*T)(nil)},
+			want:     "`address`=?",
+		},
+		{
+			name:     "ValuePointer: pointer",
+			expr:     newFloat("user", "address").ValuePointer(&value),
+			wantVars: []any{&value},
+			want:     "`address`=?",
+		},
+		{
 			name:     "Value",
 			expr:     newFloat("user", "address").ValueZero(),
 			wantVars: []any{zeroValue},

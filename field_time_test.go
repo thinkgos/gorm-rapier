@@ -325,6 +325,18 @@ func Test_SetExpr_Time(t *testing.T) {
 			want:     "`created_at`=?",
 		},
 		{
+			name:     "ValuePointer: null",
+			expr:     NewTime("user", "created_at").ValuePointer(nil),
+			wantVars: []any{(*time.Time)(nil)},
+			want:     "`created_at`=?",
+		},
+		{
+			name:     "ValuePointer: pointer",
+			expr:     NewTime("user", "created_at").ValuePointer(&value1),
+			wantVars: []any{&value1},
+			want:     "`created_at`=?",
+		},
+		{
 			name:     "Value",
 			expr:     NewTime("user", "created_at").ValueZero(),
 			wantVars: []any{zeroValue},

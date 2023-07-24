@@ -348,6 +348,7 @@ func Test_Expr_String(t *testing.T) {
 }
 
 func Test_SetExpr_String(t *testing.T) {
+	value1 := "abc"
 	tests := []struct {
 		name     string
 		expr     Expr
@@ -356,8 +357,20 @@ func Test_SetExpr_String(t *testing.T) {
 	}{
 		{
 			name:     "Value",
-			expr:     NewString("user", "address").Value("abc"),
-			wantVars: []any{"abc"},
+			expr:     NewString("user", "address").Value(value1),
+			wantVars: []any{value1},
+			want:     "`address`=?",
+		},
+		{
+			name:     "ValuePointer: null",
+			expr:     NewString("user", "address").ValuePointer(nil),
+			wantVars: []any{(*string)(nil)},
+			want:     "`address`=?",
+		},
+		{
+			name:     "ValuePointer: pointer",
+			expr:     NewString("user", "address").ValuePointer(&value1),
+			wantVars: []any{&value1},
 			want:     "`address`=?",
 		},
 		{

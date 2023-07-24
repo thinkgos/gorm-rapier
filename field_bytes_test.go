@@ -207,6 +207,12 @@ func Test_Bytes_SetExpr(t *testing.T) {
 			want:     "`address`=?",
 		},
 		{
+			name:     "Value: null",
+			expr:     NewBytes("user", "address").Value(nil),
+			wantVars: []any{[]byte(nil)},
+			want:     "`address`=?",
+		},
+		{
 			name:     "Value",
 			expr:     NewBytes("user", "address").ValueZero(),
 			wantVars: []any{[]byte{}},

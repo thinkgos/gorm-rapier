@@ -225,6 +225,11 @@ func (field Integer[T]) Value(value T) SetExpr {
 	return field.value(value)
 }
 
+// Value set value use pointer
+func (field Integer[T]) ValuePointer(value *T) SetExpr {
+	return field.value(value)
+}
+
 // ValueZero set value zero
 func (field Integer[T]) ValueZero() SetExpr {
 	var zero T

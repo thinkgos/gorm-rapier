@@ -397,6 +397,18 @@ func testSetExprInteger[T constraints.Integer](
 			want:     "`address`=?",
 		},
 		{
+			name:     "ValuePointer: null",
+			expr:     newInteger("user", "address").ValuePointer(nil),
+			wantVars: []any{(*T)(nil)},
+			want:     "`address`=?",
+		},
+		{
+			name:     "ValuePointer: pointer",
+			expr:     newInteger("user", "address").ValuePointer(&value),
+			wantVars: []any{&value},
+			want:     "`address`=?",
+		},
+		{
 			name:     "Value",
 			expr:     newInteger("user", "address").ValueZero(),
 			wantVars: []any{zeroValue},

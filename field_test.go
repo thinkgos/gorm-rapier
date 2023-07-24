@@ -813,6 +813,12 @@ func Test_SetExpr_Field(t *testing.T) {
 			want:     "`address`=?",
 		},
 		{
+			name:     "Value: any null",
+			expr:     NewField("user", "address").Value(nil),
+			wantVars: []any{nil},
+			want:     "`address`=?",
+		},
+		{
 			name:     "Value: null",
 			expr:     NewField("user", "address").ValueNull(),
 			wantVars: []any{nil},

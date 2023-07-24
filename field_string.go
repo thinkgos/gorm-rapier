@@ -252,6 +252,11 @@ func (field String) Value(value string) SetExpr {
 	return field.value(value)
 }
 
+// Value set value use pointer
+func (field String) ValuePointer(value *string) SetExpr {
+	return field.value(value)
+}
+
 // ValueZero set value zero
 func (field String) ValueZero() SetExpr {
 	return field.value("")
