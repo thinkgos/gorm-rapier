@@ -47,7 +47,7 @@ func Test_Executor_Stand(t *testing.T) {
 				Name: "aaaa",
 				Sort: 1111,
 			}).
-			FirstOrCreate(&Dict{})
+			FirstOrCreate()
 		if err != nil {
 			t.Error(err)
 		}
@@ -58,7 +58,7 @@ func Test_Executor_Stand(t *testing.T) {
 				xDict.Name.Value("bbbb"),
 				xDict.Sort.Value(2222),
 			).
-			FirstOrCreate(&Dict{})
+			FirstOrCreate()
 		if err != nil {
 			t.Error(err)
 		}
@@ -72,7 +72,7 @@ func Test_Executor_Stand(t *testing.T) {
 				Name: "aaaa",
 				Sort: 1111,
 			}).
-			FirstOrInit(&Dict{})
+			FirstOrInit()
 		if err != nil {
 			t.Error(err)
 		}
@@ -83,7 +83,7 @@ func Test_Executor_Stand(t *testing.T) {
 				xDict.Name.Value("bbbb"),
 				xDict.Sort.Value(2222),
 			).
-			FirstOrInit(&Dict{})
+			FirstOrInit()
 		if err != nil {
 			t.Error(err)
 		}

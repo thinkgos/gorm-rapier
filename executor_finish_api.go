@@ -97,15 +97,20 @@ func (x *Executor[T]) FindInBatches(dest any, batchSize int, fc func(tx *gorm.DB
 	return x.IntoDB().FindInBatches(dest, batchSize, fc).Error
 }
 
-func (x *Executor[T]) Create(value any) error {
-	return x.intoRaw().Create(value).Error
+func (x *Executor[T]) Create(values ...*T) error {
+	if len(values) == 0 {
+		return nil
+	}
+	return x.intoRaw().Create(values).Error
 }
 
-func (x *Executor[T]) CreateInBatches(value any, batchSize int) error {
+func (x *Executor[T]) CreateInBatches(value []*T, batchSize int) error {
 	return x.intoRaw().CreateInBatches(value, batchSize).Error
 }
 
-func (x *Executor[T]) FirstOrInit(dest any) (rowsAffected int64, err error) {
+func (x *Executor[T]) FirstOrInit() (*T, error) {
+	var dest T
+
 	db := x.IntoDB()
 	if x.attrs != nil {
 		db = x.attrs(db)
@@ -113,11 +118,16 @@ func (x *Executor[T]) FirstOrInit(dest any) (rowsAffected int64, err error) {
 	if x.assigns != nil {
 		db = x.assigns(db)
 	}
-	db = db.FirstOrInit(dest)
-	return db.RowsAffected, db.Error
+	err := db.FirstOrInit(&dest).Error
+	if err != nil {
+		return nil, err
+	}
+	return &dest, nil
 }
 
-func (x *Executor[T]) FirstOrCreate(dest any) (rowsAffected int64, err error) {
+func (x *Executor[T]) FirstOrCreate() (*T, error) {
+	var dest T
+
 	db := x.IntoDB()
 	if x.attrs != nil {
 		db = x.attrs(db)
@@ -125,11 +135,14 @@ func (x *Executor[T]) FirstOrCreate(dest any) (rowsAffected int64, err error) {
 	if x.assigns != nil {
 		db = x.assigns(db)
 	}
-	db = db.FirstOrCreate(dest)
-	return db.RowsAffected, db.Error
+	err := db.FirstOrCreate(&dest).Error
+	if err != nil {
+		return nil, err
+	}
+	return &dest, nil
 }
 
-func (x *Executor[T]) Save(value any) error {
+func (x *Executor[T]) Save(value *T) error {
 	return x.intoRaw().Save(value).Error
 }
 
