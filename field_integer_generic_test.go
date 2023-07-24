@@ -394,13 +394,13 @@ func testSetExprInteger[T constraints.Integer](
 			name:     "Value",
 			expr:     newInteger("user", "address").Value(value),
 			wantVars: []any{value},
-			want:     "`address` = ?",
+			want:     "`address`=?",
 		},
 		{
 			name:     "Value",
 			expr:     newInteger("user", "address").ValueZero(),
 			wantVars: []any{zeroValue},
-			want:     "`address` = ?",
+			want:     "`address`=?",
 		},
 	}
 	for _, tt := range tests {

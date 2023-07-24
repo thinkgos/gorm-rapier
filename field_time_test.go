@@ -322,13 +322,13 @@ func Test_SetExpr_Time(t *testing.T) {
 			name:     "Value",
 			expr:     NewTime("user", "created_at").Value(value1),
 			wantVars: []any{value1},
-			want:     "`created_at` = ?",
+			want:     "`created_at`=?",
 		},
 		{
 			name:     "Value",
 			expr:     NewTime("user", "created_at").ValueZero(),
 			wantVars: []any{zeroValue},
-			want:     "`created_at` = ?",
+			want:     "`created_at`=?",
 		},
 	}
 	for _, tt := range tests {

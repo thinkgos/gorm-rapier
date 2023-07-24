@@ -102,13 +102,13 @@ func Test_SetExpr_Bool(t *testing.T) {
 			name:     "Value",
 			expr:     NewBool("user", "male").Value(true),
 			wantVars: []any{true},
-			want:     "`male` = ?",
+			want:     "`male`=?",
 		},
 		{
 			name:     "Value",
 			expr:     NewBool("user", "male").ValueZero(),
 			wantVars: []any{false},
-			want:     "`male` = ?",
+			want:     "`male`=?",
 		},
 	}
 	for _, tt := range tests {

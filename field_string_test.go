@@ -358,13 +358,13 @@ func Test_SetExpr_String(t *testing.T) {
 			name:     "Value",
 			expr:     NewString("user", "address").Value("abc"),
 			wantVars: []any{"abc"},
-			want:     "`address` = ?",
+			want:     "`address`=?",
 		},
 		{
 			name:     "Value",
 			expr:     NewString("user", "address").ValueZero(),
 			wantVars: []any{""},
-			want:     "`address` = ?",
+			want:     "`address`=?",
 		},
 	}
 	for _, tt := range tests {

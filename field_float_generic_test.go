@@ -335,13 +335,13 @@ func testSetExprFloat[T constraints.Float | ~string](
 			name:     "Value",
 			expr:     newFloat("user", "address").Value(value),
 			wantVars: []any{value},
-			want:     "`address` = ?",
+			want:     "`address`=?",
 		},
 		{
 			name:     "Value",
 			expr:     newFloat("user", "address").ValueZero(),
 			wantVars: []any{zeroValue},
-			want:     "`address` = ?",
+			want:     "`address`=?",
 		},
 	}
 	for _, tt := range tests {

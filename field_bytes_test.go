@@ -204,13 +204,13 @@ func Test_Bytes_SetExpr(t *testing.T) {
 			name:     "Value",
 			expr:     NewBytes("user", "address").Value([]byte("abc")),
 			wantVars: []any{[]byte("abc")},
-			want:     "`address` = ?",
+			want:     "`address`=?",
 		},
 		{
 			name:     "Value",
 			expr:     NewBytes("user", "address").ValueZero(),
 			wantVars: []any{[]byte{}},
-			want:     "`address` = ?",
+			want:     "`address`=?",
 		},
 	}
 	for _, tt := range tests {

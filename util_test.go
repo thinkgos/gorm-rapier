@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"gorm.io/gorm/clause"
 )
 
 func Test_buildSelectValue(t *testing.T) {
@@ -48,12 +50,22 @@ func Test_buildColumnsValue(t *testing.T) {
 
 func Test_buildAssignSet(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
+		testEq := func(val string) SetExpr {
+			testExpr := xDict.Name
+			testExpr.e = clause.Eq{
+				Column: testExpr.col.Name,
+				Value:  val,
+			}
+			return testExpr
+		}
+
 		db := newDb()
 		query := buildAssignSet(
 			db,
 			[]SetExpr{
 				xDict.Pid.Value(100),
 				xDict.Score.Add(1),
+				testEq("name"),
 			})
 		t.Logf("%+v", query)
 	})
