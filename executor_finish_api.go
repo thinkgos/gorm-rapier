@@ -3,43 +3,43 @@ package assist
 import "gorm.io/gorm"
 
 func (x *Executor[T]) FirstOne() (*T, error) {
-	var row T
+	var dest T
 
-	err := x.First(&row)
+	err := x.First(&dest)
 	if err != nil {
 		return nil, err
 	}
-	return &row, nil
+	return &dest, nil
 }
 
 func (x *Executor[T]) TakeOne() (*T, error) {
-	var row T
+	var dest T
 
-	err := x.Take(&row)
+	err := x.Take(&dest)
 	if err != nil {
 		return nil, err
 	}
-	return &row, nil
+	return &dest, nil
 }
 
 func (x *Executor[T]) LastOne() (*T, error) {
-	var row T
+	var dest T
 
-	err := x.Last(&row)
+	err := x.Last(&dest)
 	if err != nil {
 		return nil, err
 	}
-	return &row, nil
+	return &dest, nil
 }
 
 func (x *Executor[T]) ScanOne() (*T, error) {
-	var row T
+	var dest T
 
-	err := x.Scan(&row)
+	err := x.Scan(&dest)
 	if err != nil {
 		return nil, err
 	}
-	return &row, nil
+	return &dest, nil
 }
 
 func (x *Executor[T]) Count() (count int64, err error) {
