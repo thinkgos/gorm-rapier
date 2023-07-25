@@ -2,6 +2,7 @@ package assist
 
 import (
 	"gorm.io/gorm/clause"
+	"gorm.io/gorm/schema"
 )
 
 func (x *Executor[T]) Table(name string, args ...any) *Executor[T] {
@@ -126,43 +127,43 @@ func (x *Executor[T]) GroupExpr(columns ...Expr) *Executor[T] {
 	return x
 }
 
-func (x *Executor[T]) CrossJoinsExpr(tableName string, conds ...Expr) *Executor[T] {
-	x.conditions.CrossJoinsExpr(tableName, conds...)
+func (x *Executor[T]) CrossJoinsExpr(table schema.Tabler, conds ...Expr) *Executor[T] {
+	x.conditions.CrossJoinsExpr(table, conds...)
 	return x
 }
 
-func (x *Executor[T]) CrossJoinsXExpr(tableName, alias string, conds ...Expr) *Executor[T] {
-	x.conditions.CrossJoinsXExpr(tableName, alias, conds...)
+func (x *Executor[T]) CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Executor[T] {
+	x.conditions.CrossJoinsXExpr(table, alias, conds...)
 	return x
 }
 
-func (x *Executor[T]) InnerJoinsExpr(tableName string, conds ...Expr) *Executor[T] {
-	x.conditions.InnerJoinsExpr(tableName, conds...)
+func (x *Executor[T]) InnerJoinsExpr(table schema.Tabler, conds ...Expr) *Executor[T] {
+	x.conditions.InnerJoinsExpr(table, conds...)
 	return x
 }
 
-func (x *Executor[T]) InnerJoinsXExpr(tableName, alias string, conds ...Expr) *Executor[T] {
-	x.conditions.InnerJoinsXExpr(tableName, alias, conds...)
+func (x *Executor[T]) InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Executor[T] {
+	x.conditions.InnerJoinsXExpr(table, alias, conds...)
 	return x
 }
 
-func (x *Executor[T]) LeftJoinsExpr(tableName string, conds ...Expr) *Executor[T] {
-	x.conditions.LeftJoinsExpr(tableName, conds...)
+func (x *Executor[T]) LeftJoinsExpr(table schema.Tabler, conds ...Expr) *Executor[T] {
+	x.conditions.LeftJoinsExpr(table, conds...)
 	return x
 }
 
-func (x *Executor[T]) LeftJoinsXExpr(tableName, alias string, conds ...Expr) *Executor[T] {
-	x.conditions.LeftJoinsXExpr(tableName, alias, conds...)
+func (x *Executor[T]) LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Executor[T] {
+	x.conditions.LeftJoinsXExpr(table, alias, conds...)
 	return x
 }
 
-func (x *Executor[T]) RightJoinsExpr(tableName string, conds ...Expr) *Executor[T] {
-	x.conditions.RightJoinsExpr(tableName, conds...)
+func (x *Executor[T]) RightJoinsExpr(table schema.Tabler, conds ...Expr) *Executor[T] {
+	x.conditions.RightJoinsExpr(table, conds...)
 	return x
 }
 
-func (x *Executor[T]) RightJoinsXExpr(tableName, alias string, conds ...Expr) *Executor[T] {
-	x.conditions.RightJoinsXExpr(tableName, alias, conds...)
+func (x *Executor[T]) RightJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Executor[T] {
+	x.conditions.RightJoinsXExpr(table, alias, conds...)
 	return x
 }
 

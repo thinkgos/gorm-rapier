@@ -1,6 +1,9 @@
 package assist
 
-import "gorm.io/gorm/clause"
+import (
+	"gorm.io/gorm/clause"
+	"gorm.io/gorm/schema"
+)
 
 // Conditions hold Condition slice
 type Conditions struct {
@@ -134,43 +137,43 @@ func (c *Conditions) GroupExpr(columns ...Expr) *Conditions {
 }
 
 // CrossJoinsExpr cross joins condition
-func (c *Conditions) CrossJoinsExpr(tableName string, conds ...Expr) *Conditions {
-	return c.Scopes(CrossJoinsExpr(tableName, conds...))
+func (c *Conditions) CrossJoinsExpr(table schema.Tabler, conds ...Expr) *Conditions {
+	return c.Scopes(CrossJoinsExpr(table, conds...))
 }
 
 // CrossJoinsXExpr cross joins condition
-func (c *Conditions) CrossJoinsXExpr(tableName, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(CrossJoinsXExpr(tableName, alias, conds...))
+func (c *Conditions) CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
+	return c.Scopes(CrossJoinsXExpr(table, alias, conds...))
 }
 
 // InnerJoinsExpr inner joins condition
-func (c *Conditions) InnerJoinsExpr(tableName string, conds ...Expr) *Conditions {
-	return c.Scopes(InnerJoinsExpr(tableName, conds...))
+func (c *Conditions) InnerJoinsExpr(table schema.Tabler, conds ...Expr) *Conditions {
+	return c.Scopes(InnerJoinsExpr(table, conds...))
 }
 
 // InnerJoinsXExpr inner joins condition
-func (c *Conditions) InnerJoinsXExpr(tableName, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(InnerJoinsXExpr(tableName, alias, conds...))
+func (c *Conditions) InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
+	return c.Scopes(InnerJoinsXExpr(table, alias, conds...))
 }
 
 // LeftJoinsExpr left join condition
-func (c *Conditions) LeftJoinsExpr(tableName string, conds ...Expr) *Conditions {
-	return c.Scopes(LeftJoinsExpr(tableName, conds...))
+func (c *Conditions) LeftJoinsExpr(table schema.Tabler, conds ...Expr) *Conditions {
+	return c.Scopes(LeftJoinsExpr(table, conds...))
 }
 
 // LeftJoinsXExpr left join condition
-func (c *Conditions) LeftJoinsXExpr(tableName, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(LeftJoinsXExpr(tableName, alias, conds...))
+func (c *Conditions) LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
+	return c.Scopes(LeftJoinsXExpr(table, alias, conds...))
 }
 
 // RightJoinsExpr right join condition
-func (c *Conditions) RightJoinsExpr(tableName string, conds ...Expr) *Conditions {
-	return c.Scopes(RightJoinsExpr(tableName, conds...))
+func (c *Conditions) RightJoinsExpr(table schema.Tabler, conds ...Expr) *Conditions {
+	return c.Scopes(RightJoinsExpr(table, conds...))
 }
 
 // RightJoinsXExpr right join condition
-func (c *Conditions) RightJoinsXExpr(tableName, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(RightJoinsXExpr(tableName, alias, conds...))
+func (c *Conditions) RightJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
+	return c.Scopes(RightJoinsXExpr(table, alias, conds...))
 }
 
 // LockingUpdate specify the lock strength to UPDATE

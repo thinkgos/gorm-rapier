@@ -62,10 +62,14 @@ func (*Dict_Active) As(alias string) Dict_Active {
 	return New_X_Dict(alias)
 }
 
-func (x *Dict_Active) X_TableName() string {
+func (*Dict_Active) TableName() string {
+	return "dict"
+}
+
+func (x *Dict_Active) X_Alias() string {
 	return x.xTableName
 }
-func (*Dict_Active) X_Executor(db *gorm.DB) *Executor[Dict] {
+func (*Dict_Active) New_Executor(db *gorm.DB) *Executor[Dict] {
 	return NewExecutor[Dict](db)
 }
 
@@ -111,10 +115,13 @@ func X_DictItem() DictItem_Active {
 func (*DictItem_Active) As(alias string) DictItem_Active {
 	return New_X_DictItem(alias)
 }
-func (x *DictItem_Active) X_TableName() string {
+func (*DictItem_Active) TableName() string {
+	return "dict_item"
+}
+func (x *DictItem_Active) X_Alias() string {
 	return x.xTableName
 }
-func (*DictItem_Active) X_Executor(db *gorm.DB) *Executor[DictItem] {
+func (*DictItem_Active) New_Executor(db *gorm.DB) *Executor[DictItem] {
 	return NewExecutor[DictItem](db)
 }
 

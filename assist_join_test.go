@@ -9,9 +9,8 @@ import (
 func Test_Joins(t *testing.T) {
 	var dummy Dict
 
-	xDd := xDict.As("dd")
-	xDi := xDict.As("di")
-
+	xDi := xDictItem.As("di")
+	_ = xDi
 	tests := []struct {
 		name     string
 		db       *gorm.DB
@@ -22,7 +21,7 @@ func Test_Joins(t *testing.T) {
 			name: "inner join - empty conds",
 			db: newDb().Model(&Dict{}).
 				Scopes(
-					InnerJoinsExpr(xDd.X_TableName()),
+					InnerJoinsExpr(&xDictItem),
 				).
 				Take(&dummy),
 			wantVars: nil,
@@ -32,52 +31,52 @@ func Test_Joins(t *testing.T) {
 			name: "cross join",
 			db: newDb().Model(&Dict{}).
 				Scopes(
-					CrossJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					CrossJoinsExpr(&xDictItem, xDictItem.DictId.EqCol(xDict.Id), xDictItem.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT 1",
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT 1",
 		},
 		{
 			name: "inner join",
 			db: newDb().Model(&Dict{}).
 				Scopes(
-					InnerJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					InnerJoinsExpr(&xDictItem, xDictItem.DictId.EqCol(xDict.Id), xDictItem.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT 1",
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT 1",
 		},
 		{
 			name: "left join",
 			db: newDb().Model(&Dict{}).
 				Scopes(
-					LeftJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					LeftJoinsExpr(&xDictItem, xDictItem.DictId.EqCol(xDict.Id), xDictItem.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT 1",
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT 1",
 		},
 		{
 			name: "right join",
 			db: newDb().Model(&Dict{}).
 				Scopes(
-					RightJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)),
+					RightJoinsExpr(&xDictItem, xDictItem.DictId.EqCol(xDict.Id), xDictItem.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT 1",
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT 1",
 		},
 		{
 			name: "inner join - multiple",
 			db: newDb().Model(&Dict{}).
 				Scopes(
-					InnerJoinsExpr(xDd.X_TableName(), xDd.Id.EqCol(xDict.Pid)),
-					InnerJoinsExpr(xDi.X_TableName(), xDi.IsPin.Eq(true)),
+					InnerJoinsExpr(&xDictItem, xDictItem.DictId.EqCol(xDict.Id)),
+					InnerJoinsXExpr(&xDi, xDi.X_Alias(), xDi.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dd` ON `dd`.`id` = `dict`.`pid` INNER JOIN `di` ON `di`.`is_pin` = ? LIMIT 1",
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` INNER JOIN `dict_item` `di` ON `di`.`is_enabled` = ? LIMIT 1",
 		},
 	}
 	for _, tt := range tests {

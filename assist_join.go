@@ -3,49 +3,50 @@ package assist
 import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"gorm.io/gorm/schema"
 )
 
 // CrossJoinsExpr cross joins condition
-func CrossJoinsExpr(tableName string, conds ...Expr) Condition {
-	return CrossJoinsXExpr(tableName, "", conds...)
+func CrossJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
+	return CrossJoinsXExpr(table, "", conds...)
 }
 
 // CrossJoinsXExpr cross joins condition
-func CrossJoinsXExpr(tableName, alias string, conds ...Expr) Condition {
-	return joinsExpr(clause.CrossJoin, tableName, alias, conds...)
+func CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
+	return joinsExpr(clause.CrossJoin, table, alias, conds...)
 }
 
 // InnerJoinsExpr inner joins condition
-func InnerJoinsExpr(tableName string, conds ...Expr) Condition {
-	return InnerJoinsXExpr(tableName, "", conds...)
+func InnerJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
+	return InnerJoinsXExpr(table, "", conds...)
 }
 
 // InnerJoinsXExpr inner joins condition
-func InnerJoinsXExpr(tableName, alias string, conds ...Expr) Condition {
-	return joinsExpr(clause.InnerJoin, tableName, alias, conds...)
+func InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
+	return joinsExpr(clause.InnerJoin, table, alias, conds...)
 }
 
 // LeftJoinsExpr left join condition
-func LeftJoinsExpr(tableName string, conds ...Expr) Condition {
-	return LeftJoinsXExpr(tableName, "", conds...)
+func LeftJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
+	return LeftJoinsXExpr(table, "", conds...)
 }
 
 // LeftJoinsXExpr left join condition
-func LeftJoinsXExpr(tableName, alias string, conds ...Expr) Condition {
-	return joinsExpr(clause.LeftJoin, tableName, alias, conds...)
+func LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
+	return joinsExpr(clause.LeftJoin, table, alias, conds...)
 }
 
 // RightJoinsExpr right join condition
-func RightJoinsExpr(tableName string, conds ...Expr) Condition {
-	return RightJoinsXExpr(tableName, "", conds...)
+func RightJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
+	return RightJoinsXExpr(table, "", conds...)
 }
 
 // RightJoinsXExpr right join condition
-func RightJoinsXExpr(tableName, alias string, conds ...Expr) Condition {
-	return joinsExpr(clause.RightJoin, tableName, alias, conds...)
+func RightJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
+	return joinsExpr(clause.RightJoin, table, alias, conds...)
 }
 
-func joinsExpr(joinType clause.JoinType, tableName, alias string, conds ...Expr) Condition {
+func joinsExpr(joinType clause.JoinType, table schema.Tabler, alias string, conds ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(conds) == 0 {
 			return db
@@ -54,7 +55,7 @@ func joinsExpr(joinType clause.JoinType, tableName, alias string, conds ...Expr)
 		clauseFrom := getClauseFrom(db)
 		clauseFrom.Joins = append(clauseFrom.Joins, clause.Join{
 			Type:  joinType,
-			Table: clause.Table{Name: tableName, Alias: alias},
+			Table: clause.Table{Name: table.TableName(), Alias: alias},
 			ON:    clause.Where{Exprs: IntoExpression(conds...)},
 		})
 		return db.Clauses(clauseFrom)
