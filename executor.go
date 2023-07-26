@@ -69,16 +69,17 @@ func (x *Executor[T]) AssignExpr(attrs ...SetExpr) *Executor[T] {
 // IntoDB with model or table
 func (x *Executor[T]) IntoDB() *gorm.DB {
 	if x.table == nil {
-		var t T
-		x.db = innerModel(t)(x.db)
+		var model T
+
+		x.db = innerModel(model)(x.db)
 	} else {
 		x.db = x.table(x.db)
 	}
-	return x.intoRaw()
+	return x.IntoRawDB()
 }
 
-// intoRaw without model or table
-func (x *Executor[T]) intoRaw() *gorm.DB {
+// IntoRawDB without model or table
+func (x *Executor[T]) IntoRawDB() *gorm.DB {
 	db := x.db
 	for _, f := range x.conditions.Build() {
 		db = f(db)

@@ -101,11 +101,11 @@ func (x *Executor[T]) Create(values ...*T) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return x.intoRaw().Create(values).Error
+	return x.IntoRawDB().Create(values).Error
 }
 
 func (x *Executor[T]) CreateInBatches(value []*T, batchSize int) error {
-	return x.intoRaw().CreateInBatches(value, batchSize).Error
+	return x.IntoRawDB().CreateInBatches(value, batchSize).Error
 }
 
 func (x *Executor[T]) FirstOrInit() (*T, error) {
@@ -143,7 +143,7 @@ func (x *Executor[T]) FirstOrCreate() (*T, error) {
 }
 
 func (x *Executor[T]) Save(value *T) error {
-	return x.intoRaw().Save(value).Error
+	return x.IntoRawDB().Save(value).Error
 }
 
 func (x *Executor[T]) Updates(value *T) (rowsAffected int64, err error) {
