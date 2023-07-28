@@ -18,6 +18,14 @@ func NewConditions(cs ...Condition) *Conditions {
 	}
 }
 
+// Configure the conditions in the scope
+func (c *Conditions) Configure(funcs ...func(*Conditions) *Conditions) *Conditions {
+	for _, f := range funcs {
+		c = f(c)
+	}
+	return c
+}
+
 // Table with field
 func (c *Conditions) Build() []Condition {
 	return c.funcs
