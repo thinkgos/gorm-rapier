@@ -73,9 +73,25 @@ func buildAssignSet(db *gorm.DB, exprs []SetExpr) (set clause.Set) {
 
 func buildAttrsValue(attrs []SetExpr) []any {
 	values := make([]any, 0, len(attrs))
-	for _, attr := range attrs {
-		if e, ok := attr.SetExpr().(clause.Eq); ok {
+	for _, expr := range attrs {
+		switch e := expr.SetExpr().(type) {
+		case clause.Expr:
+			values = append(values, clause.Eq{
+				Column: clause.Column{
+					Table: "", // FIXME: when need table?.
+					Name:  expr.ColumnName(),
+				},
+				Value: e,
+			})
+		case clause.Eq:
 			values = append(values, e)
+		case clause.Set:
+			for _, v := range e {
+				values = append(values, clause.Eq{
+					Column: v.Column,
+					Value:  v.Value,
+				})
+			}
 		}
 	}
 	return values
