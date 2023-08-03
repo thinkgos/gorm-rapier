@@ -9,8 +9,6 @@ import (
 type Executor[T any] struct {
 	db         *gorm.DB
 	table      Condition
-	attrs      Condition // for [FirstOrInit|FirstOrCreate]
-	assigns    Condition // for [FirstOrInit|FirstOrCreate]
 	conditions *Conditions
 }
 
@@ -19,8 +17,6 @@ func NewExecutor[T any](db *gorm.DB) *Executor[T] {
 	return &Executor[T]{
 		db:         db,
 		table:      nil,
-		attrs:      nil,
-		assigns:    nil,
 		conditions: NewConditions(),
 	}
 }
@@ -42,27 +38,27 @@ func (x *Executor[T]) Debug() *Executor[T] {
 
 // Attrs provide attributes used in [FirstOrCreate] or [FirstOrInit]
 func (x *Executor[T]) Attrs(attrs ...any) *Executor[T] {
-	x.attrs = innerAttrs(attrs...)
+	x.Scopes(innerAttrs(attrs...))
 	return x
 }
 
-// AttrsExpr  provide attributes used in [FirstOrCreate] or [FirstOrInit]
+// AttrsExpr provide attributes used in [FirstOrCreate] or [FirstOrInit]
 func (x *Executor[T]) Assign(attrs ...any) *Executor[T] {
-	x.assigns = innerAssign(attrs...)
+	x.Scopes(innerAssign(attrs...))
 	return x
 }
 
 // AttrsExpr with SetExpr
 // provide attributes used in [FirstOrCreate] or [FirstOrInit]
 func (x *Executor[T]) AttrsExpr(attrs ...SetExpr) *Executor[T] {
-	x.attrs = innerAttrsExpr(attrs...)
+	x.Scopes(innerAttrsExpr(attrs...))
 	return x
 }
 
 // AssignExpr with SetExpr
 // provide attributes used in [FirstOrCreate] or [FirstOrInit]
 func (x *Executor[T]) AssignExpr(attrs ...SetExpr) *Executor[T] {
-	x.assigns = innerAssignExpr(attrs...)
+	x.Scopes(innerAssignExpr(attrs...))
 	return x
 }
 

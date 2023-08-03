@@ -382,7 +382,7 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 }
 
 func Test_Executor_Attrs(t *testing.T) {
-	t.Run("attr: FirstOrCreate", func(t *testing.T) {
+	t.Run("attr", func(t *testing.T) {
 		wantName := "aaaa"
 		wantSort := uint16(1111)
 		got1, err := xDict.New_Executor(newDb()).
@@ -413,7 +413,7 @@ func Test_Executor_Attrs(t *testing.T) {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
 	})
-	t.Run("attr expr: FirstOrInit", func(t *testing.T) {
+	t.Run("attr expr", func(t *testing.T) {
 		wantName := "bbbb"
 		wantSort := uint16(2222)
 
@@ -448,7 +448,7 @@ func Test_Executor_Attrs(t *testing.T) {
 }
 
 func Test_Executor_Assign(t *testing.T) {
-	t.Run("assign: FirstOrCreate", func(t *testing.T) {
+	t.Run("assign", func(t *testing.T) {
 		wantName := "aaaa"
 		wantSort := uint16(1111)
 		got1, err := xDict.New_Executor(newDb()).
@@ -479,7 +479,7 @@ func Test_Executor_Assign(t *testing.T) {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
 	})
-	t.Run("assign expr: FirstOrInit", func(t *testing.T) {
+	t.Run("assign expr", func(t *testing.T) {
 		wantName := "bbbb"
 		wantSort := uint16(2222)
 		got1, err := xDict.New_Executor(newDb()).

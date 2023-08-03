@@ -111,14 +111,7 @@ func (x *Executor[T]) CreateInBatches(value []*T, batchSize int) error {
 func (x *Executor[T]) FirstOrInit() (*T, error) {
 	var dest T
 
-	db := x.IntoDB()
-	if x.attrs != nil {
-		db = x.attrs(db)
-	}
-	if x.assigns != nil {
-		db = x.assigns(db)
-	}
-	err := db.FirstOrInit(&dest).Error
+	err := x.IntoDB().FirstOrInit(&dest).Error
 	if err != nil {
 		return nil, err
 	}
@@ -128,14 +121,7 @@ func (x *Executor[T]) FirstOrInit() (*T, error) {
 func (x *Executor[T]) FirstOrCreate() (*T, error) {
 	var dest T
 
-	db := x.IntoDB()
-	if x.attrs != nil {
-		db = x.attrs(db)
-	}
-	if x.assigns != nil {
-		db = x.assigns(db)
-	}
-	err := db.FirstOrCreate(&dest).Error
+	err := x.IntoDB().FirstOrCreate(&dest).Error
 	if err != nil {
 		return nil, err
 	}
