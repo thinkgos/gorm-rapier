@@ -55,7 +55,7 @@ func Test_buildAssignSet(t *testing.T) {
 		[]SetExpr{
 			xDict.Pid.Value(100),
 			xDict.Score.Add(1),
-			xDict.Name.setValue("name"),
+			xDict.Name.valueEq("name"),
 		})
 	want := clause.Set{
 		{
@@ -97,7 +97,7 @@ func Test_buildAttrsValue(t *testing.T) {
 	got := buildAttrsValue(
 		[]SetExpr{
 			xDict.Pid.Value(100),
-			xDict.Name.setValue("name"),
+			xDict.Name.valueEq("name"),
 		})
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("buildAttrSet want: %v got: %v", want, got)

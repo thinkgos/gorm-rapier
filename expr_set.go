@@ -4,8 +4,8 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-// setValue same sa value, but use clause.Eq
-func (e expr) setValue(value any) SetExpr {
+// valueEq same as value, but use clause.Eq
+func (e expr) valueEq(value any) SetExpr {
 	e.e = clause.Eq{
 		Column: e.col.Name,
 		Value:  value,
@@ -13,6 +13,7 @@ func (e expr) setValue(value any) SetExpr {
 	return e
 }
 
+// value set value, Clause.Set
 func (e expr) value(value any) SetExpr {
 	e.e = clause.Set{
 		{
@@ -25,6 +26,7 @@ func (e expr) value(value any) SetExpr {
 	return e
 }
 
+// ValueNull set value NULL
 func (e expr) ValueNull() SetExpr {
 	e.e = clause.Set{
 		{
@@ -37,6 +39,8 @@ func (e expr) ValueNull() SetExpr {
 	return e
 }
 
+// ValueAny set any value.
+// Deprecated: use other ValueXXX instead.
 func (e expr) ValueAny(value any) SetExpr {
 	e.e = clause.Set{
 		{

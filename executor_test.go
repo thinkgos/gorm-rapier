@@ -499,7 +499,7 @@ func Test_Executor_Assign(t *testing.T) {
 			Where(xDict.Id.Eq(1)).
 			AssignExpr(
 				xDict.Name.Value(wantName),
-				xDict.Sort.setValue(wantSort),
+				xDict.Sort.valueEq(wantSort),
 			).
 			FirstOrInit()
 		if err != nil {
