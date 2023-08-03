@@ -75,14 +75,6 @@ func buildAttrsValue(attrs []SetExpr) []any {
 	values := make([]any, 0, len(attrs))
 	for _, expr := range attrs {
 		switch e := expr.SetExpr().(type) {
-		case clause.Expr:
-			values = append(values, clause.Eq{
-				Column: clause.Column{
-					Table: "", // FIXME: when need table?.
-					Name:  expr.ColumnName(),
-				},
-				Value: e,
-			})
 		case clause.Eq:
 			values = append(values, e)
 		case clause.Set:

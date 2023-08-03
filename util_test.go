@@ -49,34 +49,64 @@ func Test_buildColumnsValue(t *testing.T) {
 }
 
 func Test_buildAssignSet(t *testing.T) {
-	t.Run("empty", func(t *testing.T) {
-		testEq := func(val string) SetExpr {
-			testExpr := xDict.Name
-			testExpr.e = clause.Eq{
-				Column: testExpr.col.Name,
-				Value:  val,
-			}
-			return testExpr
-		}
+	db := newDb()
+	got := buildAssignSet(
+		db,
+		[]SetExpr{
+			xDict.Pid.Value(100),
+			xDict.Score.Add(1),
+			xDict.Name.setValue("name"),
+		})
+	want := clause.Set{
+		{
+			Column: clause.Column{Name: "pid"},
+			Value:  int64(100),
+		},
+		{
+			Column: clause.Column{Name: "score"},
+			Value: clause.Expr{
+				SQL: "?+?", Vars: []any{
+					clause.Column{Table: "dict", Name: "score"},
+					float64(1),
+				},
+			},
+		},
+		{
+			Column: clause.Column{Name: "name"},
+			Value:  "name",
+		},
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("buildAssignSet want: %v got: %v", want, got)
+	}
+}
 
-		db := newDb()
-		query := buildAssignSet(
-			db,
-			[]SetExpr{
-				xDict.Pid.Value(100),
-				xDict.Score.Add(1),
-				testEq("name"),
-			})
-		t.Logf("%+v", query)
-	})
+func Test_buildAttrsValue(t *testing.T) {
+	want := []any{
+		clause.Eq{
+			Column: clause.Column{
+				Name: xDict.Pid.ColumnName(),
+			},
+			Value: int64(100),
+		},
+		clause.Eq{
+			Column: xDict.Name.ColumnName(),
+			Value:  "name",
+		},
+	}
+	got := buildAttrsValue(
+		[]SetExpr{
+			xDict.Pid.Value(100),
+			xDict.Name.setValue("name"),
+		})
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("buildAttrSet want: %v got: %v", want, got)
+	}
 }
 
 func Test_buildColumnName(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
-		got := buildColumnName(
-			xDict.Pid,
-			xDict.Score,
-		)
+		got := buildColumnName(xDict.Pid, xDict.Score)
 		if want := []string{"pid", "score"}; !reflect.DeepEqual(got, want) {
 			t.Errorf("column name expects %+v got %v", want, got)
 		}

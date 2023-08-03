@@ -39,55 +39,6 @@ func Test_Executor_Stand(t *testing.T) {
 			t.Error(err)
 		}
 	})
-	t.Run("attr executor: attr", func(t *testing.T) {
-		_, err := xDict.New_Executor(newDb()).
-			Debug().
-			Where(xDict.Id.Eq(1)).
-			Attrs(&Dict{
-				Name: "aaaa",
-				Sort: 1111,
-			}).
-			FirstOrCreate()
-		if err != nil {
-			t.Error(err)
-		}
-		_, err = xDict.New_Executor(newDb()).
-			Debug().
-			Where(xDict.Id.Eq(1)).
-			AttrsExpr(
-				xDict.Name.Value("bbbb"),
-				xDict.Sort.Value(2222),
-			).
-			FirstOrCreate()
-		if err != nil {
-			t.Error(err)
-		}
-	})
-
-	t.Run("attr executor: assign", func(t *testing.T) {
-		_, err := xDict.New_Executor(newDb()).
-			Debug().
-			Where(xDict.Id.Eq(1)).
-			Assign(&Dict{
-				Name: "aaaa",
-				Sort: 1111,
-			}).
-			FirstOrInit()
-		if err != nil {
-			t.Error(err)
-		}
-		_, err = xDict.New_Executor(newDb()).
-			Debug().
-			Where(xDict.Id.Eq(1)).
-			AssignExpr(
-				xDict.Name.Value("bbbb"),
-				xDict.Sort.Value(2222),
-			).
-			FirstOrInit()
-		if err != nil {
-			t.Error(err)
-		}
-	})
 }
 
 func Test_Executor_Expr(t *testing.T) {
@@ -102,69 +53,69 @@ func Test_Executor_Expr(t *testing.T) {
 		wantVars []any
 		want     string
 	}{
-		// {
-		// 	name: "Expr: table",
-		// 	db: xDict.X_Executor(newDb()).
-		// 		TableExpr(
-		// 			From{
-		// 				"a",
-		// 				xDict.X_Executor(newDb()).IntoDB(),
-		// 			},
-		// 		).
-		// 		IntoDB().
-		// 		Take(&dummy),
-		// 	wantVars: nil,
-		// 	want:     "SELECT * FROM (SELECT * FROM `dict`) AS `a` LIMIT 1",
-		// },
-		// {
-		// 	name: "Expr: select *",
-		// 	db: xDict.X_Executor(newDb()).
-		// 		SelectExpr().
-		// 		IntoDB().
-		// 		Take(&dummy),
-		// 	wantVars: nil,
-		// 	want:     "SELECT * FROM `dict` LIMIT 1",
-		// },
-		// {
-		// 	name: "Expr: select field",
-		// 	db: xDict.X_Executor(newDb()).
-		// 		SelectExpr(
-		// 			xDict.Id,
-		// 			xDict.CreatedAt.UnixTimestamp().As("created_at"),
-		// 			xDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at1"),
-		// 		).
-		// 		IntoDB().
-		// 		Take(&dummy),
-		// 	wantVars: []any{int64(0)},
-		// 	want:     "SELECT `dict`.`id`,UNIX_TIMESTAMP(`dict`.`created_at`) AS `created_at`,IFNULL(UNIX_TIMESTAMP(`dict`.`created_at`),?) AS `created_at1` FROM `dict` LIMIT 1",
-		// },
-		// {
-		// 	name: "Expr: select * using distinct",
-		// 	db: xDict.X_Executor(newDb()).
-		// 		DistinctExpr(xDict.Id).
-		// 		IntoDB().
-		// 		Take(&dummy),
-		// 	wantVars: nil,
-		// 	want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT 1",
-		// },
-		// {
-		// 	name: "Expr: order",
-		// 	db: xDict.X_Executor(newDb()).
-		// 		OrderExpr(xDict.Score).
-		// 		IntoDB().
-		// 		Take(&dummy),
-		// 	wantVars: nil,
-		// 	want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` LIMIT 1",
-		// },
-		// {
-		// 	name: "Expr: group",
-		// 	db: xDict.X_Executor(newDb()).
-		// 		GroupExpr(xDict.Name).
-		// 		IntoDB().
-		// 		Take(&dummy),
-		// 	wantVars: nil,
-		// 	want:     "SELECT * FROM `dict` GROUP BY `dict`.`name` LIMIT 1",
-		// },
+		{
+			name: "Expr: table",
+			db: xDict.New_Executor(newDb()).
+				TableExpr(
+					From{
+						"a",
+						xDict.New_Executor(newDb()).IntoDB(),
+					},
+				).
+				IntoDB().
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM (SELECT * FROM `dict`) AS `a` LIMIT 1",
+		},
+		{
+			name: "Expr: select *",
+			db: xDict.New_Executor(newDb()).
+				SelectExpr().
+				IntoDB().
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` LIMIT 1",
+		},
+		{
+			name: "Expr: select field",
+			db: xDict.New_Executor(newDb()).
+				SelectExpr(
+					xDict.Id,
+					xDict.CreatedAt.UnixTimestamp().As("created_at"),
+					xDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at1"),
+				).
+				IntoDB().
+				Take(&dummy),
+			wantVars: []any{int64(0)},
+			want:     "SELECT `dict`.`id`,UNIX_TIMESTAMP(`dict`.`created_at`) AS `created_at`,IFNULL(UNIX_TIMESTAMP(`dict`.`created_at`),?) AS `created_at1` FROM `dict` LIMIT 1",
+		},
+		{
+			name: "Expr: select * using distinct",
+			db: xDict.New_Executor(newDb()).
+				DistinctExpr(xDict.Id).
+				IntoDB().
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT 1",
+		},
+		{
+			name: "Expr: order",
+			db: xDict.New_Executor(newDb()).
+				OrderExpr(xDict.Score).
+				IntoDB().
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` LIMIT 1",
+		},
+		{
+			name: "Expr: group",
+			db: xDict.New_Executor(newDb()).
+				GroupExpr(xDict.Name).
+				IntoDB().
+				Take(&dummy),
+			wantVars: nil,
+			want:     "SELECT * FROM `dict` GROUP BY `dict`.`name` LIMIT 1",
+		},
 		{
 			name: "Expr: cross join",
 			db: xDict.New_Executor(newDb()).
@@ -428,4 +379,134 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
 		})
 	}
+}
+
+func Test_Executor_Attrs(t *testing.T) {
+	t.Run("attr: FirstOrCreate", func(t *testing.T) {
+		wantName := "aaaa"
+		wantSort := uint16(1111)
+		got1, err := xDict.New_Executor(newDb()).
+			Where(xDict.Id.Eq(1)).
+			Attrs(&Dict{
+				Name: wantName,
+				Sort: wantSort,
+			}).
+			FirstOrCreate()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got1.Name != wantName || got1.Sort != wantSort {
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+		}
+
+		got2, err := xDict.New_Executor(newDb()).
+			Where(xDict.Id.Eq(1)).
+			Attrs(&Dict{
+				Name: wantName,
+				Sort: wantSort,
+			}).
+			FirstOrInit()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got2.Name != wantName || got2.Sort != wantSort {
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+		}
+	})
+	t.Run("attr expr: FirstOrInit", func(t *testing.T) {
+		wantName := "bbbb"
+		wantSort := uint16(2222)
+
+		got1, err := xDict.New_Executor(newDb()).
+			Where(xDict.Id.Eq(1)).
+			AttrsExpr(
+				xDict.Name.Value(wantName),
+				xDict.Sort.Value(wantSort),
+			).
+			FirstOrCreate()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got1.Name != wantName || got1.Sort != wantSort {
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+		}
+
+		got2, err := xDict.New_Executor(newDb()).
+			Where(xDict.Id.Eq(1)).
+			AttrsExpr(
+				xDict.Name.Value(wantName),
+				xDict.Sort.Value(wantSort),
+			).
+			FirstOrInit()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got2.Name != wantName || got2.Sort != wantSort {
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+		}
+	})
+}
+
+func Test_Executor_Assign(t *testing.T) {
+	t.Run("assign: FirstOrCreate", func(t *testing.T) {
+		wantName := "aaaa"
+		wantSort := uint16(1111)
+		got1, err := xDict.New_Executor(newDb()).
+			Where(xDict.Id.Eq(1)).
+			Assign(&Dict{
+				Name: wantName,
+				Sort: wantSort,
+			}).
+			FirstOrCreate()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got1.Name != wantName || got1.Sort != wantSort {
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+		}
+
+		got2, err := xDict.New_Executor(newDb()).
+			Where(xDict.Id.Eq(1)).
+			Assign(&Dict{
+				Name: wantName,
+				Sort: wantSort,
+			}).
+			FirstOrInit()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got2.Name != wantName || got2.Sort != wantSort {
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+		}
+	})
+	t.Run("assign expr: FirstOrInit", func(t *testing.T) {
+		wantName := "bbbb"
+		wantSort := uint16(2222)
+		got1, err := xDict.New_Executor(newDb()).
+			Where(xDict.Id.Eq(1)).
+			AssignExpr(
+				xDict.Name.Value(wantName),
+				xDict.Sort.Value(wantSort),
+			).
+			FirstOrCreate()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got1.Name != wantName || got1.Sort != wantSort {
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+		}
+		got2, err := xDict.New_Executor(newDb()).
+			Where(xDict.Id.Eq(1)).
+			AssignExpr(
+				xDict.Name.Value(wantName),
+				xDict.Sort.setValue(wantSort),
+			).
+			FirstOrInit()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got2.Name != wantName || got2.Sort != wantSort {
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+		}
+	})
 }
