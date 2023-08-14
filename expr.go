@@ -32,6 +32,15 @@ type expr struct {
 	buildOpts []BuildOption
 }
 
+// FieldName hold model column name.
+// if prefixes not exist returns same as ColumnName(), others {prefixes[0]}_{ColumnName}
+func (e expr) FieldName(prefixes ...string) string {
+	if len(prefixes) == 0 || prefixes[0] == "" {
+		return e.ColumnName()
+	}
+	return prefixes[0] + "_" + e.ColumnName()
+}
+
 func (e expr) ColumnName() string { return e.col.Name }
 
 func (e expr) Expression() clause.Expression {

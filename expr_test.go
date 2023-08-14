@@ -14,7 +14,7 @@ import (
 )
 
 type User struct {
-	ID        uint `gorm:"primarykey"`
+	Id        uint `gorm:"primarykey"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt int64
@@ -55,6 +55,16 @@ func Test_Expr(t *testing.T) {
 		got := NewField("table", "id").ColumnName()
 		if want := "id"; got != want {
 			t.Errorf("ColumnName want %+v, got %v", want, got)
+		}
+	})
+	t.Run("field name", func(t *testing.T) {
+		got := NewField("table", "id").FieldName()
+		if want := "id"; got != want {
+			t.Errorf("FieldName want %+v, got %v", want, got)
+		}
+		got = NewField("table", "id").FieldName("tb")
+		if want := "tb_id"; got != want {
+			t.Errorf("FieldName want %+v, got %v", want, got)
 		}
 	})
 }
