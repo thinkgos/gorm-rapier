@@ -25,19 +25,19 @@ func main() {
 
 	xDict := model.X_Dict()
 
-	_, err := xDict.X_Executor(db).
+	_, err := xDict.New_Executor(db).
 		SelectExpr(
 			xDict.Id,
-			xDict.X_Executor(db).SelectExpr(xDict.Key).Where(xDict.Id.Eq(1)).IntoSubQueryExpr().As("aaa"),
+			xDict.New_Executor(db).SelectExpr(xDict.Key).Where(xDict.Id.Eq(1)).IntoSubQueryExpr().As("aaa"),
 		).
 		Where(
 			xDict.Id.Eq(100),
-			xDict.Key.EqSubQuery(xDict.X_Executor(db).Where(xDict.Id.Eq(1)).IntoDB()),
+			xDict.Key.EqSubQuery(xDict.New_Executor(db).Where(xDict.Id.Eq(1)).IntoDB()),
 		).
 		FindAll()
 	checkError(err)
 
-	_, err = xDict.X_Executor(db).
+	_, err = xDict.New_Executor(db).
 		Where(
 			xDict.Id.Eq(100),
 		).
