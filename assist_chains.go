@@ -49,58 +49,47 @@ func (c *Conditions) Select(query any, args ...any) *Conditions {
 }
 
 func (c *Conditions) Omit(columns ...string) *Conditions {
-	c.Scopes(GormOmit(columns...))
-	return c
+	return c.Scopes(GormOmit(columns...))
 }
 
 func (c *Conditions) Where(query any, args ...any) *Conditions {
-	c.Scopes(GormWhere(query, args...))
-	return c
+	return c.Scopes(GormWhere(query, args...))
 }
 
 func (c *Conditions) Not(query any, args ...any) *Conditions {
-	c.Scopes(GormNot(query, args...))
-	return c
+	return c.Scopes(GormNot(query, args...))
 }
 
 func (c *Conditions) Or(query any, args ...any) *Conditions {
-	c.Scopes(GormOr(query, args...))
-	return c
+	return c.Scopes(GormOr(query, args...))
 }
 
 func (c *Conditions) Joins(query string, args ...any) *Conditions {
-	c.Scopes(GormJoins(query, args...))
-	return c
+	return c.Scopes(GormJoins(query, args...))
 }
 
 func (c *Conditions) InnerJoins(query string, args ...any) *Conditions {
-	c.Scopes(GormInnerJoins(query, args...))
-	return c
+	return c.Scopes(GormInnerJoins(query, args...))
 }
 
 func (c *Conditions) Group(name string) *Conditions {
-	c.Scopes(GormGroup(name))
-	return c
+	return c.Scopes(GormGroup(name))
 }
 
 func (c *Conditions) Having(query any, args ...any) *Conditions {
-	c.Scopes(GormHaving(query, args...))
-	return c
+	return c.Scopes(GormHaving(query, args...))
 }
 
 func (c *Conditions) Order(value any) *Conditions {
-	c.Scopes(GormOrder(value))
-	return c
+	return c.Scopes(GormOrder(value))
 }
 
 func (c *Conditions) Limit(limit int) *Conditions {
-	c.Scopes(GormLimit(limit))
-	return c
+	return c.Scopes(GormLimit(limit))
 }
 
 func (c *Conditions) Offset(offset int) *Conditions {
-	c.Scopes(GormOffset(offset))
-	return c
+	return c.Scopes(GormOffset(offset))
 }
 
 // Scopes more condition
@@ -110,13 +99,11 @@ func (c *Conditions) Scopes(cs ...Condition) *Conditions {
 }
 
 func (c *Conditions) Preload(query string, args ...any) *Conditions {
-	c.Scopes(GormPreload(query, args...))
-	return c
+	return c.Scopes(GormPreload(query, args...))
 }
 
 func (c *Conditions) Unscoped() *Conditions {
-	c.Scopes(GormUnscoped())
-	return c
+	return c.Scopes(GormUnscoped())
 }
 
 // DistinctExpr with field

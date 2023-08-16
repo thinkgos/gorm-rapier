@@ -7,17 +7,15 @@ import (
 )
 
 type Executor[T any] struct {
-	db         *gorm.DB
-	table      Condition
-	conditions *Conditions
+	db     *gorm.DB
+	table  Condition
+	scopes []Condition
 }
 
 // Executor new executor
 func NewExecutor[T any](db *gorm.DB) *Executor[T] {
 	return &Executor[T]{
-		db:         db,
-		table:      nil,
-		conditions: NewConditions(),
+		db: db,
 	}
 }
 
@@ -38,36 +36,41 @@ func (x *Executor[T]) Debug() *Executor[T] {
 
 // Attrs provide attributes used in [FirstOrCreate] or [FirstOrInit]
 func (x *Executor[T]) Attrs(attrs ...any) *Executor[T] {
-	x.Scopes(innerAttrs(attrs...))
+	x.db = x.db.Attrs(attrs...)
 	return x
 }
 
-// AttrsExpr provide attributes used in [FirstOrCreate] or [FirstOrInit]
+// Assign provide attributes used in [FirstOrCreate] or [FirstOrInit]
 func (x *Executor[T]) Assign(attrs ...any) *Executor[T] {
-	x.Scopes(innerAssign(attrs...))
+	x.db = x.db.Assign(attrs...)
 	return x
 }
 
 // AttrsExpr with SetExpr
 // provide attributes used in [FirstOrCreate] or [FirstOrInit]
 func (x *Executor[T]) AttrsExpr(attrs ...SetExpr) *Executor[T] {
-	x.Scopes(innerAttrsExpr(attrs...))
+	x.db = x.db.Attrs(buildAttrsValue(attrs)...)
 	return x
 }
 
 // AssignExpr with SetExpr
 // provide attributes used in [FirstOrCreate] or [FirstOrInit]
 func (x *Executor[T]) AssignExpr(attrs ...SetExpr) *Executor[T] {
-	x.Scopes(innerAssignExpr(attrs...))
+	x.db = x.db.Assign(buildAttrsValue(attrs)...)
 	return x
 }
 
 // IntoDB with model or table
 func (x *Executor[T]) IntoDB() *gorm.DB {
 	if x.table == nil {
-		var model T
+		var t T
 
-		x.db = innerModel(model)(x.db)
+		db := x.db.Model(&t)
+		err := db.Statement.Parse(t)
+		if err != nil {
+			_ = db.AddError(err)
+		}
+		x.db = db
 	} else {
 		x.db = x.table(x.db)
 	}
@@ -77,45 +80,17 @@ func (x *Executor[T]) IntoDB() *gorm.DB {
 // IntoRawDB without model or table
 func (x *Executor[T]) IntoRawDB() *gorm.DB {
 	db := x.db
-	for _, f := range x.conditions.Build() {
+	for _, f := range x.scopes {
 		db = f(db)
 	}
 	return db
 }
 
-/****************************************************************************/
-
-func innerAttrs(attrs ...any) Condition {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Attrs(attrs...)
-	}
+func (x *Executor[T]) execute(f Condition) *Executor[T] {
+	return x.getInstance(f(x.db))
 }
 
-func innerAttrsExpr(attrs ...SetExpr) Condition {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Attrs(buildAttrsValue(attrs)...)
-	}
-}
-
-func innerAssign(attrs ...any) Condition {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Assign(attrs...)
-	}
-}
-
-func innerAssignExpr(attrs ...SetExpr) Condition {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Assign(buildAttrsValue(attrs)...)
-	}
-}
-
-func innerModel[T any](t T) Condition {
-	return func(db *gorm.DB) *gorm.DB {
-		db = db.Model(&t)
-		err := db.Statement.Parse(t)
-		if err != nil {
-			_ = db.AddError(err)
-		}
-		return db
-	}
+func (x *Executor[T]) getInstance(db *gorm.DB) *Executor[T] {
+	x.db = db
+	return x
 }
