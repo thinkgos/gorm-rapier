@@ -17,6 +17,12 @@ func Test_Bytes(t *testing.T) {
 		want     string
 	}{
 		{
+			name:     "IntoField",
+			expr:     NewBytes("", "name").IntoField().IfNull(value1),
+			wantVars: []any{value1},
+			want:     "IFNULL(`name`,?)",
+		},
+		{
 			name:     "IfNull",
 			expr:     NewBytes("", "name").IfNull(value1),
 			wantVars: []any{value1},

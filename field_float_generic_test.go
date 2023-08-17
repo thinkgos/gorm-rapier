@@ -83,6 +83,12 @@ func testExprFloat[T constraints.Float | ~string](
 		want     string
 	}{
 		{
+			name:     "IntoField",
+			expr:     newFloat("t1", "score").IntoField().IfNull(value1),
+			wantVars: []any{value1},
+			want:     "IFNULL(`t1`.`score`,?)",
+		},
+		{
 			name:     "IfNull",
 			expr:     newFloat("t1", "score").IfNull(value1),
 			wantVars: []any{value1},

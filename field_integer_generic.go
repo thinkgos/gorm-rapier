@@ -19,6 +19,11 @@ func NewInteger[T constraints.Integer](table, column string, opts ...Option) Int
 	}
 }
 
+// IntoField convert into Field. then use Field abilities.
+func (field Integer[T]) IntoField() Field {
+	return Field(field)
+}
+
 // IfNull use IFNULL(expr,?)
 func (field Integer[T]) IfNull(value T) Expr {
 	return field.innerIfNull(value)

@@ -90,6 +90,12 @@ func testExprInteger[T constraints.Integer](
 		want     string
 	}{
 		{
+			name:     "IntoField",
+			expr:     newInteger("t1", "age").IntoField().IfNull(value1),
+			wantVars: []any{value1},
+			want:     "IFNULL(`t1`.`age`,?)",
+		},
+		{
 			name:     "IfNull",
 			expr:     newInteger("t1", "age").IfNull(value1),
 			wantVars: []any{value1},

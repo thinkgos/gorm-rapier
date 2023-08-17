@@ -19,6 +19,12 @@ func Test_Expr_String(t *testing.T) {
 		want     string
 	}{
 		{
+			name:     "IntoField",
+			expr:     NewString("", "name").IntoField().IfNull(value1),
+			wantVars: []any{value1},
+			want:     "IFNULL(`name`,?)",
+		},
+		{
 			name:     "IfNull",
 			expr:     NewString("", "name").IfNull(value1),
 			wantVars: []any{value1},

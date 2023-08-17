@@ -16,6 +16,11 @@ func NewFloat[T constraints.Float | ~string](table, column string, opts ...Optio
 	}
 }
 
+// IntoField convert into Field. then use Field abilities.
+func (field Float[T]) IntoField() Field {
+	return Field(field)
+}
+
 // IfNull use IFNULL(expr,?)
 func (field Float[T]) IfNull(value T) Expr {
 	return field.innerIfNull(value)

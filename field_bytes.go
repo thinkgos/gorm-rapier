@@ -18,6 +18,11 @@ func NewBytes(table, column string, opts ...Option) Bytes {
 	}
 }
 
+// IntoField convert into Field. then use Field abilities.
+func (field Bytes) IntoField() Field {
+	return Field(field)
+}
+
 // IfNull use IFNULL(expr,?)
 func (field Bytes) IfNull(value []byte) Expr {
 	return field.innerIfNull(value)

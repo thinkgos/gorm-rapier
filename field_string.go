@@ -18,6 +18,11 @@ func NewString(table, column string, opts ...Option) String {
 	}
 }
 
+// IntoField convert into Field. then use Field abilities.
+func (field String) IntoField() Field {
+	return Field(field)
+}
+
 // IfNull use IFNULL(expr,?)
 func (field String) IfNull(value string) Expr {
 	return field.innerIfNull(value)
