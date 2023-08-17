@@ -538,7 +538,7 @@ func (x *Executor[T]) updateExpr(column Expr, value any) *gorm.DB {
 func (x *Executor[T]) updatesExpr(columns ...SetExpr) *gorm.DB {
 	db := x.IntoDB()
 	return db.
-		Clauses(buildAssignSet(db, columns)).
+		Clauses(buildClauseSet(db, columns)).
 		Omit("*").
 		Updates(map[string]any{})
 }
@@ -557,7 +557,7 @@ func (x *Executor[T]) updateColumnExpr(column Expr, value any) *gorm.DB {
 func (x *Executor[T]) updateColumnsExpr(columns ...SetExpr) *gorm.DB {
 	db := x.IntoDB()
 	db.Statement.SkipHooks = true
-	return db.Clauses(buildAssignSet(db, columns)).
+	return db.Clauses(buildClauseSet(db, columns)).
 		Omit("*").
 		UpdateColumns(map[string]any{})
 }

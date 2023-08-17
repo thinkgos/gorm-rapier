@@ -43,8 +43,8 @@ func buildColumnsValue(db *gorm.DB, columns ...Expr) string {
 	return stmt.SQL.String()
 }
 
-// buildAssignSet build all set
-func buildAssignSet(db *gorm.DB, exprs []SetExpr) (set clause.Set) {
+// buildClauseSet build all set
+func buildClauseSet(db *gorm.DB, exprs []SetExpr) (set clause.Set) {
 	for _, expr := range exprs {
 		column := clause.Column{
 			Table: "", // FIXME: when need table?.

@@ -50,7 +50,7 @@ func Test_buildColumnsValue(t *testing.T) {
 
 func Test_buildAssignSet(t *testing.T) {
 	db := newDb()
-	got := buildAssignSet(
+	got := buildClauseSet(
 		db,
 		[]SetExpr{
 			xDict.Pid.Value(100),

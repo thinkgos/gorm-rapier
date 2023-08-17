@@ -17,7 +17,7 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 			name: "set: empty columns",
 			db: newDb().Model(&Dict{}).
 				Where(xDict.Id.Eq(1)).
-				Clauses(buildAssignSet(
+				Clauses(buildClauseSet(
 					newDb(),
 					[]SetExpr{
 						NewColumns().
@@ -38,7 +38,7 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 			name: "set: sub query",
 			db: newDb().Model(&Dict{}).
 				Where(xDict.Id.Eq(1)).
-				Clauses(buildAssignSet(
+				Clauses(buildClauseSet(
 					newDb(),
 					[]SetExpr{
 						NewColumns(xDict.Sort, xDict.IsPin).
