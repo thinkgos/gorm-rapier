@@ -2,16 +2,6 @@ package assist
 
 import "gorm.io/gorm/clause"
 
-type Value clause.Expr
-
-func Values(value any) Value {
-	return Value(clause.Expr{
-		SQL:                "?",
-		Vars:               []any{value},
-		WithoutParentheses: true,
-	})
-}
-
 // EmptyExpr return a empty expression. it is nil
 func EmptyExpr() Expr { return expr{e: clause.Expr{}} }
 

@@ -107,7 +107,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in value",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id).In(Values([]any{1, 100}))).
+				Where(NewColumns(xDict.Id).In([]any{1, 100})).
 				Find(&dummy),
 			wantVars: []any{1, 100},
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` IN (?,?)",
@@ -115,7 +115,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in value - multiple field",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id, xDict.Score).In(Values([][]any{{100, 200}, {1, 2}}))).
+				Where(NewColumns(xDict.Id, xDict.Score).In([][]any{{100, 200}, {1, 2}})).
 				Find(&dummy),
 			wantVars: []any{100, 200, 1, 2},
 			want:     "SELECT * FROM `dict` WHERE (`dict`.`id`, `dict`.`score`) IN ((?,?),(?,?))",
@@ -123,7 +123,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in value - (no field)",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns().In(Values([][]any{{100, 200}, {1, 2}}))).
+				Where(NewColumns().In([][]any{{100, 200}, {1, 2}})).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -155,7 +155,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not in value",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id, xDict.Score).NotIn(Values([][]any{{100, 200}, {1, 2}}))).
+				Where(NewColumns(xDict.Id, xDict.Score).NotIn([][]any{{100, 200}, {1, 2}})).
 				Find(&dummy),
 			wantVars: []any{100, 200, 1, 2},
 			want:     "SELECT * FROM `dict` WHERE (`dict`.`id`, `dict`.`score`) NOT IN ((?,?),(?,?))",
@@ -163,7 +163,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not in value(no fields)",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns().NotIn(Values([][]any{{100, 200}, {1, 2}}))).
+				Where(NewColumns().NotIn([][]any{{100, 200}, {1, 2}})).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",

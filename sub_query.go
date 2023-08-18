@@ -44,20 +44,16 @@ func NewColumns(cols ...Expr) Columns { return cols }
 // SetSubQuery set with subQuery
 func (cs Columns) Set(subQuery *gorm.DB) SetExpr {
 	if len(cs) == 0 {
-		return expr{
-			e: clause.Set{},
-		}
+		return expr{e: clause.Set{}}
 	}
 	cols := make([]string, len(cs))
 	for i, v := range cs {
 		cols[i] = v.BuildColumn(subQuery.Statement)
 	}
-
 	name := cols[0]
 	if len(cols) > 1 {
 		name = "(" + strings.Join(cols, ",") + ")"
 	}
-
 	return expr{
 		e: clause.Set{
 			{
@@ -76,12 +72,16 @@ func (cs Columns) Set(subQuery *gorm.DB) SetExpr {
 // when len(columns) > 1, equal to (columns[0], columns[1], ...) IN (subQuery/value)
 func (cs Columns) In(subQueryOrValue any) Expr {
 	switch v := subQueryOrValue.(type) {
-	case Value:
-		return containsValues("IN", cs, v)
 	case *gorm.DB:
-		return containsSubQuery("IN", cs, v)
-	default:
+		return cs.containsSubQuery("IN", v)
+	case nil:
 		return EmptyExpr()
+	default:
+		return cs.containsValues("IN", clause.Expr{
+			SQL:                "?",
+			Vars:               []any{subQueryOrValue},
+			WithoutParentheses: true,
+		})
 	}
 }
 
@@ -90,16 +90,20 @@ func (cs Columns) In(subQueryOrValue any) Expr {
 // when len(columns) > 1, equal to NOT (columns[0], columns[1], ...) IN (subQuery/value)
 func (cs Columns) NotIn(subQueryOrValue any) Expr {
 	switch v := subQueryOrValue.(type) {
-	case Value:
-		return containsValues("NOT IN", cs, v)
 	case *gorm.DB:
-		return containsSubQuery("NOT IN", cs, v)
-	default:
+		return cs.containsSubQuery("NOT IN", v)
+	case nil:
 		return EmptyExpr()
+	default:
+		return cs.containsValues("NOT IN", clause.Expr{
+			SQL:                "?",
+			Vars:               []any{subQueryOrValue},
+			WithoutParentheses: true,
+		})
 	}
 }
 
-func containsSubQuery(op string, columns []Expr, subQuery *gorm.DB) Expr {
+func (columns Columns) containsSubQuery(op string, subQuery *gorm.DB) Expr {
 	switch len(columns) {
 	case 0:
 		return EmptyExpr()
@@ -121,7 +125,7 @@ func containsSubQuery(op string, columns []Expr, subQuery *gorm.DB) Expr {
 	}
 }
 
-func containsValues(op string, columns []Expr, value Value) Expr {
+func (columns Columns) containsValues(op string, value clause.Expr) Expr {
 	switch len(columns) {
 	case 0:
 		return EmptyExpr()
@@ -138,7 +142,7 @@ func containsValues(op string, columns []Expr, value Value) Expr {
 		}
 		return expr{e: clause.Expr{
 			SQL:  fmt.Sprintf("(%s) %s (?)", strings.Join(vars, ", "), op),
-			Vars: append(queryCols, clause.Expr(value)),
+			Vars: append(queryCols, value),
 		}}
 	}
 }
