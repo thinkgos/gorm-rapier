@@ -223,6 +223,16 @@ func Test_Executor_Expr(t *testing.T) {
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` LIMIT 10 OFFSET 10",
 		},
+		{
+			name: "clause: Returning",
+			db: xDict.New_Executor(newDb()).
+				Returning("id", "pid").
+				updatesExpr(
+					xDict.IsPin.Value(false),
+				),
+			wantVars: []any{false},
+			want:     "UPDATE `dict` SET `is_pin`=? RETURNING `id`,`pid`",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

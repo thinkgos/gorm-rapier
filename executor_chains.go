@@ -147,3 +147,11 @@ func (x *Executor[T]) LockingShare() *Executor[T] {
 func (x *Executor[T]) Pagination(page, perPage int64, maxPerPages ...int64) *Executor[T] {
 	return x.execute(Pagination(page, perPage, maxPerPages...))
 }
+
+func (x *Executor[T]) Returning(columns ...string) *Executor[T] {
+	clauseColumn := make([]clause.Column, 0, len(columns))
+	for _, column := range columns {
+		clauseColumn = append(clauseColumn, clause.Column{Name: column})
+	}
+	return x.getInstance(x.db.Clauses(clause.Returning{Columns: clauseColumn}))
+}
