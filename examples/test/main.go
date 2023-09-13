@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/things-go/gorm-assist/examples/model"
+	"github.com/thinkgos/gorm-rapier/examples/model"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

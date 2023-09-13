@@ -1,4 +1,4 @@
-package assist
+package rapier
 
 import "gorm.io/gorm"
 

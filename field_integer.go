@@ -1,4 +1,4 @@
-package assist
+package rapier
 
 type Int = Integer[int]
 type Int8 = Integer[int8]

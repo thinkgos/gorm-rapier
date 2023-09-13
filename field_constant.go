@@ -1,4 +1,4 @@
-package assist
+package rapier
 
 // One a symbol of "1"
 var One = NewRaw("1")

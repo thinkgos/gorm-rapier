@@ -1,7 +1,7 @@
 package model
 
 import (
-	assist "github.com/things-go/gorm-assist"
+	rapier "github.com/thinkgos/gorm-rapier"
 	"gorm.io/gorm"
 )
 
@@ -18,19 +18,18 @@ const (
 	xx_Dict_UpdatedAt = "updated_at"
 )
 
-var xxx_Dict_Native_Model = new_Dict("")
 var xxx_Dict_Model = new_Dict(xx_Dict_TableName)
 
 type Dict_Native struct {
 	xAlias    string
-	ALL       assist.Asterisk
-	Id        assist.Int64
-	Key       assist.String
-	Name      assist.String
-	IsPin     assist.Bool
-	Remark    assist.String
-	CreatedAt assist.Time
-	UpdatedAt assist.Time
+	ALL       rapier.Asterisk
+	Id        rapier.Int64
+	Key       rapier.String
+	Name      rapier.String
+	IsPin     rapier.Bool
+	Remark    rapier.String
+	CreatedAt rapier.Time
+	UpdatedAt rapier.Time
 }
 
 // X_Dict model with TableName `dict`.
@@ -41,25 +40,22 @@ func X_Dict() Dict_Native {
 func new_Dict(xAlias string) Dict_Native {
 	return Dict_Native{
 		xAlias:    xAlias,
-		ALL:       assist.NewAsterisk(xAlias),
-		Id:        assist.NewInt64(xAlias, xx_Dict_Id),
-		Key:       assist.NewString(xAlias, xx_Dict_Key),
-		Name:      assist.NewString(xAlias, xx_Dict_Name),
-		IsPin:     assist.NewBool(xAlias, xx_Dict_IsPin),
-		Remark:    assist.NewString(xAlias, xx_Dict_Remark),
-		CreatedAt: assist.NewTime(xAlias, xx_Dict_CreatedAt),
-		UpdatedAt: assist.NewTime(xAlias, xx_Dict_UpdatedAt),
+		ALL:       rapier.NewAsterisk(xAlias),
+		Id:        rapier.NewInt64(xAlias, xx_Dict_Id),
+		Key:       rapier.NewString(xAlias, xx_Dict_Key),
+		Name:      rapier.NewString(xAlias, xx_Dict_Name),
+		IsPin:     rapier.NewBool(xAlias, xx_Dict_IsPin),
+		Remark:    rapier.NewString(xAlias, xx_Dict_Remark),
+		CreatedAt: rapier.NewTime(xAlias, xx_Dict_CreatedAt),
+		UpdatedAt: rapier.NewTime(xAlias, xx_Dict_UpdatedAt),
 	}
 }
 
 // New_Dict new instance.
 func New_Dict(xAlias string) Dict_Native {
-	switch xAlias {
-	case "":
-		return xxx_Dict_Native_Model
-	case xx_Dict_TableName:
+	if xAlias == xx_Dict_TableName {
 		return xxx_Dict_Model
-	default:
+	} else {
 		return new_Dict(xAlias)
 	}
 }
@@ -75,8 +71,8 @@ func (x *Dict_Native) X_Alias() string {
 }
 
 // New_Executor new entity executor which suggest use only once.
-func (*Dict_Native) New_Executor(db *gorm.DB) *assist.Executor[Dict] {
-	return assist.NewExecutor[Dict](db)
+func (*Dict_Native) New_Executor(db *gorm.DB) *rapier.Executor[Dict] {
+	return rapier.NewExecutor[Dict](db)
 }
 
 // TableName hold model `Dict` table name returns `dict`.
@@ -85,8 +81,8 @@ func (*Dict_Native) TableName() string {
 }
 
 // Select_Expr select model fields
-func (x *Dict_Native) Select_Expr() []assist.Expr {
-	return []assist.Expr{
+func (x *Dict_Native) Select_Expr() []rapier.Expr {
+	return []rapier.Expr{
 		x.Id,
 		x.Key,
 		x.Name,
@@ -98,9 +94,9 @@ func (x *Dict_Native) Select_Expr() []assist.Expr {
 }
 
 // Select_VariantExpr select model fields, but time.Time field convert to timestamp(int64).
-func (x *Dict_Native) Select_VariantExpr(prefixes ...string) []assist.Expr {
+func (x *Dict_Native) Select_VariantExpr(prefixes ...string) []rapier.Expr {
 	if len(prefixes) > 0 {
-		return []assist.Expr{
+		return []rapier.Expr{
 			x.Id.As(x.Id.FieldName(prefixes...)),
 			x.Key.As(x.Key.FieldName(prefixes...)),
 			x.Name.As(x.Name.FieldName(prefixes...)),
@@ -110,7 +106,7 @@ func (x *Dict_Native) Select_VariantExpr(prefixes ...string) []assist.Expr {
 			x.UpdatedAt.UnixTimestamp().As(x.UpdatedAt.FieldName(prefixes...)),
 		}
 	} else {
-		return []assist.Expr{
+		return []rapier.Expr{
 			x.Id,
 			x.Key,
 			x.Name,

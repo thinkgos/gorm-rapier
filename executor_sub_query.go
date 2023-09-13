@@ -1,4 +1,4 @@
-package assist
+package rapier
 
 func (x *Executor[T]) IntoSubQueryExpr() Field {
 	return SubQuery(x.IntoDB())

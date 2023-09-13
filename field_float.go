@@ -1,4 +1,4 @@
-package assist
+package rapier
 
 type Float32 = Float[float32]
 type Float64 = Float[float64]

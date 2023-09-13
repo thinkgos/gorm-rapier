@@ -1,4 +1,4 @@
-package assist
+package rapier
 
 import (
 	"golang.org/x/exp/constraints"

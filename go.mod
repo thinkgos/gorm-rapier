@@ -1,4 +1,4 @@
-module github.com/things-go/gorm-assist
+module github.com/thinkgos/gorm-rapier
 
 go 1.20
 
