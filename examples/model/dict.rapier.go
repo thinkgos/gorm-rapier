@@ -95,7 +95,7 @@ func (x *Dict_Native) Select_Expr() []rapier.Expr {
 
 // Select_VariantExpr select model fields, but time.Time field convert to timestamp(int64).
 func (x *Dict_Native) Select_VariantExpr(prefixes ...string) []rapier.Expr {
-	if len(prefixes) > 0 {
+	if len(prefixes) > 0 && prefixes[0] != "" {
 		return []rapier.Expr{
 			x.Id.As(x.Id.FieldName(prefixes...)),
 			x.Key.As(x.Key.FieldName(prefixes...)),
