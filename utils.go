@@ -152,5 +152,3 @@ func intoClauseIN(column, value any) clause.Expression {
 	}
 	return EmptyExpr()
 }
-
-
