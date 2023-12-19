@@ -6,73 +6,60 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type WhenThenExpr Expr
+type CaseWhen struct {
+	wts    []*clause.Expr
+	result Expr
+}
 
-func WhenThen(condition Expr, result Expr) WhenThenExpr {
-	return expr{
-		e: clause.Expr{
-			SQL:                "WHEN ? THEN ?",
-			Vars:               []any{condition, result},
-			WithoutParentheses: false,
-		},
+// NewCaseWhen new case when clause
+// CASE
+//
+//	WHEN condition1 THEN result1
+//	WHEN condition2 THEN result2
+//	...
+//	[ELSE result]
+//
+// END
+func NewCaseWhen() *CaseWhen {
+	return &CaseWhen{
+		wts: make([]*clause.Expr, 0, 16),
 	}
 }
 
-/*
-CASE
+// WhenThen add `WHEN condition THEN result`
+func (c *CaseWhen) WhenThen(condition Expr, result Expr) *CaseWhen {
+	c.wts = append(c.wts, &clause.Expr{
+		SQL:                "WHEN ? THEN ?",
+		Vars:               []any{condition, result},
+		WithoutParentheses: false,
+	})
+	return c
+}
 
-	WHEN condition1 THEN result1
-	WHEN condition2 THEN result2
-	...
+// Else add `ELSE result“
+func (c *CaseWhen) Else(result Expr) *CaseWhen {
+	c.result = result
+	return c
+}
 
-END
-*/
-func CaseWhen(wts ...WhenThenExpr) Field {
-	sqlBuilder := strings.Builder{}
-	sqlBuilder.Grow(5 + 2*len(wts) + 6)
-	vars := make([]any, 0, len(wts))
-	sqlBuilder.WriteString("(CASE")
-	for _, wt := range wts {
-		sqlBuilder.WriteString(" ?")
+func (c *CaseWhen) Build() Field {
+	b := &strings.Builder{}
+	b.Grow(5 + 2*len(c.wts) + 12)
+	vars := make([]any, 0, len(c.wts)+1)
+	b.WriteString("(CASE")
+	for _, wt := range c.wts {
+		b.WriteString(" ?")
 		vars = append(vars, wt)
 	}
-	sqlBuilder.WriteString(" END)")
+	if c.result != nil {
+		vars = append(vars, c.result)
+		b.WriteString(" ELSE ?")
+	}
+	b.WriteString(" END)")
 	return Field{
 		expr{
 			e: clause.Expr{
-				SQL:                sqlBuilder.String(),
-				Vars:               vars,
-				WithoutParentheses: false,
-			},
-		},
-	}
-}
-
-/*
-CASE
-
-	WHEN condition1 THEN result1
-	WHEN condition2 THEN result2
-	...
-	ELSE result
-END
-*/
-
-func CaseWhenElse(elseResult Expr, wts ...WhenThenExpr) Field {
-	sqlBuilder := strings.Builder{}
-	sqlBuilder.Grow(5 + 2*len(wts) + 12)
-	vars := make([]any, 0, len(wts)+1)
-	sqlBuilder.WriteString("(CASE")
-	for _, ee := range wts {
-		sqlBuilder.WriteString(" ?")
-		vars = append(vars, ee)
-	}
-	vars = append(vars, elseResult)
-	sqlBuilder.WriteString(" ELSE ? END)")
-	return Field{
-		expr{
-			e: clause.Expr{
-				SQL:                sqlBuilder.String(),
+				SQL:                b.String(),
 				Vars:               vars,
 				WithoutParentheses: false,
 			},
