@@ -10,6 +10,13 @@ import (
 // Condition alias func(*gorm.DB) *gorm.DB
 type Condition = func(*gorm.DB) *gorm.DB
 
+type Table string
+
+// TableName implement schema.Tabler interface
+func (t Table) TableName() string {
+	return string(t)
+}
+
 // From hold subQuery
 type From struct {
 	Alias    string
