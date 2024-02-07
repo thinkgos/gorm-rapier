@@ -64,8 +64,8 @@ func Test_Executor_Expr(t *testing.T) {
 				).
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM (SELECT * FROM `dict`) AS `a` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM (SELECT * FROM `dict`) AS `a` LIMIT ?",
 		},
 		{
 			name: "Expr: select *",
@@ -73,8 +73,8 @@ func Test_Executor_Expr(t *testing.T) {
 				SelectExpr().
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ?",
 		},
 		{
 			name: "Expr: select field",
@@ -86,8 +86,8 @@ func Test_Executor_Expr(t *testing.T) {
 				).
 				IntoDB().
 				Take(&dummy),
-			wantVars: []any{int64(0)},
-			want:     "SELECT `dict`.`id`,UNIX_TIMESTAMP(`dict`.`created_at`) AS `created_at`,IFNULL(UNIX_TIMESTAMP(`dict`.`created_at`),?) AS `created_at1` FROM `dict` LIMIT 1",
+			wantVars: []any{int64(0), 1},
+			want:     "SELECT `dict`.`id`,UNIX_TIMESTAMP(`dict`.`created_at`) AS `created_at`,IFNULL(UNIX_TIMESTAMP(`dict`.`created_at`),?) AS `created_at1` FROM `dict` LIMIT ?",
 		},
 		{
 			name: "Expr: select * using distinct",
@@ -95,8 +95,8 @@ func Test_Executor_Expr(t *testing.T) {
 				DistinctExpr(xDict.Id).
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT ?",
 		},
 		{
 			name: "Expr: order",
@@ -104,8 +104,8 @@ func Test_Executor_Expr(t *testing.T) {
 				OrderExpr(xDict.Score).
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` LIMIT ?",
 		},
 		{
 			name: "Expr: group",
@@ -113,8 +113,8 @@ func Test_Executor_Expr(t *testing.T) {
 				GroupExpr(xDict.Name).
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` GROUP BY `dict`.`name` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` GROUP BY `dict`.`name` LIMIT ?",
 		},
 		{
 			name: "Expr: cross join",
@@ -125,8 +125,8 @@ func Test_Executor_Expr(t *testing.T) {
 				).
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
 			name: "Expr: cross join X",
@@ -139,8 +139,8 @@ func Test_Executor_Expr(t *testing.T) {
 				).
 				IntoDB().
 				Take(&dummy),
-			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dict` `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT 1",
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dict` `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT ?",
 		},
 		{
 			name: "Expr: inner join",
@@ -148,8 +148,8 @@ func Test_Executor_Expr(t *testing.T) {
 				InnerJoinsExpr(&xDt, xDt.DictId.EqCol(xDict.Id)).
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
 			name: "Expr: inner join X",
@@ -157,8 +157,8 @@ func Test_Executor_Expr(t *testing.T) {
 				InnerJoinsXExpr(&xDd, xDd.X_Alias(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)).
 				IntoDB().
 				Take(&dummy),
-			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict` `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT 1",
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict` `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT ?",
 		},
 		{
 			name: "Expr: left join",
@@ -166,8 +166,8 @@ func Test_Executor_Expr(t *testing.T) {
 				LeftJoinsExpr(&xDt, xDt.DictId.EqCol(xDict.Id)).
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
 			name: "Expr: left join X",
@@ -175,8 +175,8 @@ func Test_Executor_Expr(t *testing.T) {
 				LeftJoinsXExpr(&xDd, xDd.X_Alias(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)).
 				IntoDB().
 				Take(&dummy),
-			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dict` `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT 1",
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dict` `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT ?",
 		},
 		{
 			name: "Expr: right join",
@@ -184,8 +184,8 @@ func Test_Executor_Expr(t *testing.T) {
 				RightJoinsExpr(&xDt, xDt.DictId.EqCol(xDict.Id)).
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
 			name: "Expr: right join X",
@@ -193,8 +193,8 @@ func Test_Executor_Expr(t *testing.T) {
 				RightJoinsXExpr(&xDd, xDd.X_Alias(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)).
 				IntoDB().
 				Take(&dummy),
-			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dict` `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT 1",
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dict` `dd` ON `dd`.`id` = `dict`.`pid` AND `dd`.`is_pin` = ? LIMIT ?",
 		},
 		{
 			name: "clause: for update",
@@ -202,8 +202,8 @@ func Test_Executor_Expr(t *testing.T) {
 				LockingUpdate().
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1 FOR UPDATE",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ? FOR UPDATE",
 		},
 		{
 			name: "clause: for share",
@@ -211,8 +211,8 @@ func Test_Executor_Expr(t *testing.T) {
 				LockingShare().
 				IntoDB().
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1 FOR SHARE",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ? FOR SHARE",
 		},
 		{
 			name: "clause: pagination",
@@ -220,8 +220,8 @@ func Test_Executor_Expr(t *testing.T) {
 				Pagination(2, 10).
 				IntoDB().
 				Find(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 10 OFFSET 10",
+			wantVars: []any{10, 10},
+			want:     "SELECT * FROM `dict` LIMIT ? OFFSET ?",
 		},
 		{
 			name: "clause: Returning",
@@ -263,8 +263,8 @@ func Test_Executor_SubQuery(t *testing.T) {
 				).
 				IntoDB().
 				Take(&dummy),
-			wantVars: []any{int64(100)},
-			want:     "SELECT * FROM `dict` WHERE `dict`.`id` = (SELECT `dict`.`id` FROM `dict` WHERE `dict`.`pid` = ?) LIMIT 1",
+			wantVars: []any{int64(100), 1},
+			want:     "SELECT * FROM `dict` WHERE `dict`.`id` = (SELECT `dict`.`id` FROM `dict` WHERE `dict`.`pid` = ?) LIMIT ?",
 		},
 		{
 			name: "sub query: IntoExistExpr",
