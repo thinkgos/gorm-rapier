@@ -24,8 +24,8 @@ func Test_Joins(t *testing.T) {
 					InnerJoinsExpr(&xDictItem),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ?",
 		},
 		{
 			name: "cross join",
@@ -34,8 +34,8 @@ func Test_Joins(t *testing.T) {
 					CrossJoinsExpr(&xDictItem, xDictItem.DictId.EqCol(xDict.Id), xDictItem.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
-			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT 1",
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT ?",
 		},
 		{
 			name: "inner join",
@@ -44,8 +44,8 @@ func Test_Joins(t *testing.T) {
 					InnerJoinsExpr(&xDictItem, xDictItem.DictId.EqCol(xDict.Id), xDictItem.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
-			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT 1",
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT ?",
 		},
 		{
 			name: "left join",
@@ -54,8 +54,8 @@ func Test_Joins(t *testing.T) {
 					LeftJoinsExpr(&xDictItem, xDictItem.DictId.EqCol(xDict.Id), xDictItem.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
-			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT 1",
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT ?",
 		},
 		{
 			name: "right join",
@@ -64,8 +64,8 @@ func Test_Joins(t *testing.T) {
 					RightJoinsExpr(&xDictItem, xDictItem.DictId.EqCol(xDict.Id), xDictItem.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
-			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT 1",
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = ? LIMIT ?",
 		},
 		{
 			name: "inner join - multiple",
@@ -75,8 +75,8 @@ func Test_Joins(t *testing.T) {
 					InnerJoinsXExpr(&xDi, xDi.X_Alias(), xDi.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
-			wantVars: []any{true},
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` INNER JOIN `dict_item` `di` ON `di`.`is_enabled` = ? LIMIT 1",
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` INNER JOIN `dict_item` `di` ON `di`.`is_enabled` = ? LIMIT ?",
 		},
 	}
 	for _, tt := range tests {

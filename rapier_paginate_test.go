@@ -17,32 +17,32 @@ func Test_Paginate(t *testing.T) {
 			{
 				name:     "in range",
 				db:       newDb().Model(Dict{}).Clauses(Paginate(2, 10)).Find([]Dict{}),
-				wantVars: nil,
-				want:     "SELECT * FROM `dict` LIMIT 10 OFFSET 10",
+				wantVars: []any{10, 10},
+				want:     "SELECT * FROM `dict` LIMIT ? OFFSET ?",
 			},
 			{
 				name:     "page < 1",
 				db:       newDb().Model(Dict{}).Clauses(Paginate(0, 10)).Find([]Dict{}),
-				wantVars: nil,
-				want:     "SELECT * FROM `dict` LIMIT 10",
+				wantVars: []any{10},
+				want:     "SELECT * FROM `dict` LIMIT ?",
 			},
 			{
 				name:     "perPage < 1",
 				db:       newDb().Model(Dict{}).Clauses(Paginate(1, 0)).Find([]Dict{}),
-				wantVars: nil,
-				want:     "SELECT * FROM `dict` LIMIT 50",
+				wantVars: []any{50},
+				want:     "SELECT * FROM `dict` LIMIT ?",
 			},
 			{
 				name:     "perPage > DefaultMaxPerPage",
 				db:       newDb().Model(Dict{}).Clauses(Paginate(1, DefaultMaxPerPage+1)).Find([]Dict{}),
-				wantVars: nil,
-				want:     "SELECT * FROM `dict` LIMIT 500",
+				wantVars: []any{500},
+				want:     "SELECT * FROM `dict` LIMIT ?",
 			},
 			{
 				name:     "customer perPage > maxPerPage",
 				db:       newDb().Model(Dict{}).Clauses(Paginate(1, 201, 200)).Find([]Dict{}),
-				wantVars: nil,
-				want:     "SELECT * FROM `dict` LIMIT 200",
+				wantVars: []any{200},
+				want:     "SELECT * FROM `dict` LIMIT ?",
 			},
 		}
 		for _, tt := range tests {
@@ -62,26 +62,26 @@ func Test_Paginate(t *testing.T) {
 			{
 				name:     "in range",
 				db:       newDb().Model(Dict{}).Scopes(Pagination(2, 10)).Find([]Dict{}),
-				wantVars: nil,
-				want:     "SELECT * FROM `dict` LIMIT 10 OFFSET 10",
+				wantVars: []any{10, 10},
+				want:     "SELECT * FROM `dict` LIMIT ? OFFSET ?",
 			},
 			{
 				name:     "page < 1",
 				db:       newDb().Model(Dict{}).Scopes(Pagination(0, 10)).Find([]Dict{}),
-				wantVars: nil,
-				want:     "SELECT * FROM `dict` LIMIT 10",
+				wantVars: []any{10},
+				want:     "SELECT * FROM `dict` LIMIT ?",
 			},
 			{
 				name:     "perPage < 1",
 				db:       newDb().Model(Dict{}).Scopes(Pagination(1, 0)).Find([]Dict{}),
-				wantVars: nil,
-				want:     "SELECT * FROM `dict` LIMIT 50",
+				wantVars: []any{50},
+				want:     "SELECT * FROM `dict` LIMIT ?",
 			},
 			{
 				name:     "perPage > DefaultMaxPerPage",
 				db:       newDb().Model(Dict{}).Scopes(Pagination(1, DefaultMaxPerPage+1)).Find([]Dict{}),
-				wantVars: nil,
-				want:     "SELECT * FROM `dict` LIMIT 500",
+				wantVars: []any{500},
+				want:     "SELECT * FROM `dict` LIMIT ?",
 			},
 		}
 		for _, tt := range tests {

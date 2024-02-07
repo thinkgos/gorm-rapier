@@ -145,8 +145,8 @@ func Test_Table(t *testing.T) {
 					TableExpr(),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ?",
 		},
 		{
 			name: "single table",
@@ -161,8 +161,8 @@ func Test_Table(t *testing.T) {
 					),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM (SELECT * FROM `dict`) AS `a` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM (SELECT * FROM `dict`) AS `a` LIMIT ?",
 		},
 		{
 			name: "multi table",
@@ -182,8 +182,8 @@ func Test_Table(t *testing.T) {
 					),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM (SELECT * FROM `dict`) AS `a`, (SELECT * FROM `dict`) AS `b` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM (SELECT * FROM `dict`) AS `a`, (SELECT * FROM `dict`) AS `b` LIMIT ?",
 		},
 	}
 	for _, tt := range tests {
@@ -209,8 +209,8 @@ func Test_Select(t *testing.T) {
 					SelectExpr(),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ?",
 		},
 		{
 			name: "select field",
@@ -223,8 +223,8 @@ func Test_Select(t *testing.T) {
 					),
 				).
 				Take(&dummy),
-			wantVars: []any{int64(0)},
-			want:     "SELECT `dict`.`id`,UNIX_TIMESTAMP(`dict`.`created_at`) AS `created_at`,IFNULL(UNIX_TIMESTAMP(`dict`.`created_at`),?) AS `created_at1` FROM `dict` LIMIT 1",
+			wantVars: []any{int64(0), 1},
+			want:     "SELECT `dict`.`id`,UNIX_TIMESTAMP(`dict`.`created_at`) AS `created_at`,IFNULL(UNIX_TIMESTAMP(`dict`.`created_at`),?) AS `created_at1` FROM `dict` LIMIT ?",
 		},
 		{
 			name: "select field where",
@@ -234,8 +234,8 @@ func Test_Select(t *testing.T) {
 				).
 				Where(xDict.Name.Eq(""), xDict.IsPin.Is(true)).
 				Take(&dummy),
-			wantVars: []any{"", true},
-			want:     "SELECT `dict`.`id`,`dict`.`score` FROM `dict` WHERE `dict`.`name` = ? AND `dict`.`is_pin` = ? LIMIT 1",
+			wantVars: []any{"", true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`score` FROM `dict` WHERE `dict`.`name` = ? AND `dict`.`is_pin` = ? LIMIT ?",
 		},
 		{
 			name: "select 1",
@@ -244,8 +244,8 @@ func Test_Select(t *testing.T) {
 					SelectExpr(One),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT 1 FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT 1 FROM `dict` LIMIT ?",
 		},
 		{
 			name: "select COUNT(1)",
@@ -254,8 +254,8 @@ func Test_Select(t *testing.T) {
 					SelectExpr(One.Count()),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT COUNT(1) FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT COUNT(1) FROM `dict` LIMIT ?",
 		},
 		{
 			name: "select COUNT(*)",
@@ -264,8 +264,8 @@ func Test_Select(t *testing.T) {
 					SelectExpr(Star.Count()),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT COUNT(*) FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT COUNT(*) FROM `dict` LIMIT ?",
 		},
 		{
 			name: "select AVG(field)",
@@ -274,8 +274,8 @@ func Test_Select(t *testing.T) {
 					SelectExpr(xDict.Score.Avg()),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT AVG(`dict`.`score`) FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT AVG(`dict`.`score`) FROM `dict` LIMIT ?",
 		},
 		{
 			name: "update with select field",
@@ -318,8 +318,8 @@ func Test_Omit(t *testing.T) {
 					OmitExpr(),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ?",
 		},
 		{
 			name: "omit field",
@@ -330,8 +330,8 @@ func Test_Omit(t *testing.T) {
 					),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort` FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort` FROM `dict` LIMIT ?",
 		},
 		{
 			name: "omit more fields",
@@ -343,8 +343,8 @@ func Test_Omit(t *testing.T) {
 					),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`is_pin`,`dict`.`sort` FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`is_pin`,`dict`.`sort` FROM `dict` LIMIT ?",
 		},
 	}
 	for _, tt := range tests {
@@ -369,16 +369,16 @@ func Test_Distinct(t *testing.T) {
 					SelectExpr(xDict.Id),
 				).
 				Take(&Dict{}),
-			wantVars: nil,
-			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT ?",
 		},
 		{
 			name: "distinct field",
 			db: newDb().Model(&Dict{}).
 				Scopes(DistinctExpr(xDict.Id)).
 				Take(&Dict{}),
-			wantVars: nil,
-			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT DISTINCT `dict`.`id` FROM `dict` LIMIT ?",
 		},
 	}
 	for _, tt := range tests {
@@ -404,8 +404,8 @@ func Test_Order(t *testing.T) {
 					OrderExpr(),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ?",
 		},
 		{
 			name: "",
@@ -414,8 +414,8 @@ func Test_Order(t *testing.T) {
 					OrderExpr(xDict.Score),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` LIMIT ?",
 		},
 		{
 			name: "",
@@ -424,8 +424,8 @@ func Test_Order(t *testing.T) {
 					OrderExpr(xDict.Score.Desc()),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` DESC LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` DESC LIMIT ?",
 		},
 		{
 			name: "",
@@ -434,8 +434,8 @@ func Test_Order(t *testing.T) {
 					OrderExpr(xDict.Score.Desc(), xDict.Name),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` DESC,`dict`.`name` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` DESC,`dict`.`name` LIMIT ?",
 		},
 	}
 	for _, tt := range tests {
@@ -461,8 +461,8 @@ func Test_Group(t *testing.T) {
 					GroupExpr(),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ?",
 		},
 		{
 			name: "",
@@ -471,8 +471,8 @@ func Test_Group(t *testing.T) {
 					GroupExpr(xDict.Name),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` GROUP BY `dict`.`name` LIMIT 1",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` GROUP BY `dict`.`name` LIMIT ?",
 		},
 		{
 			name: "",
@@ -483,8 +483,8 @@ func Test_Group(t *testing.T) {
 				).
 				Having(xDict.Score.Sum().Gt(100)).
 				Take(&dummy),
-			wantVars: []any{float64(100)},
-			want:     "SELECT SUM(`dict`.`score`) FROM `dict` GROUP BY `dict`.`name` HAVING SUM(`dict`.`score`) > ? LIMIT 1",
+			wantVars: []any{float64(100), 1},
+			want:     "SELECT SUM(`dict`.`score`) FROM `dict` GROUP BY `dict`.`name` HAVING SUM(`dict`.`score`) > ? LIMIT ?",
 		},
 	}
 	for _, tt := range tests {
@@ -511,8 +511,8 @@ func Test_Locking(t *testing.T) {
 					LockingUpdate(),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1 FOR UPDATE",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ? FOR UPDATE",
 		},
 		{
 			name: "",
@@ -522,8 +522,8 @@ func Test_Locking(t *testing.T) {
 					LockingShare(),
 				).
 				Take(&dummy),
-			wantVars: nil,
-			want:     "SELECT * FROM `dict` LIMIT 1 FOR SHARE",
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` LIMIT ? FOR SHARE",
 		},
 	}
 	for _, tt := range tests {
