@@ -8,45 +8,49 @@ import (
 
 // CrossJoinsExpr cross joins condition
 func CrossJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
-	return CrossJoinsXExpr(table, "", conds...)
-}
-
-// CrossJoinsXExpr cross joins condition
-func CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
-	return joinsExpr(clause.CrossJoin, table, alias, conds...)
+	return joinsExpr(clause.CrossJoin, table, conds...)
 }
 
 // InnerJoinsExpr inner joins condition
 func InnerJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
-	return InnerJoinsXExpr(table, "", conds...)
-}
-
-// InnerJoinsXExpr inner joins condition
-func InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
-	return joinsExpr(clause.InnerJoin, table, alias, conds...)
+	return joinsExpr(clause.InnerJoin, table, conds...)
 }
 
 // LeftJoinsExpr left join condition
 func LeftJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
-	return LeftJoinsXExpr(table, "", conds...)
-}
-
-// LeftJoinsXExpr left join condition
-func LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
-	return joinsExpr(clause.LeftJoin, table, alias, conds...)
+	return joinsExpr(clause.LeftJoin, table, conds...)
 }
 
 // RightJoinsExpr right join condition
 func RightJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
-	return RightJoinsXExpr(table, "", conds...)
+	return joinsExpr(clause.RightJoin, table, conds...)
+}
+
+// CrossJoinsXExpr cross joins condition
+// Deprecated: use other CrossJoinsExpr(NewJoinTable(table, alias), conds...).
+func CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
+	return CrossJoinsExpr(NewJoinTable(table, alias), conds...)
+}
+
+// InnerJoinsXExpr inner joins condition
+// Deprecated: use other InnerJoinsExpr(NewJoinTable(table, alias), conds...).
+func InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
+	return InnerJoinsExpr(NewJoinTable(table, alias), conds...)
+}
+
+// LeftJoinsXExpr left join condition
+// Deprecated: use other LeftJoinsExpr(NewJoinTable(table, alias), conds...).
+func LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
+	return LeftJoinsExpr(NewJoinTable(table, alias), conds...)
 }
 
 // RightJoinsXExpr right join condition
+// Deprecated: use other RightJoinsExpr(NewJoinTable(table, alias), conds...).
 func RightJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
-	return joinsExpr(clause.RightJoin, table, alias, conds...)
+	return RightJoinsExpr(NewJoinTable(table, alias), conds...)
 }
 
-func joinsExpr(joinType clause.JoinType, table schema.Tabler, alias string, conds ...Expr) Condition {
+func joinsExpr(joinType clause.JoinType, table schema.Tabler, conds ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(conds) == 0 {
 			return db
@@ -54,14 +58,24 @@ func joinsExpr(joinType clause.JoinType, table schema.Tabler, alias string, cond
 
 		join := clause.Join{
 			Type:  joinType,
-			Table: clause.Table{Name: table.TableName(), Alias: alias},
+			Table: clause.Table{Name: table.TableName()},
 			ON:    clause.Where{Exprs: IntoExpression(conds...)},
 		}
 		if jt, ok := table.(*JoinTable); ok {
-			newDb := db.Session(&gorm.Session{NewDB: true})
-			join.Expression = JoinTableExpr{
-				Join:      join,
-				TableExpr: TableExpr(jt.From)(newDb).Statement.TableExpr}
+			switch tb := jt.table.(type) {
+			case *gorm.DB:
+				newDb := db.Session(&gorm.Session{NewDB: true})
+				join.Expression = JoinTableExpr{
+					Join:      join,
+					TableExpr: TableExpr(From{Alias: jt.alias, SubQuery: tb})(newDb).Statement.TableExpr,
+				}
+			case schema.Tabler:
+				if jt.alias != "" {
+					join.Table.Alias = jt.alias
+				}
+			default:
+				// do nothing
+			}
 		}
 
 		clauseFrom := getClauseFrom(db)
@@ -86,15 +100,34 @@ func getClauseFrom(db *gorm.DB) *clause.From {
 }
 
 type JoinTable struct {
-	From
+	table any // table(schema.Tabler) or table subquery(*gorm.DB)
+	alias string
 }
 
-func NewJoinTable(f From) *JoinTable {
-	return &JoinTable{From: f}
+func NewJoinTable(table schema.Tabler, alias string) *JoinTable {
+	return &JoinTable{
+		table: table,
+		alias: alias,
+	}
+}
+
+func NewJoinTableSubQuery(subQuery *gorm.DB, alias string) *JoinTable {
+	return &JoinTable{
+		table: subQuery,
+		alias: alias,
+	}
 }
 
 // TableName implement schema.Tabler
-// just placeholder, in fact no used here
 func (jt *JoinTable) TableName() string {
-	return jt.Alias
+	if jt.table == nil {
+		return jt.alias
+	}
+	switch t := jt.table.(type) {
+	case schema.Tabler:
+		return t.TableName()
+	// case *gorm.DB:
+	default:
+	}
+	return jt.alias
 }

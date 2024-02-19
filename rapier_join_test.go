@@ -104,13 +104,13 @@ func Test_SubJoins(t *testing.T) {
 				).
 				Scopes(
 					InnerJoinsExpr(
-						NewJoinTable(From{
-							Alias: "di",
-							SubQuery: xDictItem.New_Executor(newDb()).
+						NewJoinTableSubQuery(
+							xDictItem.New_Executor(newDb()).
 								SelectExpr(xDictItem.DictId, xDictItem.DictName).
 								Where(xDictItem.Id.Eq(10)).
 								IntoDB(),
-						}),
+							"di",
+						),
 						xDi.DictId.EqCol(xDict.Id),
 					),
 				).

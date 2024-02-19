@@ -136,19 +136,9 @@ func (c *Conditions) CrossJoinsExpr(table schema.Tabler, conds ...Expr) *Conditi
 	return c.Scopes(CrossJoinsExpr(table, conds...))
 }
 
-// CrossJoinsXExpr cross joins condition
-func (c *Conditions) CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(CrossJoinsXExpr(table, alias, conds...))
-}
-
 // InnerJoinsExpr inner joins condition
 func (c *Conditions) InnerJoinsExpr(table schema.Tabler, conds ...Expr) *Conditions {
 	return c.Scopes(InnerJoinsExpr(table, conds...))
-}
-
-// InnerJoinsXExpr inner joins condition
-func (c *Conditions) InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(InnerJoinsXExpr(table, alias, conds...))
 }
 
 // LeftJoinsExpr left join condition
@@ -156,17 +146,31 @@ func (c *Conditions) LeftJoinsExpr(table schema.Tabler, conds ...Expr) *Conditio
 	return c.Scopes(LeftJoinsExpr(table, conds...))
 }
 
-// LeftJoinsXExpr left join condition
-func (c *Conditions) LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(LeftJoinsXExpr(table, alias, conds...))
-}
-
 // RightJoinsExpr right join condition
 func (c *Conditions) RightJoinsExpr(table schema.Tabler, conds ...Expr) *Conditions {
 	return c.Scopes(RightJoinsExpr(table, conds...))
 }
 
+// CrossJoinsXExpr cross joins condition
+// Deprecated: use other CrossJoinsExpr(NewJoinTable(table, alias), conds...).
+func (c *Conditions) CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
+	return c.Scopes(CrossJoinsXExpr(table, alias, conds...))
+}
+
+// InnerJoinsXExpr inner joins condition
+// Deprecated: use other InnerJoinsExpr(NewJoinTable(table, alias), conds...).
+func (c *Conditions) InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
+	return c.Scopes(InnerJoinsXExpr(table, alias, conds...))
+}
+
+// LeftJoinsXExpr left join condition
+// Deprecated: use other LeftJoinsExpr(NewJoinTable(table, alias), conds...).
+func (c *Conditions) LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
+	return c.Scopes(LeftJoinsXExpr(table, alias, conds...))
+}
+
 // RightJoinsXExpr right join condition
+// Deprecated: use other RightJoinsExpr(NewJoinTable(table, alias), conds...).
 func (c *Conditions) RightJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
 	return c.Scopes(RightJoinsXExpr(table, alias, conds...))
 }
