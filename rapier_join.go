@@ -104,6 +104,7 @@ type JoinTable struct {
 	alias string
 }
 
+// NewJoinTable new join table as alias
 func NewJoinTable(table schema.Tabler, alias string) *JoinTable {
 	return &JoinTable{
 		table: table,
@@ -111,6 +112,7 @@ func NewJoinTable(table schema.Tabler, alias string) *JoinTable {
 	}
 }
 
+// NewJoinTableSubQuery new join table sub query as alias
 func NewJoinTableSubQuery(subQuery *gorm.DB, alias string) *JoinTable {
 	return &JoinTable{
 		table: subQuery,
