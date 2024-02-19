@@ -52,12 +52,20 @@ func joinsExpr(joinType clause.JoinType, table schema.Tabler, alias string, cond
 			return db
 		}
 
-		clauseFrom := getClauseFrom(db)
-		clauseFrom.Joins = append(clauseFrom.Joins, clause.Join{
+		join := clause.Join{
 			Type:  joinType,
 			Table: clause.Table{Name: table.TableName(), Alias: alias},
 			ON:    clause.Where{Exprs: IntoExpression(conds...)},
-		})
+		}
+		if jt, ok := table.(*JoinTable); ok {
+			newDb := db.Session(&gorm.Session{NewDB: true})
+			join.Expression = JoinTableExpr{
+				Join:      join,
+				TableExpr: TableExpr(jt.From)(newDb).Statement.TableExpr}
+		}
+
+		clauseFrom := getClauseFrom(db)
+		clauseFrom.Joins = append(clauseFrom.Joins, join)
 		return db.Clauses(clauseFrom)
 	}
 }
@@ -75,4 +83,18 @@ func getClauseFrom(db *gorm.DB) *clause.From {
 		return &clause.From{}
 	}
 	return &from
+}
+
+type JoinTable struct {
+	From
+}
+
+func NewJoinTable(f From) *JoinTable {
+	return &JoinTable{From: f}
+}
+
+// TableName implement schema.Tabler
+// just placeholder, in fact no used here
+func (jt *JoinTable) TableName() string {
+	return jt.Alias
 }
