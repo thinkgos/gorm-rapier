@@ -23,7 +23,7 @@ func main() {
 	})
 	db.DryRun = true
 
-	xDict := model.X_Dict()
+	xDict := model.Ref_Dict()
 
 	_, err := xDict.New_Executor(db).
 		SelectExpr(

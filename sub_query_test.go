@@ -16,7 +16,7 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 		{
 			name: "set: empty columns",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.Eq(1)).
+				Where(refDict.Id.Eq(1)).
 				Clauses(buildClauseSet(
 					newDb(),
 					[]SetExpr{
@@ -24,8 +24,8 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 							Set(
 								newDb().Model(&Dict{}).
 									Scopes(SelectExpr(
-										xDict.Sort,
-										xDict.IsPin,
+										refDict.Sort,
+										refDict.IsPin,
 									)),
 							),
 					},
@@ -37,16 +37,16 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 		{
 			name: "set: sub query",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.Eq(1)).
+				Where(refDict.Id.Eq(1)).
 				Clauses(buildClauseSet(
 					newDb(),
 					[]SetExpr{
-						NewColumns(xDict.Sort, xDict.IsPin).
+						NewColumns(refDict.Sort, refDict.IsPin).
 							Set(
 								newDb().Model(&Dict{}).
 									Scopes(SelectExpr(
-										xDict.Sort,
-										xDict.IsPin,
+										refDict.Sort,
+										refDict.IsPin,
 									)),
 							),
 					},
@@ -58,7 +58,7 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+			ReviewBuildDb(t, tt.db, tt.want, tt.wantVars)
 		})
 	}
 }
@@ -75,7 +75,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in invalid query",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id).In(nil)).
+				Where(NewColumns(refDict.Id).In(nil)).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -83,7 +83,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in sub query",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id).In(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(NewColumns(refDict.Id).In(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id)).Where(refDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: []any{float64(100)},
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` IN (SELECT `dict`.`id` FROM `dict` WHERE `dict`.`score` > ?)",
@@ -91,7 +91,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in sub query - (multiple fields)",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id, xDict.Name).In(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id, xDict.Name)).Where(xDict.Score.Gt(100)))).
+				Where(NewColumns(refDict.Id, refDict.Name).In(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id, refDict.Name)).Where(refDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: []any{float64(100)},
 			want:     "SELECT * FROM `dict` WHERE (`dict`.`id`,`dict`.`name`) IN (SELECT `dict`.`id`,`dict`.`name` FROM `dict` WHERE `dict`.`score` > ?)",
@@ -99,7 +99,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in sub query - (no field)",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns().In(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(NewColumns().In(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id)).Where(refDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -107,7 +107,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in value",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id).In([]any{1, 100})).
+				Where(NewColumns(refDict.Id).In([]any{1, 100})).
 				Find(&dummy),
 			wantVars: []any{1, 100},
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` IN (?,?)",
@@ -115,7 +115,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in value - multiple field",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id, xDict.Score).In([][]any{{100, 200}, {1, 2}})).
+				Where(NewColumns(refDict.Id, refDict.Score).In([][]any{{100, 200}, {1, 2}})).
 				Find(&dummy),
 			wantVars: []any{100, 200, 1, 2},
 			want:     "SELECT * FROM `dict` WHERE (`dict`.`id`, `dict`.`score`) IN ((?,?),(?,?))",
@@ -131,7 +131,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not in invalid query",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id).NotIn(nil)).
+				Where(NewColumns(refDict.Id).NotIn(nil)).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -139,7 +139,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not in sub query",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id).NotIn(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(NewColumns(refDict.Id).NotIn(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id)).Where(refDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: []any{float64(100)},
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` NOT IN (SELECT `dict`.`id` FROM `dict` WHERE `dict`.`score` > ?)",
@@ -147,7 +147,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not in sub query(no fields)",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns().NotIn(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(NewColumns().NotIn(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id)).Where(refDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE ",
@@ -155,7 +155,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not in value",
 			db: newDb().Model(&Dict{}).
-				Where(NewColumns(xDict.Id, xDict.Score).NotIn([][]any{{100, 200}, {1, 2}})).
+				Where(NewColumns(refDict.Id, refDict.Score).NotIn([][]any{{100, 200}, {1, 2}})).
 				Find(&dummy),
 			wantVars: []any{100, 200, 1, 2},
 			want:     "SELECT * FROM `dict` WHERE (`dict`.`id`, `dict`.`score`) NOT IN ((?,?),(?,?))",
@@ -172,8 +172,8 @@ func Test_Columns_SubQuery(t *testing.T) {
 			name: "eq",
 			db: newDb().Model(&Dict{}).
 				Where(
-					xDict.Id.EqSubQuery(
-						newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id.Max())),
+					refDict.Id.EqSubQuery(
+						newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id.Max())),
 					),
 				).
 				Find(&dummy),
@@ -183,7 +183,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "neq",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.NeqSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id.Max())))).
+				Where(refDict.Id.NeqSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id.Max())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` <> (SELECT MAX(`dict`.`id`) FROM `dict`)",
@@ -191,7 +191,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "gt",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.GtSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id.Min())))).
+				Where(refDict.Id.GtSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` > (SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -199,7 +199,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "gte",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.GteSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id.Min())))).
+				Where(refDict.Id.GteSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` >= (SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -207,7 +207,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "lt",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.LtSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id.Min())))).
+				Where(refDict.Id.LtSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` < (SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -215,7 +215,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "lte",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.LteSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id.Min())))).
+				Where(refDict.Id.LteSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` <= (SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -223,7 +223,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "in",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.InSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(refDict.Id.InSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id)).Where(refDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: []any{float64(100)},
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` IN (SELECT `dict`.`id` FROM `dict` WHERE `dict`.`score` > ?)",
@@ -231,7 +231,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not in",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.NotInSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id)).Where(xDict.Score.Gt(100)))).
+				Where(refDict.Id.NotInSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id)).Where(refDict.Score.Gt(100)))).
 				Find(&dummy),
 			wantVars: []any{float64(100)},
 			want:     "SELECT * FROM `dict` WHERE `dict`.`id` NOT IN (SELECT `dict`.`id` FROM `dict` WHERE `dict`.`score` > ?)",
@@ -239,7 +239,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "find_in_set",
 			db: newDb().Model(&Dict{}).
-				Where(xDict.Id.FindInSetSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id.Min())))).
+				Where(refDict.Id.FindInSetSubQuery(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE FIND_IN_SET(`dict`.`id`, (SELECT MIN(`dict`.`id`) FROM `dict`))",
@@ -247,7 +247,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "exist",
 			db: newDb().Model(&Dict{}).
-				Where(Exist(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id.Min())))).
+				Where(Exist(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE EXISTS(SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -255,7 +255,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 		{
 			name: "not exist",
 			db: newDb().Model(&Dict{}).
-				Where(NotExist(newDb().Model(&Dict{}).Scopes(SelectExpr(xDict.Id.Min())))).
+				Where(NotExist(newDb().Model(&Dict{}).Scopes(SelectExpr(refDict.Id.Min())))).
 				Find(&dummy),
 			wantVars: nil,
 			want:     "SELECT * FROM `dict` WHERE NOT EXISTS(SELECT MIN(`dict`.`id`) FROM `dict`)",
@@ -263,7 +263,7 @@ func Test_Columns_SubQuery(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+			ReviewBuildDb(t, tt.db, tt.want, tt.wantVars)
 		})
 	}
 }

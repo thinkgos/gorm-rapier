@@ -87,7 +87,6 @@ func (e expr) Build(builder clause.Builder) {
 			return
 		}
 	}
-
 	e.e.Build(builder)
 }
 

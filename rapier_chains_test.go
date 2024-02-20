@@ -10,7 +10,7 @@ import (
 
 func Test_Condition_Stand(t *testing.T) {
 	t.Run("executor", func(t *testing.T) {
-		err := xDict.New_Executor(newDb()).
+		err := refDict.New_Executor(newDb()).
 			Debug().
 			Scopes(
 				NewConditions().
@@ -19,15 +19,15 @@ func Test_Condition_Stand(t *testing.T) {
 					Select([]string{"id", "pid", "name"}).
 					Distinct().
 					Omit("sort").
-					OmitExpr(xDict.Sort).
+					OmitExpr(refDict.Sort).
 					Where("id = ?", 1).
 					Or("pid = ?", 0).
 					Not("is_ping = ?", false).
 					Order("created_at").
 					Group("name").
 					Having("").
-					InnerJoins(xDict.X_Alias()).
-					Joins(xDict.X_Alias()).
+					InnerJoins(refDict.Ref_Alias()).
+					Joins(refDict.Ref_Alias()).
 					Limit(10).
 					Offset(2).
 					Scopes(func(d *gorm.DB) *gorm.DB {
@@ -48,8 +48,8 @@ func Test_Condition_Stand(t *testing.T) {
 func Test_Condition_Expr(t *testing.T) {
 	var dummy Dict
 
-	xDd := xDict.As("dd")
-	xDt := xDictItem
+	xDd := refDict.As("dd")
+	xDt := refDictItem
 
 	tests := []struct {
 		name     string
@@ -59,11 +59,11 @@ func Test_Condition_Expr(t *testing.T) {
 	}{
 		{
 			name: "Expr: Configure",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
 						Configure(func(c *Conditions) *Conditions {
-							return c.SelectExpr(xDict.Id)
+							return c.SelectExpr(refDict.Id)
 						}).
 						Build()...,
 				).
@@ -74,7 +74,7 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: select *",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
 						SelectExpr().
@@ -87,13 +87,13 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: select field",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
 						SelectExpr(
-							xDict.Id,
-							xDict.CreatedAt.UnixTimestamp().As("created_at"),
-							xDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at1"),
+							refDict.Id,
+							refDict.CreatedAt.UnixTimestamp().As("created_at"),
+							refDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at1"),
 						).
 						Build()...,
 				).
@@ -104,10 +104,10 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: select * using distinct",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						DistinctExpr(xDict.Id).
+						DistinctExpr(refDict.Id).
 						Build()...,
 				).
 				IntoDB().
@@ -117,10 +117,10 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: order",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						OrderExpr(xDict.Score).
+						OrderExpr(refDict.Score).
 						Build()...,
 				).
 				IntoDB().
@@ -130,10 +130,10 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: group",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						GroupExpr(xDict.Name).
+						GroupExpr(refDict.Name).
 						Build()...,
 				).
 				IntoDB().
@@ -143,12 +143,12 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: cross join",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
 						CrossJoinsExpr(
 							&xDt,
-							xDt.DictId.EqCol(xDict.Id),
+							xDt.DictId.EqCol(refDict.Id),
 						).
 						Build()...,
 				).
@@ -159,13 +159,13 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: cross join X",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
 						CrossJoinsXExpr(
 							&xDd,
-							xDd.X_Alias(),
-							xDd.Id.EqCol(xDict.Pid),
+							xDd.Ref_Alias(),
+							xDd.Id.EqCol(refDict.Pid),
 							xDd.IsPin.Eq(true),
 						).
 						Build()...,
@@ -177,10 +177,10 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: inner join",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						InnerJoinsExpr(&xDt, xDt.DictId.EqCol(xDict.Id)).
+						InnerJoinsExpr(&xDt, xDt.DictId.EqCol(refDict.Id)).
 						Build()...,
 				).
 				IntoDB().
@@ -190,10 +190,10 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: inner join X",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						InnerJoinsXExpr(&xDd, xDd.X_Alias(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)).
+						InnerJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 						Build()...,
 				).
 				IntoDB().
@@ -203,10 +203,10 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: left join",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						LeftJoinsExpr(&xDt, xDt.DictId.EqCol(xDict.Id)).
+						LeftJoinsExpr(&xDt, xDt.DictId.EqCol(refDict.Id)).
 						Build()...,
 				).
 				IntoDB().
@@ -216,10 +216,10 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: left join X",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						LeftJoinsXExpr(&xDd, xDd.X_Alias(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)).
+						LeftJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 						Build()...,
 				).
 				IntoDB().
@@ -229,10 +229,10 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: right join",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						RightJoinsExpr(&xDt, xDt.DictId.EqCol(xDict.Id)).
+						RightJoinsExpr(&xDt, xDt.DictId.EqCol(refDict.Id)).
 						Build()...,
 				).
 				IntoDB().
@@ -242,10 +242,10 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: right join X",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						RightJoinsXExpr(&xDd, xDd.X_Alias(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)).
+						RightJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 						Build()...,
 				).
 				IntoDB().
@@ -255,7 +255,7 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "clause: for update",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
 						LockingUpdate().
@@ -268,7 +268,7 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "clause: for share",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
 						LockingShare().
@@ -281,7 +281,7 @@ func Test_Condition_Expr(t *testing.T) {
 		},
 		{
 			name: "clause: pagination",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
 						Pagination(2, 10).
@@ -295,7 +295,7 @@ func Test_Condition_Expr(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+			ReviewBuildDb(t, tt.db, tt.want, tt.wantVars)
 		})
 	}
 }

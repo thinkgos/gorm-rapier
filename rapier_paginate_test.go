@@ -47,7 +47,7 @@ func Test_Paginate(t *testing.T) {
 		}
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+				ReviewBuildDb(t, tt.db, tt.want, tt.wantVars)
 			})
 		}
 	})
@@ -86,7 +86,7 @@ func Test_Paginate(t *testing.T) {
 		}
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+				ReviewBuildDb(t, tt.db, tt.want, tt.wantVars)
 			})
 		}
 	})

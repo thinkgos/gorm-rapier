@@ -1,54 +1,8 @@
 package rapier
 
 import (
-	"reflect"
-	"strings"
-	"sync"
 	"testing"
-	"time"
-
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
-	"gorm.io/gorm/schema"
-	"gorm.io/gorm/utils/tests"
 )
-
-type User struct {
-	Id        uint `gorm:"primarykey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt int64
-	Name      string
-	Age       uint32
-	Active    bool
-}
-
-var db, _ = gorm.Open(tests.DummyDialector{}, nil)
-
-func NewStatement() *gorm.Statement {
-	user, _ := schema.Parse(&User{}, &sync.Map{}, db.NamingStrategy)
-	return &gorm.Statement{DB: db, Table: user.Table, Schema: user, Clauses: map[string]clause.Clause{}}
-}
-
-func CheckBuildExpr(t *testing.T, e Expr, wantSQL string, wantVars []any) {
-	stmt := NewStatement()
-
-	gotSQL, gotVars := e.BuildWithArgs(stmt)
-	// e.expression().Build(stmt)
-	// gotSQL, gotVars := stmt.SQL, stmt.Vars
-	if got := strings.TrimSpace(gotSQL); got != wantSQL {
-		t.Errorf("SQL want %v, got %v", wantSQL, gotSQL)
-	}
-	if !reflect.DeepEqual(gotVars, wantVars) {
-		t.Errorf("Vars want %+v, got %v", wantVars, gotVars)
-	}
-}
-
-func BuildToString(e Expr) (string, []any) {
-	stmt := NewStatement()
-	sql, vars := e.BuildWithArgs(stmt)
-	return sql, vars
-}
 
 func Test_Expr(t *testing.T) {
 	t.Run("column name", func(t *testing.T) {

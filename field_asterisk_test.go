@@ -36,7 +36,7 @@ func Test_Expr_Asterisk(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExpr(t, tt.Expr, tt.Result, tt.ExpectedVars)
+			ReviewBuildExpr(t, tt.Expr, tt.Result, tt.ExpectedVars)
 		})
 	}
 }

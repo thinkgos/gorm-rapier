@@ -33,7 +33,7 @@ func (e expr) innerGt(value any) expr {
 	return e
 }
 
-// use expr >= ?
+// expr >= ?
 func (e expr) innerGte(value any) expr {
 	e.e = clause.Gte{Column: e.RawExpr(), Value: value}
 	return e
@@ -158,8 +158,9 @@ func (e expr) innerSum() expr {
 }
 
 // value:
-// time.Duration - DATE_ADD(expr, INTERVAL ? MICROSECOND)
-// other = expr+?
+//
+//	time.Duration: DATE_ADD(expr, INTERVAL ? MICROSECOND)
+//	other: expr+?
 func (e expr) innerAdd(value any) expr {
 	switch v := value.(type) {
 	case time.Duration:
@@ -177,8 +178,9 @@ func (e expr) innerAdd(value any) expr {
 }
 
 // value:
-// time.Duration - DATE_SUB(expr, INTERVAL ? MICROSECOND)
-// other = expr-?
+//
+//	time.Duration: DATE_SUB(expr, INTERVAL ? MICROSECOND)
+//	other: expr-?
 func (e expr) innerSub(value any) expr {
 	switch v := value.(type) {
 	case time.Duration:
@@ -277,7 +279,7 @@ func (e expr) innerRound(decimals int) expr {
 	return e
 }
 
-// innerFindInSet equal to FIND_IN_SET(expr, targetList)
+// FIND_IN_SET(expr, targetList)
 func (e expr) innerFindInSet(targetList string) expr {
 	e.e = clause.Expr{
 		SQL:  "FIND_IN_SET(?, ?)",
@@ -286,7 +288,7 @@ func (e expr) innerFindInSet(targetList string) expr {
 	return e
 }
 
-// innerFindInSetWith equal to FIND_IN_SET(target, expr)
+// FIND_IN_SET(target, expr)
 func (e expr) innerFindInSetWith(target string) expr {
 	e.e = clause.Expr{
 		SQL:  "FIND_IN_SET(?, ?)",

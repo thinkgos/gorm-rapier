@@ -10,7 +10,7 @@ import (
 
 func Test_Executor_Stand(t *testing.T) {
 	t.Run("executor", func(t *testing.T) {
-		err := xDict.New_Executor(newDb()).
+		err := refDict.New_Executor(newDb()).
 			Debug().
 			WithContext(context.Background()).
 			Unscoped().
@@ -20,7 +20,7 @@ func Test_Executor_Stand(t *testing.T) {
 			Select([]string{"id", "pid", "name"}).
 			Distinct().
 			Omit("sort").
-			OmitExpr(xDict.Sort).
+			OmitExpr(refDict.Sort).
 			Where("id = ?", 1).
 			Scopes(func(d *gorm.DB) *gorm.DB {
 				return d.Where("score > ?", 10)
@@ -30,8 +30,8 @@ func Test_Executor_Stand(t *testing.T) {
 			Order("created_at").
 			Group("name").
 			Having("").
-			InnerJoins(xDict.X_Alias()).
-			Joins(xDict.X_Alias()).
+			InnerJoins(refDict.Ref_Alias()).
+			Joins(refDict.Ref_Alias()).
 			Limit(10).
 			Offset(2).
 			Find(&[]Dict{})
@@ -44,8 +44,8 @@ func Test_Executor_Stand(t *testing.T) {
 func Test_Executor_Expr(t *testing.T) {
 	var dummy Dict
 
-	xDd := xDict.As("dd")
-	xDt := xDictItem
+	xDd := refDict.As("dd")
+	xDt := refDictItem
 
 	tests := []struct {
 		name     string
@@ -55,11 +55,11 @@ func Test_Executor_Expr(t *testing.T) {
 	}{
 		{
 			name: "Expr: table",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				TableExpr(
 					From{
 						"a",
-						xDict.New_Executor(newDb()).IntoDB(),
+						refDict.New_Executor(newDb()).IntoDB(),
 					},
 				).
 				IntoDB().
@@ -69,7 +69,7 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: select *",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				SelectExpr().
 				IntoDB().
 				Take(&dummy),
@@ -78,11 +78,11 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: select field",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				SelectExpr(
-					xDict.Id,
-					xDict.CreatedAt.UnixTimestamp().As("created_at"),
-					xDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at1"),
+					refDict.Id,
+					refDict.CreatedAt.UnixTimestamp().As("created_at"),
+					refDict.CreatedAt.UnixTimestamp().IfNull(0).As("created_at1"),
 				).
 				IntoDB().
 				Take(&dummy),
@@ -91,8 +91,8 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: select * using distinct",
-			db: xDict.New_Executor(newDb()).
-				DistinctExpr(xDict.Id).
+			db: refDict.New_Executor(newDb()).
+				DistinctExpr(refDict.Id).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{1},
@@ -100,8 +100,8 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: order",
-			db: xDict.New_Executor(newDb()).
-				OrderExpr(xDict.Score).
+			db: refDict.New_Executor(newDb()).
+				OrderExpr(refDict.Score).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{1},
@@ -109,8 +109,8 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: group",
-			db: xDict.New_Executor(newDb()).
-				GroupExpr(xDict.Name).
+			db: refDict.New_Executor(newDb()).
+				GroupExpr(refDict.Name).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{1},
@@ -118,10 +118,10 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: cross join",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				CrossJoinsExpr(
 					&xDt,
-					xDt.DictId.EqCol(xDict.Id),
+					xDt.DictId.EqCol(refDict.Id),
 				).
 				IntoDB().
 				Take(&dummy),
@@ -130,11 +130,11 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: cross join X",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				CrossJoinsXExpr(
 					&xDd,
-					xDd.X_Alias(),
-					xDd.Id.EqCol(xDict.Pid),
+					xDd.Ref_Alias(),
+					xDd.Id.EqCol(refDict.Pid),
 					xDd.IsPin.Eq(true),
 				).
 				IntoDB().
@@ -144,8 +144,8 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: inner join",
-			db: xDict.New_Executor(newDb()).
-				InnerJoinsExpr(&xDt, xDt.DictId.EqCol(xDict.Id)).
+			db: refDict.New_Executor(newDb()).
+				InnerJoinsExpr(&xDt, xDt.DictId.EqCol(refDict.Id)).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{1},
@@ -153,8 +153,8 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: inner join X",
-			db: xDict.New_Executor(newDb()).
-				InnerJoinsXExpr(&xDd, xDd.X_Alias(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)).
+			db: refDict.New_Executor(newDb()).
+				InnerJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{true, 1},
@@ -162,8 +162,8 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: left join",
-			db: xDict.New_Executor(newDb()).
-				LeftJoinsExpr(&xDt, xDt.DictId.EqCol(xDict.Id)).
+			db: refDict.New_Executor(newDb()).
+				LeftJoinsExpr(&xDt, xDt.DictId.EqCol(refDict.Id)).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{1},
@@ -171,8 +171,8 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: left join X",
-			db: xDict.New_Executor(newDb()).
-				LeftJoinsXExpr(&xDd, xDd.X_Alias(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)).
+			db: refDict.New_Executor(newDb()).
+				LeftJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{true, 1},
@@ -180,8 +180,8 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: right join",
-			db: xDict.New_Executor(newDb()).
-				RightJoinsExpr(&xDt, xDt.DictId.EqCol(xDict.Id)).
+			db: refDict.New_Executor(newDb()).
+				RightJoinsExpr(&xDt, xDt.DictId.EqCol(refDict.Id)).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{1},
@@ -189,8 +189,8 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "Expr: right join X",
-			db: xDict.New_Executor(newDb()).
-				RightJoinsXExpr(&xDd, xDd.X_Alias(), xDd.Id.EqCol(xDict.Pid), xDd.IsPin.Eq(true)).
+			db: refDict.New_Executor(newDb()).
+				RightJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{true, 1},
@@ -198,7 +198,7 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "clause: for update",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				LockingUpdate().
 				IntoDB().
 				Take(&dummy),
@@ -207,7 +207,7 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "clause: for share",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				LockingShare().
 				IntoDB().
 				Take(&dummy),
@@ -216,7 +216,7 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "clause: pagination",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Pagination(2, 10).
 				IntoDB().
 				Find(&dummy),
@@ -225,10 +225,10 @@ func Test_Executor_Expr(t *testing.T) {
 		},
 		{
 			name: "clause: Returning",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Returning("id", "pid").
 				updatesExpr(
-					xDict.IsPin.Value(false),
+					refDict.IsPin.Value(false),
 				),
 			wantVars: []any{false},
 			want:     "UPDATE `dict` SET `is_pin`=? RETURNING `id`,`pid`",
@@ -236,7 +236,7 @@ func Test_Executor_Expr(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+			ReviewBuildDb(t, tt.db, tt.want, tt.wantVars)
 		})
 	}
 }
@@ -252,12 +252,12 @@ func Test_Executor_SubQuery(t *testing.T) {
 	}{
 		{
 			name: "sub query: IntoSubQueryExpr",
-			db: xDict.New_Executor(newDb()).
+			db: refDict.New_Executor(newDb()).
 				Where(
-					xDict.Id.EqCol(
-						xDict.New_Executor(db).
-							SelectExpr(xDict.Id).
-							Where(xDict.Pid.Eq(100)).
+					refDict.Id.EqCol(
+						refDict.New_Executor(db).
+							SelectExpr(refDict.Id).
+							Where(refDict.Pid.Eq(100)).
 							IntoSubQueryExpr(),
 					),
 				).
@@ -270,8 +270,8 @@ func Test_Executor_SubQuery(t *testing.T) {
 			name: "sub query: IntoExistExpr",
 			db: newDb().Model(&Dict{}).
 				Where(
-					xDict.New_Executor(newDb()).
-						SelectExpr(xDict.Id.Min()).
+					refDict.New_Executor(newDb()).
+						SelectExpr(refDict.Id.Min()).
 						IntoExistExpr(),
 				).
 				Find(&dummy),
@@ -282,8 +282,8 @@ func Test_Executor_SubQuery(t *testing.T) {
 			name: "sub query: IntoNotExistExpr",
 			db: newDb().Model(&Dict{}).
 				Where(
-					xDict.New_Executor(newDb()).
-						SelectExpr(xDict.Id.Min()).
+					refDict.New_Executor(newDb()).
+						SelectExpr(refDict.Id.Min()).
 						IntoNotExistExpr(),
 				).
 				Find(&dummy),
@@ -293,7 +293,7 @@ func Test_Executor_SubQuery(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+			ReviewBuildDb(t, tt.db, tt.want, tt.wantVars)
 		})
 	}
 }
@@ -309,76 +309,76 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 	}{
 		{
 			name: "updateExpr: value",
-			db: xDict.New_Executor(newDb()).
-				Where(xDict.Id.Eq(1)).
-				updateExpr(xDict.Sort, int(100)),
+			db: refDict.New_Executor(newDb()).
+				Where(refDict.Id.Eq(1)).
+				updateExpr(refDict.Sort, int(100)),
 			wantVars: []any{int(100), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updateExpr: value gorm.Expr",
-			db: xDict.New_Executor(newDb()).
-				Where(xDict.Id.Eq(1)).
-				updateExpr(xDict.Sort, gorm.Expr("`sort`+?", 100)),
+			db: refDict.New_Executor(newDb()).
+				Where(refDict.Id.Eq(1)).
+				updateExpr(refDict.Sort, gorm.Expr("`sort`+?", 100)),
 			wantVars: []any{int(100), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=`sort`+? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updateExpr: value SetExpr",
-			db: xDict.New_Executor(newDb()).
-				Where(xDict.Id.Eq(1)).
-				updateExpr(xDict.Sort, xDict.Score.Add(100)),
+			db: refDict.New_Executor(newDb()).
+				Where(refDict.Id.Eq(1)).
+				updateExpr(refDict.Sort, refDict.Score.Add(100)),
 			wantVars: []any{float64(100), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=`dict`.`score`+? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updatesExpr: value SetExpr",
-			db: xDict.New_Executor(newDb()).
-				Where(xDict.Id.Eq(1)).
+			db: refDict.New_Executor(newDb()).
+				Where(refDict.Id.Eq(1)).
 				updatesExpr(
-					xDict.Name.Value("abc"),
-					xDict.Score.Add(10),
-					xDict.Sort.ValueAny(gorm.Expr("`sort`+?", 100)),
-					xDict.CreatedAt.ValueNull(),
+					refDict.Name.Value("abc"),
+					refDict.Score.Add(10),
+					refDict.Sort.ValueAny(gorm.Expr("`sort`+?", 100)),
+					refDict.CreatedAt.ValueNull(),
 				),
 			wantVars: []any{"abc", float64(10), int(100), nil, int64(1)},
 			want:     "UPDATE `dict` SET `name`=?,`score`=`dict`.`score`+?,`sort`=`sort`+?,`created_at`=? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updateColumnExpr: value",
-			db: xDict.New_Executor(newDb()).
-				Where(xDict.Id.Eq(1)).
-				updateColumnExpr(xDict.Sort, int(100)),
+			db: refDict.New_Executor(newDb()).
+				Where(refDict.Id.Eq(1)).
+				updateColumnExpr(refDict.Sort, int(100)),
 			wantVars: []any{int(100), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updateColumnExpr: value SetExpr",
-			db: xDict.New_Executor(newDb()).
-				Where(xDict.Id.Eq(1)).
-				updateColumnExpr(xDict.Sort, xDict.Sort.Add(100)),
+			db: refDict.New_Executor(newDb()).
+				Where(refDict.Id.Eq(1)).
+				updateColumnExpr(refDict.Sort, refDict.Sort.Add(100)),
 			wantVars: []any{uint16(100), int64(1)},
 			want:     "UPDATE `dict` SET `sort`=`dict`.`sort`+? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updateColumnsExpr: value SetExpr",
-			db: xDict.New_Executor(newDb()).
-				Where(xDict.Id.Eq(1)).
+			db: refDict.New_Executor(newDb()).
+				Where(refDict.Id.Eq(1)).
 				updateColumnsExpr(
-					xDict.Sort.Value(100),
-					xDict.Score.Add(10),
-					xDict.Name.ValueAny(nullString),
-					xDict.CreatedAt.ValueAny(nil),
+					refDict.Sort.Value(100),
+					refDict.Score.Add(10),
+					refDict.Name.ValueAny(nullString),
+					refDict.CreatedAt.ValueAny(nil),
 				),
 			wantVars: []any{uint16(100), float64(10), nullString, nil, int64(1)},
 			want:     "UPDATE `dict` SET `sort`=?,`score`=`dict`.`score`+?,`name`=?,`created_at`=? WHERE `dict`.`id` = ?",
 		},
 		{
 			name: "updatesExpr: SubQuery",
-			db: xDict.New_Executor(newDb()).
-				Where(xDict.Id.Eq(1)).
+			db: refDict.New_Executor(newDb()).
+				Where(refDict.Id.Eq(1)).
 				updatesExpr(
-					xDict.Score.SetSubQuery(xDict.New_Executor(newDb()).SelectExpr(xDict.Score).Where(xDict.Id.Eq(2)).IntoDB()),
+					refDict.Score.SetSubQuery(refDict.New_Executor(newDb()).SelectExpr(refDict.Score).Where(refDict.Id.Eq(2)).IntoDB()),
 				),
 			wantVars: []any{int64(2), int64(1)},
 			want:     "UPDATE `dict` SET `score`=(SELECT `dict`.`score` FROM `dict` WHERE `dict`.`id` = ?) WHERE `dict`.`id` = ?",
@@ -386,7 +386,7 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExprSql(t, tt.db, tt.want, tt.wantVars)
+			ReviewBuildDb(t, tt.db, tt.want, tt.wantVars)
 		})
 	}
 }
@@ -395,8 +395,8 @@ func Test_Executor_Attrs(t *testing.T) {
 	t.Run("attr", func(t *testing.T) {
 		wantName := "aaaa"
 		wantSort := uint16(1111)
-		got1, err := xDict.New_Executor(newDb()).
-			Where(xDict.Id.Eq(1)).
+		got1, err := refDict.New_Executor(newDb()).
+			Where(refDict.Id.Eq(1)).
 			Attrs(&Dict{
 				Name: wantName,
 				Sort: wantSort,
@@ -409,8 +409,8 @@ func Test_Executor_Attrs(t *testing.T) {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
 
-		got2, err := xDict.New_Executor(newDb()).
-			Where(xDict.Id.Eq(1)).
+		got2, err := refDict.New_Executor(newDb()).
+			Where(refDict.Id.Eq(1)).
 			Attrs(&Dict{
 				Name: wantName,
 				Sort: wantSort,
@@ -427,11 +427,11 @@ func Test_Executor_Attrs(t *testing.T) {
 		wantName := "bbbb"
 		wantSort := uint16(2222)
 
-		got1, err := xDict.New_Executor(newDb()).
-			Where(xDict.Id.Eq(1)).
+		got1, err := refDict.New_Executor(newDb()).
+			Where(refDict.Id.Eq(1)).
 			AttrsExpr(
-				xDict.Name.Value(wantName),
-				xDict.Sort.Value(wantSort),
+				refDict.Name.Value(wantName),
+				refDict.Sort.Value(wantSort),
 			).
 			FirstOrCreate()
 		if err != nil {
@@ -441,11 +441,11 @@ func Test_Executor_Attrs(t *testing.T) {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
 
-		got2, err := xDict.New_Executor(newDb()).
-			Where(xDict.Id.Eq(1)).
+		got2, err := refDict.New_Executor(newDb()).
+			Where(refDict.Id.Eq(1)).
 			AttrsExpr(
-				xDict.Name.Value(wantName),
-				xDict.Sort.Value(wantSort),
+				refDict.Name.Value(wantName),
+				refDict.Sort.Value(wantSort),
 			).
 			FirstOrInit()
 		if err != nil {
@@ -461,8 +461,8 @@ func Test_Executor_Assign(t *testing.T) {
 	t.Run("assign", func(t *testing.T) {
 		wantName := "aaaa"
 		wantSort := uint16(1111)
-		got1, err := xDict.New_Executor(newDb()).
-			Where(xDict.Id.Eq(1)).
+		got1, err := refDict.New_Executor(newDb()).
+			Where(refDict.Id.Eq(1)).
 			Assign(&Dict{
 				Name: wantName,
 				Sort: wantSort,
@@ -475,8 +475,8 @@ func Test_Executor_Assign(t *testing.T) {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
 
-		got2, err := xDict.New_Executor(newDb()).
-			Where(xDict.Id.Eq(1)).
+		got2, err := refDict.New_Executor(newDb()).
+			Where(refDict.Id.Eq(1)).
 			Assign(&Dict{
 				Name: wantName,
 				Sort: wantSort,
@@ -492,11 +492,11 @@ func Test_Executor_Assign(t *testing.T) {
 	t.Run("assign expr", func(t *testing.T) {
 		wantName := "bbbb"
 		wantSort := uint16(2222)
-		got1, err := xDict.New_Executor(newDb()).
-			Where(xDict.Id.Eq(1)).
+		got1, err := refDict.New_Executor(newDb()).
+			Where(refDict.Id.Eq(1)).
 			AssignExpr(
-				xDict.Name.Value(wantName),
-				xDict.Sort.Value(wantSort),
+				refDict.Name.Value(wantName),
+				refDict.Sort.Value(wantSort),
 			).
 			FirstOrCreate()
 		if err != nil {
@@ -505,11 +505,11 @@ func Test_Executor_Assign(t *testing.T) {
 		if got1.Name != wantName || got1.Sort != wantSort {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
-		got2, err := xDict.New_Executor(newDb()).
-			Where(xDict.Id.Eq(1)).
+		got2, err := refDict.New_Executor(newDb()).
+			Where(refDict.Id.Eq(1)).
 			AssignExpr(
-				xDict.Name.Value(wantName),
-				xDict.Sort.valueEq(wantSort),
+				refDict.Name.Value(wantName),
+				refDict.Sort.valueEq(wantSort),
 			).
 			FirstOrInit()
 		if err != nil {

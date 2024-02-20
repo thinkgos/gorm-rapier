@@ -5,23 +5,10 @@ import (
 	"gorm.io/gorm"
 )
 
-const (
-	// hold model `Dict` table name
-	xx_Dict_TableName = "dict"
-	// hold model `Dict` column name
-	xx_Dict_Id        = "id"
-	xx_Dict_Key       = "key"
-	xx_Dict_Name      = "name"
-	xx_Dict_IsPin     = "is_pin"
-	xx_Dict_Remark    = "remark"
-	xx_Dict_CreatedAt = "created_at"
-	xx_Dict_UpdatedAt = "updated_at"
-)
-
-var xxx_Dict_Model = new_Dict(xx_Dict_TableName)
+var ref_Dict_Model = new_Dict("dict")
 
 type Dict_Native struct {
-	xAlias    string
+	refAlias  string
 	ALL       rapier.Asterisk
 	Id        rapier.Int64
 	Key       rapier.String
@@ -32,43 +19,37 @@ type Dict_Native struct {
 	UpdatedAt rapier.Time
 }
 
-// X_Dict model with TableName `dict`.
-func X_Dict() Dict_Native {
-	return xxx_Dict_Model
-}
+// Ref_Dict model with TableName `dict`.
+func Ref_Dict() Dict_Native { return ref_Dict_Model }
 
-func new_Dict(xAlias string) Dict_Native {
+func new_Dict(alias string) Dict_Native {
 	return Dict_Native{
-		xAlias:    xAlias,
-		ALL:       rapier.NewAsterisk(xAlias),
-		Id:        rapier.NewInt64(xAlias, xx_Dict_Id),
-		Key:       rapier.NewString(xAlias, xx_Dict_Key),
-		Name:      rapier.NewString(xAlias, xx_Dict_Name),
-		IsPin:     rapier.NewBool(xAlias, xx_Dict_IsPin),
-		Remark:    rapier.NewString(xAlias, xx_Dict_Remark),
-		CreatedAt: rapier.NewTime(xAlias, xx_Dict_CreatedAt),
-		UpdatedAt: rapier.NewTime(xAlias, xx_Dict_UpdatedAt),
+		refAlias:  alias,
+		ALL:       rapier.NewAsterisk(alias),
+		Id:        rapier.NewInt64(alias, "id"),
+		Key:       rapier.NewString(alias, "key"),
+		Name:      rapier.NewString(alias, "name"),
+		IsPin:     rapier.NewBool(alias, "is_pin"),
+		Remark:    rapier.NewString(alias, "remark"),
+		CreatedAt: rapier.NewTime(alias, "created_at"),
+		UpdatedAt: rapier.NewTime(alias, "updated_at"),
 	}
 }
 
 // New_Dict new instance.
 func New_Dict(xAlias string) Dict_Native {
-	if xAlias == xx_Dict_TableName {
-		return xxx_Dict_Model
+	if xAlias == "dict" {
+		return ref_Dict_Model
 	} else {
 		return new_Dict(xAlias)
 	}
 }
 
 // As alias
-func (*Dict_Native) As(alias string) Dict_Native {
-	return New_Dict(alias)
-}
+func (*Dict_Native) As(alias string) Dict_Native { return New_Dict(alias) }
 
-// X_Alias hold table name when call New_Dict or Dict_Active.As that you defined.
-func (x *Dict_Native) X_Alias() string {
-	return x.xAlias
-}
+// Ref_Alias hold table name when call New_Dict or Dict_Active.As that you defined.
+func (x *Dict_Native) Ref_Alias() string { return x.refAlias }
 
 // New_Executor new entity executor which suggest use only once.
 func (*Dict_Native) New_Executor(db *gorm.DB) *rapier.Executor[Dict] {
@@ -76,9 +57,7 @@ func (*Dict_Native) New_Executor(db *gorm.DB) *rapier.Executor[Dict] {
 }
 
 // TableName hold model `Dict` table name returns `dict`.
-func (*Dict_Native) TableName() string {
-	return xx_Dict_TableName
-}
+func (*Dict_Native) TableName() string { return "dict" }
 
 // Select_Expr select model fields
 func (x *Dict_Native) Select_Expr() []rapier.Expr {

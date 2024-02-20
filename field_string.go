@@ -158,8 +158,10 @@ func (field String) Replace(from, to string) String {
 	}
 }
 
-// Hidden use CONCAT(LEFT(expr,left),pad,RIGHT(expr,right))
-// detail see innerHidden
+// Hidden hidden field content.
+// left > 0 && right > 0  -- CONCAT(LEFT(expr,left),pad,RIGHT(expr,right))
+// left > 0 && right <= 0 -- CONCAT(LEFT(expr,left),pad)
+// right > 0 && left <= 0 -- CONCAT(pad,RIGHT(expr,right))
 func (field String) Hidden(left, right int, pad string) String {
 	return String{field.innerHidden(left, right, pad)}
 }

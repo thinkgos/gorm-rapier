@@ -109,7 +109,7 @@ func (e expr) innerSubCol(e2 Expr) expr {
 	return e
 }
 
-// use (expr1) * (expr2)
+// (expr1) * (expr2)
 func (e expr) innerMulCol(e2 Expr) expr {
 	e.e = clause.Expr{
 		SQL:  "(?) * (?)",
@@ -127,7 +127,7 @@ func (e expr) innerDivCol(e2 Expr) expr {
 	return e
 }
 
-// CONCAT(expr1,exp2...exprN)
+// CONCAT(expr1,expr2,...exprN)
 func (e expr) innerConcatCol(es ...Expr) expr {
 	sqlBuilder := strings.Builder{}
 	sqlBuilder.Grow(8 + 2*len(es) + 1)

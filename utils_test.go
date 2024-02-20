@@ -3,7 +3,6 @@ package rapier
 import (
 	"reflect"
 	"testing"
-	"time"
 
 	"gorm.io/gorm/clause"
 )
@@ -21,7 +20,7 @@ func Test_buildSelectValue(t *testing.T) {
 	})
 	t.Run("fields", func(t *testing.T) {
 		db := newDb()
-		query, args := buildSelectValue(db.Statement, xDict.Id, xDict.Name.Length().As("name"))
+		query, args := buildSelectValue(db.Statement, refDict.Id, refDict.Name.Length().As("name"))
 		if want := "`dict`.`id`"; query != want {
 			t.Errorf("SQL expects %v got %v", want, query)
 		}
@@ -41,7 +40,7 @@ func Test_buildColumnsValue(t *testing.T) {
 	})
 	t.Run("fields", func(t *testing.T) {
 		db := newDb()
-		query := buildColumnsValue(db, xDict.Id, xDict.Name)
+		query := buildColumnsValue(db, refDict.Id, refDict.Name)
 		if want := "`dict`.`id`,`dict`.`name`"; query != want {
 			t.Errorf("SQL expects %v got %v", want, query)
 		}
@@ -53,9 +52,9 @@ func Test_buildAssignSet(t *testing.T) {
 	got := buildClauseSet(
 		db,
 		[]SetExpr{
-			xDict.Pid.Value(100),
-			xDict.Score.Add(1),
-			xDict.Name.valueEq("name"),
+			refDict.Pid.Value(100),
+			refDict.Score.Add(1),
+			refDict.Name.valueEq("name"),
 		})
 	want := clause.Set{
 		{
@@ -85,19 +84,19 @@ func Test_buildAttrsValue(t *testing.T) {
 	want := []any{
 		clause.Eq{
 			Column: clause.Column{
-				Name: xDict.Pid.ColumnName(),
+				Name: refDict.Pid.ColumnName(),
 			},
 			Value: int64(100),
 		},
 		clause.Eq{
-			Column: xDict.Name.ColumnName(),
+			Column: refDict.Name.ColumnName(),
 			Value:  "name",
 		},
 	}
 	got := buildAttrsValue(
 		[]SetExpr{
-			xDict.Pid.Value(100),
-			xDict.Name.valueEq("name"),
+			refDict.Pid.Value(100),
+			refDict.Name.valueEq("name"),
 		})
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("buildAttrSet want: %v got: %v", want, got)
@@ -106,7 +105,7 @@ func Test_buildAttrsValue(t *testing.T) {
 
 func Test_buildColumnName(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
-		got := buildColumnName(xDict.Pid, xDict.Score)
+		got := buildColumnName(refDict.Pid, refDict.Score)
 		if want := []string{"pid", "score"}; !reflect.DeepEqual(got, want) {
 			t.Errorf("column name expects %+v got %v", want, got)
 		}
@@ -124,12 +123,6 @@ func Test_IntoSlice(t *testing.T) {
 		}
 	})
 }
-
-type TestInteger int32
-type TestFloat float64
-type TestString string
-type TestBytes []byte
-type TestTime time.Time
 
 func Test_IntoIntegerSlice(t *testing.T) {
 	t.Run("", func(t *testing.T) {

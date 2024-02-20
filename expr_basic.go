@@ -11,7 +11,7 @@ func (e expr) IsNull() Expr {
 	return e
 }
 
-// IsNotNull use expr IS NOT NULL
+// IsNotNull use `expr IS NOT NULL`
 func (e expr) IsNotNull() Expr {
 	e.e = clause.Expr{
 		SQL:  "? IS NOT NULL",

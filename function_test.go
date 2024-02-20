@@ -27,7 +27,7 @@ func Test_Expr_Function(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			CheckBuildExpr(t, tt.expr, tt.want, tt.wantVars)
+			ReviewBuildExpr(t, tt.expr, tt.want, tt.wantVars)
 		})
 	}
 }
