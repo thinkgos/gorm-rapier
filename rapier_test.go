@@ -398,7 +398,7 @@ func Test_Order(t *testing.T) {
 		want     string
 	}{
 		{
-			name: "",
+			name: "empty field",
 			db: newDb().Model(&Dict{}).
 				Scopes(
 					OrderExpr(),
@@ -408,7 +408,7 @@ func Test_Order(t *testing.T) {
 			want:     "SELECT * FROM `dict` LIMIT ?",
 		},
 		{
-			name: "",
+			name: "empty order",
 			db: newDb().Model(&Dict{}).
 				Scopes(
 					OrderExpr(xDict.Score),
@@ -418,7 +418,7 @@ func Test_Order(t *testing.T) {
 			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` LIMIT ?",
 		},
 		{
-			name: "",
+			name: "desc",
 			db: newDb().Model(&Dict{}).
 				Scopes(
 					OrderExpr(xDict.Score.Desc()),
@@ -428,7 +428,7 @@ func Test_Order(t *testing.T) {
 			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` DESC LIMIT ?",
 		},
 		{
-			name: "",
+			name: "multiple desc",
 			db: newDb().Model(&Dict{}).
 				Scopes(
 					OrderExpr(xDict.Score.Desc(), xDict.Name),
@@ -436,6 +436,26 @@ func Test_Order(t *testing.T) {
 				Take(&dummy),
 			wantVars: []any{1},
 			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` DESC,`dict`.`name` LIMIT ?",
+		},
+		{
+			name: "asc",
+			db: newDb().Model(&Dict{}).
+				Scopes(
+					OrderExpr(xDict.Score.Asc()),
+				).
+				Take(&dummy),
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` ASC LIMIT ?",
+		},
+		{
+			name: "multiple asc and desc",
+			db: newDb().Model(&Dict{}).
+				Scopes(
+					OrderExpr(xDict.Score.Desc(), xDict.Name.Asc()),
+				).
+				Take(&dummy),
+			wantVars: []any{1},
+			want:     "SELECT * FROM `dict` ORDER BY `dict`.`score` DESC,`dict`.`name` ASC LIMIT ?",
 		},
 	}
 	for _, tt := range tests {

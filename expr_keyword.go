@@ -23,3 +23,12 @@ func (e expr) Desc() Expr {
 	}
 	return e
 }
+
+// Asc use expr ASC
+func (e expr) Asc() Expr {
+	e.e = clause.Expr{
+		SQL:  "? ASC",
+		Vars: []any{e.RawExpr()},
+	}
+	return e
+}

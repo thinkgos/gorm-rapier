@@ -66,6 +66,18 @@ func Test_Field_Expr_Keyword(t *testing.T) {
 			wantVars: nil,
 			want:     "`user`.`id` DESC",
 		},
+		{
+			name:     "asc",
+			expr:     NewField("", "id").Asc(),
+			wantVars: nil,
+			want:     "`id` ASC",
+		},
+		{
+			name:     "asc with table",
+			expr:     NewField("user", "id").Asc(),
+			wantVars: nil,
+			want:     "`user`.`id` ASC",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
