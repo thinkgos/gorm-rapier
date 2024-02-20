@@ -10,6 +10,13 @@ gorm rapier is an assist rapier for gorm.
 [![Licence](https://img.shields.io/github/license/thinkgos/gorm-rapier)](https://raw.githubusercontent.com/thinkgos/gorm-rapier/main/LICENSE)
 [![Tag](https://img.shields.io/github/v/tag/thinkgos/gorm-rapier)](https://github.com/thinkgos/gorm-rapier/tags)
 
+## Overview
+
+- Idiomatic and Reusable API from Dynamic Raw SQL
+- 100% Type-safe API without interface{}
+- Almost supports all features, plugins, DBMS that GORM supports
+- Almost same behavior as gorm you used.
+
 ## Usage
 
 ### Installation
@@ -27,6 +34,8 @@ Then import the package into your own code.
 ```
 
 ### Example
+
+see [examples](https://github.com/thinkgos/gorm-rapier/tree/main/examples)
 
 ## Reference
 
