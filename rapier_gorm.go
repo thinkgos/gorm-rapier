@@ -5,6 +5,19 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+func GromModel[T any]() Condition {
+	return func(db *gorm.DB) *gorm.DB {
+		var t T
+
+		db = db.Model(&t)
+		err := db.Statement.Parse(t)
+		if err != nil {
+			_ = db.AddError(err)
+		}
+		return db
+	}
+}
+
 func GormClauses(conds ...clause.Expression) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Clauses(conds...)

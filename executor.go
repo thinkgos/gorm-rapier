@@ -63,17 +63,9 @@ func (x *Executor[T]) AssignExpr(attrs ...SetExpr) *Executor[T] {
 // IntoDB with model or table
 func (x *Executor[T]) IntoDB() *gorm.DB {
 	if x.table == nil {
-		var t T
-
-		db := x.db.Model(&t)
-		err := db.Statement.Parse(t)
-		if err != nil {
-			_ = db.AddError(err)
-		}
-		x.db = db
-	} else {
-		x.db = x.table(x.db)
+		x = x.Model()
 	}
+	x.db = x.table(x.db)
 	return x.IntoRawDB()
 }
 

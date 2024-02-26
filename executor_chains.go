@@ -5,6 +5,11 @@ import (
 	"gorm.io/gorm/schema"
 )
 
+func (x *Executor[T]) Model() *Executor[T] {
+	x.table = GromModel[T]()
+	return x
+}
+
 func (x *Executor[T]) Table(name string, args ...any) *Executor[T] {
 	x.table = GormTable(name, args...)
 	return x
