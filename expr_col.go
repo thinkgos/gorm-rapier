@@ -133,8 +133,28 @@ func (e expr) innerConcatCol(es ...Expr) expr {
 	sqlBuilder.Grow(8 + 2*len(es) + 1)
 	vars := make([]any, 0, len(es)+1)
 
-	sqlBuilder.WriteString("Concat(?")
+	sqlBuilder.WriteString("CONCAT(?")
 	vars = append(vars, e.RawExpr())
+	for _, ee := range es {
+		sqlBuilder.WriteString(",?")
+		vars = append(vars, ee.RawExpr())
+	}
+	sqlBuilder.WriteString(")")
+	e.e = clause.Expr{
+		SQL:  sqlBuilder.String(),
+		Vars: vars,
+	}
+	return e
+}
+
+// CONCAT_WS(separator,expr1,expr2,...exprN)
+func (e expr) innerConcatWsCol(separator Expr, es ...Expr) expr {
+	sqlBuilder := strings.Builder{}
+	sqlBuilder.Grow(11 + 2*len(es) + 1)
+	vars := make([]any, 0, 1+len(es)+1)
+
+	sqlBuilder.WriteString("CONCAT_WS(?,?")
+	vars = append(vars, separator.RawExpr(), e.RawExpr())
 	for _, ee := range es {
 		sqlBuilder.WriteString(",?")
 		vars = append(vars, ee.RawExpr())

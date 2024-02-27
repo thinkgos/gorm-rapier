@@ -259,6 +259,11 @@ func (field String) ConcatCol(cols ...Expr) String {
 	return String{field.innerConcatCol(cols...)}
 }
 
+// ConcatWsCol use CONCAT_WS(separator,expr1,expr2,...exprN)
+func (field String) ConcatWsCol(separator Expr, cols ...Expr) String {
+	return String{field.innerConcatWsCol(separator, cols...)}
+}
+
 // Value set value
 func (field String) Value(value string) SetExpr {
 	return field.value(value)

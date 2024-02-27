@@ -338,18 +338,34 @@ func Test_Expr_String(t *testing.T) {
 		{
 			name: "concat",
 			expr: NewString("", "id").ConcatCol(NewString("", "new_id"), NewString("", "new_id2")),
-			want: "Concat(`id`,`new_id`,`new_id2`)",
+			want: "CONCAT(`id`,`new_id`,`new_id2`)",
 		},
 		{
 			name:     "concat with raw",
 			expr:     NewString("", "id").ConcatCol(NewString("", "new_id"), NewRaw("'/'")),
 			wantVars: nil,
-			want:     "Concat(`id`,`new_id`,'/')",
+			want:     "CONCAT(`id`,`new_id`,'/')",
 		},
 		{
 			name: "concat with table",
 			expr: NewString("user", "id").ConcatCol(NewString("userB", "new_id"), NewString("userC", "new_id2")),
-			want: "Concat(`user`.`id`,`userB`.`new_id`,`userC`.`new_id2`)",
+			want: "CONCAT(`user`.`id`,`userB`.`new_id`,`userC`.`new_id2`)",
+		},
+		{
+			name: "concat_ws",
+			expr: NewString("", "id").ConcatWsCol(NewRaw(`'-'`), NewString("", "new_id"), NewString("", "new_id2")),
+			want: "CONCAT_WS('-',`id`,`new_id`,`new_id2`)",
+		},
+		{
+			name:     "concat_ws with raw",
+			expr:     NewString("", "id").ConcatWsCol(NewRaw(`'-'`), NewString("", "new_id"), NewRaw("'/'")),
+			wantVars: nil,
+			want:     "CONCAT_WS('-',`id`,`new_id`,'/')",
+		},
+		{
+			name: "concat_ws with table",
+			expr: NewString("user", "id").ConcatWsCol(NewRaw(`'-'`), NewString("userB", "new_id"), NewString("userC", "new_id2")),
+			want: "CONCAT_WS('-',`user`.`id`,`userB`.`new_id`,`userC`.`new_id2`)",
 		},
 	}
 	for _, tt := range tests {
