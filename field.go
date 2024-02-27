@@ -516,12 +516,12 @@ func (e Field) DivCol(col Expr) Field {
 
 // ConcatCol use CONCAT(expr1,exp2...exprN)
 func (e Field) ConcatCol(cols ...Expr) Field {
-	return Field{e.innerConcatCol(cols...)}
+	return ConcatCol(e, cols...)
 }
 
 // ConcatWsCol use CONCAT_WS(separator,expr1,expr2,...exprN)
 func (field Field) ConcatWsCol(separator Expr, cols ...Expr) Field {
-	return Field{field.innerConcatWsCol(separator, cols...)}
+	return ConcatWsCol(separator, field, cols...)
 }
 
 // Value set value

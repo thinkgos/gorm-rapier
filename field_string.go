@@ -256,12 +256,12 @@ func (field String) DivCol(col Expr) String {
 
 // ConcatCol use CONCAT(expr1,exp2...exprN)
 func (field String) ConcatCol(cols ...Expr) String {
-	return String{field.innerConcatCol(cols...)}
+	return String{concatCol(field, cols...)}
 }
 
 // ConcatWsCol use CONCAT_WS(separator,expr1,expr2,...exprN)
 func (field String) ConcatWsCol(separator Expr, cols ...Expr) String {
-	return String{field.innerConcatWsCol(separator, cols...)}
+	return String{concatWsCol(separator, field, cols...)}
 }
 
 // Value set value
