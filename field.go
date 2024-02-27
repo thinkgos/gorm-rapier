@@ -41,6 +41,11 @@ func (field Field) IfNull(value any) Expr {
 	return field.innerIfNull(value)
 }
 
+// IfNull use NULLIF(expr,?)
+func (field Field) NullIf(value any) Expr {
+	return field.innerNullIf(value)
+}
+
 // Eq use expr = ?
 func (field Field) Eq(value any) Expr {
 	return field.innerEq(value)

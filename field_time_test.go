@@ -27,6 +27,12 @@ func Test_Expr_Time(t *testing.T) {
 			want:     "IFNULL(`created_at`,?)",
 		},
 		{
+			name:     "NullIf",
+			expr:     NewTime("", "created_at").NullIf(value1),
+			wantVars: []any{value1},
+			want:     "NULLIF(`created_at`,?)",
+		},
+		{
 			name:     "eq",
 			expr:     NewTime("", "created_at").Eq(value1),
 			wantVars: []any{value1},

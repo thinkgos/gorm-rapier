@@ -17,6 +17,12 @@ func Test_Bool(t *testing.T) {
 			want:     "IFNULL(`male`,?)",
 		},
 		{
+			name:     "NullIf",
+			expr:     NewBool("", "male").NullIf(value1),
+			wantVars: []any{value1},
+			want:     "NULLIF(`male`,?)",
+		},
+		{
 			name:     "eq",
 			expr:     NewBool("", "male").Eq(value1),
 			wantVars: []any{value1},

@@ -19,6 +19,11 @@ func (field Time) IfNull(value time.Time) Expr {
 	return field.innerIfNull(value)
 }
 
+// NullIf use NullIf(expr,?)
+func (field Time) NullIf(value time.Time) Expr {
+	return field.innerNullIf(value)
+}
+
 // Eq equal to, use expr = ?
 func (field Time) Eq(value time.Time) Expr {
 	return field.innerEq(value)

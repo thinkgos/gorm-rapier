@@ -15,6 +15,15 @@ func (e expr) innerIfNull(value any) expr {
 	return e
 }
 
+// NULLIF(expr,?)
+func (e expr) innerNullIf(value any) expr {
+	e.e = clause.Expr{
+		SQL:  "NULLIF(?,?)",
+		Vars: []any{e.RawExpr(), value},
+	}
+	return e
+}
+
 // expr = ?
 func (e expr) innerEq(value any) expr {
 	e.e = clause.Eq{Column: e.RawExpr(), Value: value}

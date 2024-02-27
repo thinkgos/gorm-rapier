@@ -26,6 +26,11 @@ func (field Float[T]) IfNull(value T) Expr {
 	return field.innerIfNull(value)
 }
 
+// NullIf use NULLIF(expr,?)
+func (field Float[T]) NullIf(value T) Expr {
+	return field.innerNullIf(value)
+}
+
 // Eq equal to, use expr = ?
 func (field Float[T]) Eq(value T) Expr {
 	return field.innerEq(value)

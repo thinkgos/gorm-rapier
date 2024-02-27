@@ -95,6 +95,12 @@ func testExprFloat[T constraints.Float | ~string](
 			want:     "IFNULL(`t1`.`score`,?)",
 		},
 		{
+			name:     "NullIf",
+			expr:     newFloat("t1", "score").NullIf(value1),
+			wantVars: []any{value1},
+			want:     "NULLIF(`t1`.`score`,?)",
+		},
+		{
 			name:     "eq",
 			expr:     newFloat("t1", "score").Eq(value1),
 			wantVars: []any{value1},

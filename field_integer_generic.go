@@ -29,6 +29,11 @@ func (field Integer[T]) IfNull(value T) Expr {
 	return field.innerIfNull(value)
 }
 
+// use use NULLIF(expr,?)
+func (field Integer[T]) NullIf(value T) Expr {
+	return field.innerNullIf(value)
+}
+
 // Eq equal to, use expr = ?
 func (field Integer[T]) Eq(value T) Expr {
 	return field.innerEq(value)

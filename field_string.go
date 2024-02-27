@@ -28,6 +28,11 @@ func (field String) IfNull(value string) Expr {
 	return field.innerIfNull(value)
 }
 
+// NullIf use NullIf(expr,?)
+func (field String) NullIf(value string) Expr {
+	return field.innerNullIf(value)
+}
+
 // Eq equal to, use expr = ?
 func (field String) Eq(value string) Expr {
 	return field.innerEq(value)

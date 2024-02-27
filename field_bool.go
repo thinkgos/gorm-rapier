@@ -19,6 +19,11 @@ func (field Bool) IfNull(value bool) Expr {
 	return field.innerIfNull(value)
 }
 
+// NullIf use NULLIF(expr,?)
+func (field Bool) NullIf(value bool) Expr {
+	return field.innerNullIf(value)
+}
+
 // Eq equal to, use expr = ?
 func (field Bool) Eq(value bool) Expr {
 	return field.innerEq(value)

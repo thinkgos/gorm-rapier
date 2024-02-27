@@ -102,6 +102,12 @@ func testExprInteger[T constraints.Integer](
 			want:     "IFNULL(`t1`.`age`,?)",
 		},
 		{
+			name:     "NullIf",
+			expr:     newInteger("t1", "age").NullIf(value1),
+			wantVars: []any{value1},
+			want:     "NULLIF(`t1`.`age`,?)",
+		},
+		{
 			name:     "eq",
 			expr:     newInteger("t1", "age").Eq(value1),
 			wantVars: []any{value1},

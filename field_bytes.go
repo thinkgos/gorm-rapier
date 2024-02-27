@@ -28,6 +28,11 @@ func (field Bytes) IfNull(value []byte) Expr {
 	return field.innerIfNull(value)
 }
 
+// NullIf use NULLIF(expr,?)
+func (field Bytes) NullIf(value []byte) Expr {
+	return field.innerNullIf(value)
+}
+
 // Eq equal to, use expr = ?
 func (field Bytes) Eq(value []byte) Expr {
 	return field.innerEq(value)

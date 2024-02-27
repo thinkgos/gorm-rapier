@@ -31,6 +31,12 @@ func Test_Expr_String(t *testing.T) {
 			want:     "IFNULL(`name`,?)",
 		},
 		{
+			name:     "NullIf",
+			expr:     NewString("", "name").NullIf(value1),
+			wantVars: []any{value1},
+			want:     "NULLIF(`name`,?)",
+		},
+		{
 			name:     "eq",
 			expr:     NewString("", "name").Eq(value1),
 			wantVars: []any{value1},

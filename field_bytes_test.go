@@ -29,6 +29,12 @@ func Test_Bytes(t *testing.T) {
 			want:     "IFNULL(`name`,?)",
 		},
 		{
+			name:     "NullIf",
+			expr:     NewBytes("", "name").NullIf(value1),
+			wantVars: []any{value1},
+			want:     "NULLIF(`name`,?)",
+		},
+		{
 			name:     "eq",
 			expr:     NewBytes("", "name").Eq(value1),
 			wantVars: []any{value1},
