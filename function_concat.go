@@ -26,7 +26,7 @@ func ConcatWsCol(separator Expr, e Expr, es ...Expr) Field {
 
 // CONCAT(expr1,expr2,...exprN)
 func concatCol(e Expr, es ...Expr) expr {
-	sqlBuilder := strings.Builder{}
+	sqlBuilder := &strings.Builder{}
 	sqlBuilder.Grow(8 + 2*len(es) + 1)
 	vars := make([]any, 0, len(es)+1)
 
@@ -47,7 +47,7 @@ func concatCol(e Expr, es ...Expr) expr {
 
 // CONCAT_WS(separator,expr1,expr2,...exprN)
 func concatWsCol(separator Expr, e Expr, es ...Expr) expr {
-	sqlBuilder := strings.Builder{}
+	sqlBuilder := &strings.Builder{}
 	sqlBuilder.Grow(13 + 2*len(es) + 1)
 	vars := make([]any, 0, 1+len(es)+1)
 
