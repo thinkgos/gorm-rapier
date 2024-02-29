@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var ref_Dict_Model = *new_Dict("dict", "dict")
+var ref_Dict_Native = new_Dict("dict", "dict")
 
 type Dict_Native struct {
 	refAlias     string
@@ -19,9 +19,6 @@ type Dict_Native struct {
 	CreatedAt    rapier.Time
 	UpdatedAt    rapier.Time
 }
-
-// Ref_Dict model with TableName `dict`.
-func Ref_Dict() Dict_Native { return ref_Dict_Model }
 
 func new_Dict(tableName, alias string) *Dict_Native {
 	return &Dict_Native{
@@ -37,6 +34,9 @@ func new_Dict(tableName, alias string) *Dict_Native {
 		UpdatedAt:    rapier.NewTime(alias, "updated_at"),
 	}
 }
+
+// Ref_Dict model with TableName `dict`.
+func Ref_Dict() *Dict_Native { return ref_Dict_Native }
 
 // New_Dict new instance.
 func New_Dict(tableName string) *Dict_Native {
