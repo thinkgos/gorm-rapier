@@ -8,15 +8,16 @@ import (
 var ref_Dict_Model = new_Dict("dict")
 
 type Dict_Native struct {
-	refAlias  string
-	ALL       rapier.Asterisk
-	Id        rapier.Int64
-	Key       rapier.String
-	Name      rapier.String
-	IsPin     rapier.Bool
-	Remark    rapier.String
-	CreatedAt rapier.Time
-	UpdatedAt rapier.Time
+	refAlias     string
+	refTableName string
+	ALL          rapier.Asterisk
+	Id           rapier.Int64
+	Key          rapier.String
+	Name         rapier.String
+	IsPin        rapier.Bool
+	Remark       rapier.String
+	CreatedAt    rapier.Time
+	UpdatedAt    rapier.Time
 }
 
 // Ref_Dict model with TableName `dict`.
@@ -24,15 +25,16 @@ func Ref_Dict() Dict_Native { return ref_Dict_Model }
 
 func new_Dict(alias string) Dict_Native {
 	return Dict_Native{
-		refAlias:  alias,
-		ALL:       rapier.NewAsterisk(alias),
-		Id:        rapier.NewInt64(alias, "id"),
-		Key:       rapier.NewString(alias, "key"),
-		Name:      rapier.NewString(alias, "name"),
-		IsPin:     rapier.NewBool(alias, "is_pin"),
-		Remark:    rapier.NewString(alias, "remark"),
-		CreatedAt: rapier.NewTime(alias, "created_at"),
-		UpdatedAt: rapier.NewTime(alias, "updated_at"),
+		refAlias:     alias,
+		refTableName: "dict",
+		ALL:          rapier.NewAsterisk(alias),
+		Id:           rapier.NewInt64(alias, "id"),
+		Key:          rapier.NewString(alias, "key"),
+		Name:         rapier.NewString(alias, "name"),
+		IsPin:        rapier.NewBool(alias, "is_pin"),
+		Remark:       rapier.NewString(alias, "remark"),
+		CreatedAt:    rapier.NewTime(alias, "created_at"),
+		UpdatedAt:    rapier.NewTime(alias, "updated_at"),
 	}
 }
 
@@ -51,13 +53,18 @@ func (*Dict_Native) As(alias string) Dict_Native { return New_Dict(alias) }
 // Ref_Alias hold table name when call New_Dict or Dict_Active.As that you defined.
 func (x *Dict_Native) Ref_Alias() string { return x.refAlias }
 
+// Ref_Alias hold table name when call New_Dict or Dict_Active.As that you defined.
+func (x *Dict_Native) Use_Table(newTableName string) {
+	x.refTableName = newTableName
+}
+
 // New_Executor new entity executor which suggest use only once.
 func (*Dict_Native) New_Executor(db *gorm.DB) *rapier.Executor[Dict] {
 	return rapier.NewExecutor[Dict](db)
 }
 
 // TableName hold model `Dict` table name returns `dict`.
-func (*Dict_Native) TableName() string { return "dict" }
+func (x *Dict_Native) TableName() string { return x.refTableName }
 
 // Select_Expr select model fields
 func (x *Dict_Native) Select_Expr() []rapier.Expr {
