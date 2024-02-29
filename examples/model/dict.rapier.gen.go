@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var ref_Dict_Model = new_Dict("dict")
+var ref_Dict_Model = *new_Dict("dict", "dict")
 
 type Dict_Native struct {
 	refAlias     string
@@ -23,10 +23,10 @@ type Dict_Native struct {
 // Ref_Dict model with TableName `dict`.
 func Ref_Dict() Dict_Native { return ref_Dict_Model }
 
-func new_Dict(alias string) Dict_Native {
-	return Dict_Native{
+func new_Dict(tableName, alias string) *Dict_Native {
+	return &Dict_Native{
 		refAlias:     alias,
-		refTableName: "dict",
+		refTableName: tableName,
 		ALL:          rapier.NewAsterisk(alias),
 		Id:           rapier.NewInt64(alias, "id"),
 		Key:          rapier.NewString(alias, "key"),
@@ -39,32 +39,25 @@ func new_Dict(alias string) Dict_Native {
 }
 
 // New_Dict new instance.
-func New_Dict(alias string) Dict_Native {
-	if alias == "dict" {
-		return ref_Dict_Model
-	} else {
-		return new_Dict(alias)
-	}
+func New_Dict(tableName string) *Dict_Native {
+	return new_Dict(tableName, tableName)
 }
 
 // As alias
-func (*Dict_Native) As(alias string) Dict_Native { return New_Dict(alias) }
+func (x *Dict_Native) As(alias string) *Dict_Native {
+	return new_Dict(x.refTableName, alias)
+}
 
 // Ref_Alias hold table name when call New_Dict or Dict_Active.As that you defined.
 func (x *Dict_Native) Ref_Alias() string { return x.refAlias }
 
-// Ref_Alias hold table name when call New_Dict or Dict_Active.As that you defined.
-func (x *Dict_Native) Use_Table(newTableName string) {
-	x.refTableName = newTableName
-}
+// TableName hold model `Dict` table name returns `dict`.
+func (x *Dict_Native) TableName() string { return x.refTableName }
 
 // New_Executor new entity executor which suggest use only once.
 func (*Dict_Native) New_Executor(db *gorm.DB) *rapier.Executor[Dict] {
 	return rapier.NewExecutor[Dict](db)
 }
-
-// TableName hold model `Dict` table name returns `dict`.
-func (x *Dict_Native) TableName() string { return x.refTableName }
 
 // Select_Expr select model fields
 func (x *Dict_Native) Select_Expr() []rapier.Expr {
