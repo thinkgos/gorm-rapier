@@ -37,11 +37,11 @@ func new_Dict(alias string) Dict_Native {
 }
 
 // New_Dict new instance.
-func New_Dict(xAlias string) Dict_Native {
-	if xAlias == "dict" {
+func New_Dict(alias string) Dict_Native {
+	if alias == "dict" {
 		return ref_Dict_Model
 	} else {
-		return new_Dict(xAlias)
+		return new_Dict(alias)
 	}
 }
 
