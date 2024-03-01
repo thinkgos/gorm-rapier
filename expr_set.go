@@ -39,8 +39,8 @@ func (e expr) ValueNull() SetExpr {
 	return e
 }
 
-// ValueAny set any value.
 // Deprecated: use other ValueXXX instead.
+// ValueAny set any value.
 func (e expr) ValueAny(value any) SetExpr {
 	e.e = clause.Set{
 		{
