@@ -10,6 +10,7 @@ import (
 func Test_Update(t *testing.T) {
 	refDict := model.Ref_Dict()
 	rowsAffected, err := rapier.NewExecutor[model.Dict](db).
+		Model().
 		Where(refDict.Id.Eq(100)).
 		UpdatesExpr(
 			refDict.Key.Value("k1"),
