@@ -24,7 +24,7 @@ func Test_Example_Query_SingleObject(t *testing.T) {
 	_ = err     // return error
 	_ = record1 // return record
 
-	// Get the first record ordered by primary key  with original gorm api
+	// Get the first record ordered by primary key with original gorm api
 	err = rapier.NewExecutor[testdata.Dict](db).First(&dummy)
 	_ = err     // return error
 	_ = record1 // return record

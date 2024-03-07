@@ -2,7 +2,6 @@
 
 gorm rapier is an assist rapier for gorm.
 
-[![GoDoc](https://godoc.org/github.com/thinkgos/gorm-rapier?status.svg)](https://godoc.org/github.com/thinkgos/gorm-rapier)
 [![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/github.com/thinkgos/gorm-rapier?tab=doc)
 [![codecov](https://codecov.io/gh/thinkgos/gorm-rapier/graph/badge.svg?token=aHu5wq1m6i)](https://codecov.io/gh/thinkgos/gorm-rapier)
 [![Tests](https://github.com/thinkgos/gorm-rapier/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/thinkgos/gorm-rapier/actions/workflows/ci.yml)
@@ -525,9 +524,151 @@ Retrieving a single field, the api like `ScanXXX` return follow type: `bool`,`st
     // SELECT * FROM `dict`
 ```
 
-more information see [gorm Update](https://gorm.io/docs/query.html)
+more information see [gorm Query](https://gorm.io/docs/query.html)
 
 #### 2.3.3 Advanced Query
+
+##### Locking
+
+```go
+// Basic FOR UPDATE lock
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    LockingUpdate().
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR UPDATE
+// Basic FOR UPDATE lock with Clauses api
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    Clauses(clause.Locking{Strength: "UPDATE"}).
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR UPDATE
+
+// Basic FOR SHARE lock
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    LockingShare().
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR SHARE
+// Basic FOR SHARE lock with Clauses api
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    Clauses(clause.Locking{Strength: "SHARE"}).
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR SHARE
+
+// Basic FOR UPDATE NOWAIT lock with Clauses api
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    Clauses(clause.Locking{Strength: "UPDATE",Options: "NOWAIT"}).
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR UPDATE NOWAIT
+```
+
+##### SubQuery
+
+```go
+refDict := testdata.Ref_Dict()
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    Where(refDict.Key.EqSubQuery(
+        rapier.NewExecutor[testdata.Dict](db).
+            SelectExpr(refDict.Key).
+            Where(refDict.Id.Eq(1001)).
+            IntoDB(),
+    )).
+    FindAll()
+// SELECT * FROM `dict` WHERE `dict`.`key` = (SELECT `dict`.`key` FROM `dict` WHERE `dict`.`id` = 1001)
+```
+
+##### From SubQuery
+
+```go
+refDict := testdata.Ref_Dict()
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    TableExpr(
+        rapier.From{
+            Alias: "u",
+            SubQuery: rapier.NewExecutor[testdata.Dict](db).
+                SelectExpr(refDict.Key).
+                IntoDB(),
+        },
+        rapier.From{
+            Alias: "p",
+            SubQuery: rapier.NewExecutor[testdata.Dict](db).
+                SelectExpr(refDict.Key).
+                IntoDB(),
+        },
+    ).
+    FindAll()
+// SELECT * FROM (SELECT `dict`.`key` FROM `dict`) AS `u`, (SELECT `dict`.`key` FROM `dict`) AS `p`
+```
+
+##### Pluck
+
+The `Pluck`, `PluckExpr` method is used to query a single column from the database and scan the result into a slice. This method is ideal for when you need to retrieve specific fields from a model.
+
+If you need to query more than one column, you can use Select with `Scan` or `Find` instead.
+
+```go
+var ids []int64
+
+refDict := testdata.Ref_Dict()
+// with expr api
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprString(refDict.Name)
+// SELECT `name` FROM `dict`
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprBool(refDict.IsPin)
+// SELECT `is_pin` FROM `dict`
+_ = rapier.NewExecutor[testdata.Dict](db).Pluck("id", &ids)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt8(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt16(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt32(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt64(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint8(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint16(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint32(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint64(refDict.Id)
+// SELECT `id` FROM `dict`
+
+// with original gorm api
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckString("name")
+// SELECT `name` FROM `dict`
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckBool("is_pin")
+// SELECT `is_pin` FROM `dict`
+_ = rapier.NewExecutor[testdata.Dict](db).Pluck("id", &ids)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt8("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt16("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt32("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt64("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint8("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint16("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint32("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint64("id")
+// SELECT `id` FROM `dict`
+```
+
+##### Count
+
+The `Count` method is used to retrieve the number of records that match a given query. It’s a useful feature for understanding the size of a dataset, particularly in scenarios involving conditional queries or data analysis.
+
+```go
+total, err := rapier.NewExecutor[testdata.Dict](db).Count()
+_ = err
+_ = total
+// SELECT count(*) FROM `dict`
+```
+
+##### Exist
+
+The `Count` method is used to check whether the exist record that match a given query.
+
+```go
+refDict := testdata.Ref_Dict()
+b, err := rapier.NewExecutor[testdata.Dict](db).Where(refDict.Id.Eq(100)).Exist()
+_ = err
+_ = b
+// SELECT 1 FROM `dict` WHERE `dict`.`id` = 100 LIMIT 1
+```
+
+more information see [gorm Advanced Query](https://gorm.io/docs/advanced_query.html)
 
 #### 2.3.4 Update
 
