@@ -1,6 +1,7 @@
 package rapier
 
 import (
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -37,6 +38,12 @@ func (e expr) ValueNull() SetExpr {
 		},
 	}
 	return e
+}
+
+// ValueSubQuery set with subQuery
+// same as SetSubQuery.
+func (e expr) ValueSubQuery(subQuery *gorm.DB) SetExpr {
+	return e.SetSubQuery(subQuery)
 }
 
 // Deprecated: use other ValueXXX instead.

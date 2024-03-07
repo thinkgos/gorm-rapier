@@ -853,6 +853,12 @@ func Test_SetExpr_Field(t *testing.T) {
 			want:     "`address`=?",
 		},
 		{
+			name:     "Value: SubQuery",
+			expr:     NewField("user", "address").ValueSubQuery(newDb().Table("user1").Select("`addr`")),
+			wantVars: nil,
+			want:     "`address`=(SELECT `addr` FROM `user1`)",
+		},
+		{
 			name:     "Value: any",
 			expr:     NewField("user", "sex").ValueAny(1),
 			wantVars: []any{1},

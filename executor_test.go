@@ -344,6 +344,7 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 			wantVars: []any{"abc", float64(10), int(100), nil, int64(1)},
 			want:     "UPDATE `dict` SET `name`=?,`score`=`dict`.`score`+?,`sort`=`sort`+?,`created_at`=? WHERE `dict`.`id` = ?",
 		},
+		
 		{
 			name: "updateColumnExpr: value",
 			db: refDict.New_Executor(newDb()).

@@ -98,7 +98,20 @@ func Test_Example_UpdateFromSubQuery(t *testing.T) {
 	_ = err          // return error
 	_ = rowsAffected // return row affected
 
-	// TODO: update with exprs
+	// update with exprs
+	rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+		Model().
+		Where(refDict.Id.Eq(100)).
+		UpdatesExpr(
+			refDict.Key.ValueSubQuery(
+				rapier.NewExecutor[testdata.Dict](db).Model().
+					SelectExpr(refDict.Key).
+					Where(refDict.Id.Eq(101)).
+					IntoDB(),
+			),
+		)
+	_ = err          // return error
+	_ = rowsAffected // return row affected
 
 	// update use map with original gorm api
 	rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).

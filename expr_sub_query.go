@@ -86,7 +86,7 @@ func (e expr) FindInSetSubQuery(subQuery *gorm.DB) Expr {
 	return e
 }
 
-// setSubQuery set with subQuery
+// SetSubQuery set with subQuery
 func (e expr) SetSubQuery(subQuery *gorm.DB) SetExpr {
 	e.e = clause.Set{
 		clause.Assignment{

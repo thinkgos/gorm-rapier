@@ -23,13 +23,13 @@ gorm rapier is an assist rapier for gorm.
 Use go get.
 
 ```bash
-    go get github.com/thinkgos/gorm-rapier
+go get github.com/thinkgos/gorm-rapier
 ```
 
 Then import the package into your own code.
 
 ```go
-    import "github.com/thinkgos/gorm-rapier"
+import "github.com/thinkgos/gorm-rapier"
 ```
 
 ### 2. Getting Started
@@ -412,7 +412,7 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).Order("`key` DESC").Order("name").F
 - `perPage`: per page size (default size is 50, default max size is 500)
 - `maxPerPages`: override default max size.
 
-`Limit`: specify the max number of records to retrieve
+`Limit`: specify the max number of records to retrieve.  
 `Offset`: specify the number of records to skip before starting to return the records
 
 ```go
@@ -779,7 +779,21 @@ _ = err          // return error
 _ = rowsAffected // return row affected
 // UPDATE `dict` SET `key`=(SELECT `dict`.`key` FROM `dict` WHERE `dict`.`id` = 101),`updated_at`="2024-03-07 02:41:40.548" WHERE `dict`.`id` = 100
 
-// TODO: update with exprs
+// update with exprs
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdatesExpr(
+        refDict.Key.ValueSubQuery(
+            rapier.NewExecutor[testdata.Dict](db).Model().
+                SelectExpr(refDict.Key).
+                Where(refDict.Id.Eq(101)).
+                IntoDB(),
+        ),
+    )
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`=(SELECT `dict`.`key` FROM `dict` WHERE `dict`.`id` = 101),`updated_at`="2024-03-07 02:41:40.548" WHERE `dict`.`id` = 100
 
 // update use map with original gorm api
 rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
