@@ -46,7 +46,6 @@ func (e expr) ValueSubQuery(subQuery *gorm.DB) SetExpr {
 	return e.SetSubQuery(subQuery)
 }
 
-// Deprecated: use other ValueXXX instead.
 // ValueAny set any value.
 func (e expr) ValueAny(value any) SetExpr {
 	e.e = clause.Set{
