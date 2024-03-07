@@ -6,6 +6,14 @@ import (
 	"gorm.io/gorm"
 )
 
+func Test_TableImplSchemaTabler(t *testing.T) {
+	tableName := "tt"
+	tb := Table(tableName)
+	if gotTableName := tb.TableName(); gotTableName != tableName {
+		t.Errorf("want: %s, got: %s", tableName, gotTableName)
+	}
+}
+
 func Test_Table(t *testing.T) {
 	var dummy Dict
 

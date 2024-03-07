@@ -352,6 +352,12 @@ func Test_Expr_Field(t *testing.T) {
 			want:     "IFNULL(`t1`.`age`,?)",
 		},
 		{
+			name:     "NullIf",
+			expr:     NewField("t1", "age").NullIf(value1),
+			wantVars: []any{value1},
+			want:     "NULLIF(`t1`.`age`,?)",
+		},
+		{
 			name:     "eq",
 			expr:     NewField("t1", "age").Eq(value1),
 			wantVars: []any{value1},
