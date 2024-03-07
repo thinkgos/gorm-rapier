@@ -101,11 +101,6 @@ func Test_Example_Query_SingleObject_SingleFiled(t *testing.T) {
 	_ = err // return error
 	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).TakeUint64()
 	_ = err // return error
-
-	_ = err // return error
-	// Get one record, no specified order
-	_, err = rapier.NewExecutor[testdata.Dict](db).LastOne()
-	_ = err // return error
 }
 
 func Test_Example_Query_MultipleObject(t *testing.T) {
@@ -196,6 +191,78 @@ func Test_Example_Query_Order(t *testing.T) {
 	_, _ = rapier.NewExecutor[testdata.Dict](db).Order("`key` DESC").Order("name").FindAll()
 }
 
+func Test_Example_Query_LimitOffset(t *testing.T) {
+	// with Pagination
+	_, _ = rapier.NewExecutor[testdata.Dict](db).Pagination(3, 5).FindAll()
+
+	// with original gorm api
+	_, _ = rapier.NewExecutor[testdata.Dict](db).Limit(3).FindAll()
+	_, _ = rapier.NewExecutor[testdata.Dict](db).Offset(3).FindAll()
+	_, _ = rapier.NewExecutor[testdata.Dict](db).Limit(10).Offset(5).FindAll()
+}
+
+func Test_Example_Query_GroupByHaving(t *testing.T) {
+	var result struct {
+		Name  string
+		Total int
+	}
+
+	refDict := testdata.Ref_Dict()
+	// with expr
+	_ = rapier.NewExecutor[testdata.Dict](db).
+		SelectExpr(
+			refDict.Name,
+			rapier.Star.Count().As("total"),
+		).
+		Where(refDict.Name.LeftLike("group")).
+		GroupExpr(refDict.Name).
+		Take(&result)
+
+	_ = rapier.NewExecutor[testdata.Dict](db).
+		SelectExpr(
+			refDict.Name,
+			rapier.Star.Count().As("total"),
+		).
+		GroupExpr(refDict.Name).
+		Having(refDict.Name.Eq("group")).
+		Take(&result)
+
+	// with original gorm api
+	_ = rapier.NewExecutor[testdata.Dict](db).
+		SelectExpr(
+			refDict.Name,
+			rapier.Star.Count().As("total"),
+		).
+		Where(refDict.Name.LeftLike("group")).
+		Group("name").
+		Take(&result)
+
+	_ = rapier.NewExecutor[testdata.Dict](db).
+		SelectExpr(
+			refDict.Name,
+			rapier.Star.Count().As("total"),
+		).
+		Group("name").
+		Having("name = ?", "group").
+		Take(&result)
+}
+
+func Test_Example_Query_Distinct(t *testing.T) {
+	refDict := testdata.Ref_Dict()
+	// with expr
+	_, _ = rapier.NewExecutor[testdata.Dict](db).
+		DistinctExpr(
+			refDict.Name,
+			refDict.IsPin,
+		).
+		FindAll()
+
+	// with original gorm api
+	_, _ = rapier.NewExecutor[testdata.Dict](db).
+		Distinct("name", "is_pin").
+		FindAll()
+}
+
 func Test_Example_Query_Scan(t *testing.T) {
 	var dummy testdata.Dict
 
@@ -207,4 +274,39 @@ func Test_Example_Query_Scan(t *testing.T) {
 	err = rapier.NewExecutor[testdata.Dict](db).Scan(&dummy)
 	_ = err     // return error
 	_ = record1 // return record
+}
+
+func Test_Example_Query_Scan_SingleFiled(t *testing.T) {
+	var err error
+
+	refDict := testdata.Ref_Dict()
+	// Get one record, no specified order, returned single field.
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanBool()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanString()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanFloat32()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanFloat64()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanInt()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanInt8()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanInt16()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanInt32()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanInt64()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanUint()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanUint8()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanUint16()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanUint32()
+	_ = err // return error
+	_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).ScanUint64()
+	_ = err // return error
 }

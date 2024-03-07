@@ -394,14 +394,136 @@ Specify order when retrieving records from the database
 
     // with expr
     _, _ = rapier.NewExecutor[testdata.Dict](db).OrderExpr(refDict.Key.Desc(), refDict.Name).FindAll()
+    // SELECT * FROM `dict` ORDER BY `dict`.`key` DESC,`dict`.`name`
     _, _ = rapier.NewExecutor[testdata.Dict](db).OrderExpr(refDict.Key.Desc()).OrderExpr(refDict.Name).FindAll()
+    // SELECT * FROM `dict` ORDER BY `dict`.`key` DESC,`dict`.`name`
 
     // with original gorm api
     _, _ = rapier.NewExecutor[testdata.Dict](db).Order("`key` DESC,name").FindAll()
+    // SELECT * FROM `dict` ORDER BY `key` DESC,name
     _, _ = rapier.NewExecutor[testdata.Dict](db).Order("`key` DESC").Order("name").FindAll()
+    // SELECT * FROM `dict` ORDER BY `key` DESC,name
 ```
 
 ##### Limit & Offset
+
+`Pagination`:
+
+- `page`: page index
+- `perPage`: per page size (default size is 50, default max size is 500)
+- `maxPerPages`: override default max size.
+
+`Limit`: specify the max number of records to retrieve
+`Offset`: specify the number of records to skip before starting to return the records
+
+```go
+    // with Pagination
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Pagination(3, 5).FindAll()
+    // SELECT * FROM `dict` LIMIT 5 OFFSET 10
+
+    // with original gorm api
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Limit(3).FindAll()
+    // SELECT * FROM `dict` LIMIT 3
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Offset(3).FindAll()
+    // SELECT * FROM `dict` OFFSET 3
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Limit(10).Offset(5).FindAll()
+    // SELECT * FROM `dict` LIMIT 10 OFFSET 5
+```
+
+##### Group By & Having
+
+```go
+var result struct {
+        Name  string
+        Total int
+    }
+
+    refDict := testdata.Ref_Dict()
+    // with expr
+    _ = rapier.NewExecutor[testdata.Dict](db).
+        SelectExpr(
+            refDict.Name,
+            rapier.Star.Count().As("total"),
+        ).
+        Where(refDict.Name.LeftLike("group")).
+        GroupExpr(refDict.Name).
+        Take(&result)
+    // SELECT `dict`.`name`,COUNT(*) AS `total` FROM `dict` WHERE `dict`.`name` LIKE "group%" GROUP BY `dict`.`name`
+
+    _ = rapier.NewExecutor[testdata.Dict](db).
+        SelectExpr(
+            refDict.Name,
+            rapier.Star.Count().As("total"),
+        ).
+        GroupExpr(refDict.Name).
+        Having(refDict.Name.Eq("group")).
+        Take(&result)
+    // SELECT `dict`.`name`,COUNT(*) AS `total` FROM `dict` GROUP BY `dict`.`name` HAVING `dict`.`name` = "group"
+
+    // with original gorm api
+    _ = rapier.NewExecutor[testdata.Dict](db).
+        SelectExpr(
+            refDict.Name,
+            rapier.Star.Count().As("total"),
+        ).
+        Where(refDict.Name.LeftLike("group")).
+        Group("name").
+        Take(&result)
+    // SELECT `dict`.`name`,COUNT(*) AS `total` FROM `dict` WHERE `dict`.`name` LIKE "group%" GROUP BY `name` LIMIT 1
+
+    _ = rapier.NewExecutor[testdata.Dict](db).
+        SelectExpr(
+            refDict.Name,
+            rapier.Star.Count().As("total"),
+        ).
+        Group("name").
+        Having("name = ?", "group").
+        Take(&result)
+    // SELECT `dict`.`name`,COUNT(*) AS `total` FROM `dict` GROUP BY `name` HAVING name = "group" LIMIT 1
+```
+
+##### Distinct
+
+```go
+    refDict := testdata.Ref_Dict()
+    // with expr
+    _, _ = rapier.NewExecutor[testdata.Dict](db).
+        DistinctExpr(
+            refDict.Name,
+            refDict.IsPin,
+        ).
+        FindAll()
+    // SELECT DISTINCT `dict`.`name`,`dict`.`is_pin` FROM `dict`
+
+    // with original gorm api
+    _, _ = rapier.NewExecutor[testdata.Dict](db).
+        Distinct("name", "is_pin").
+        FindAll()
+    // SELECT DISTINCT `name`,`is_pin` FROM `dict`
+```
+
+##### Joins
+
+TODO...
+
+##### Scan
+
+Retrieving a single field, the api like `ScanXXX` return follow type: `bool`,`string`, `float32`, `float64`, `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, `uint16`, `uint32`, `uint64`.
+
+```go
+    var dummy testdata.Dict
+
+    // Get one record, no specified order
+    record1, err := rapier.NewExecutor[testdata.Dict](db).ScanOne()
+    _ = err     // return error
+    _ = record1 // return record
+    // SELECT * FROM `dict`
+    // Get one record, no specified order with original gorm api
+    err = rapier.NewExecutor[testdata.Dict](db).Scan(&dummy)
+    _ = err     // return error
+    _ = record1 // return record
+    // SELECT * FROM `dict`
+```
 
 more information see [gorm Update](https://gorm.io/docs/query.html)
 
