@@ -39,6 +39,8 @@ Then import the package into your own code.
 
 ### 2.1 Declaring gorm and rapier Model
 
+model defined detail see [testdata](./testdata).
+
 #### 2.1.1 Declaring gorm model
 
 see [Declaring Models](https://gorm.io/docs/models.html)
@@ -150,13 +152,13 @@ see [gorm Connecting to a Database](https://gorm.io/docs/connecting_to_the_datab
 single record
 
 ```go
-newDict := model.Dict{
+newDict := testdata.Dict{
     Key:    "key1",
     Name:   "name1",
     IsPin:  true,
     Remark: "remark1",
 }
-err := rapier.NewExecutor[model.Dict](db).Create(newDict)
+err := rapier.NewExecutor[testdata.Dict](db).Create(newDict)
 _ = err // return error
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.135","2024-02-20 07:18:42.135")
 ```
@@ -164,7 +166,7 @@ _ = err // return error
 multiple record
 
 ```go
-newDicts := []*model.Dict{
+newDicts := []*testdata.Dict{
     {
         Key:    "key1",
         Name:   "name1",
@@ -178,7 +180,7 @@ newDicts := []*model.Dict{
         Remark: "remark2",
     },
 }
-err = rapier.NewExecutor[model.Dict](db).Create(newDicts...)
+err = rapier.NewExecutor[testdata.Dict](db).Create(newDicts...)
 _ = err // return error
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136"),("key2","name2",true,"remark2","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136")
 ```
@@ -187,7 +189,7 @@ batch insert multiple record
 
 ```go
     // multiple record
-    newDicts := []*model.Dict{
+    newDicts := []*testdata.Dict{
         {
             Key:    "key1",
             Name:   "name1",
@@ -207,7 +209,7 @@ batch insert multiple record
             Remark: "remark3",
         },
     }
-    err := rapier.NewExecutor[model.Dict](db).CreateInBatches(newDicts, 2)
+    err := rapier.NewExecutor[testdata.Dict](db).CreateInBatches(newDicts, 2)
     _ = err // return error
     // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136"),("key2","name2",true,"remark2","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136")
     // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key3","name3",true,"remark3","2024-02-20 07:18:42.135","2024-02-20 07:18:42.135")
@@ -222,8 +224,8 @@ more information see [gorm Create](https://gorm.io/docs/create.html)
 #### 2.3.4 Update
 
 ```go
-refDict := model.Ref_Dict()
-rowsAffected, err := rapier.NewExecutor[model.Dict](db).
+refDict := testdata.Ref_Dict()
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
     Model().
     Where(refDict.Id.Eq(100)).
     UpdatesExpr(
@@ -237,8 +239,8 @@ _ = rowsAffected // return row affected
 #### 2.3.5 Delete
 
 ```go
-refDict := model.Ref_Dict()
-    rowsAffected, err := rapier.NewExecutor[model.Dict](db).
+refDict := testdata.Ref_Dict()
+    rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
         Model().
         Where(refDict.Id.Eq(100)).
         Delete()
@@ -258,8 +260,6 @@ more information see [gorm Delete](https://gorm.io/docs/delete.html)
 not supported yet
 
 ### 2.7 Example
-
-see [examples](https://github.com/thinkgos/gorm-rapier/tree/main/examples)
 
 ## Reference
 

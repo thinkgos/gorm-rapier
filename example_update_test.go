@@ -1,15 +1,15 @@
-package test
+package rapier_test
 
 import (
 	"testing"
 
 	rapier "github.com/thinkgos/gorm-rapier"
-	"github.com/thinkgos/gorm-rapier/examples/model"
+	testdata "github.com/thinkgos/gorm-rapier/testdata"
 )
 
 func Test_Update(t *testing.T) {
-	refDict := model.Ref_Dict()
-	rowsAffected, err := rapier.NewExecutor[model.Dict](db).
+	refDict := testdata.Ref_Dict()
+	rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
 		Model().
 		Where(refDict.Id.Eq(100)).
 		UpdatesExpr(

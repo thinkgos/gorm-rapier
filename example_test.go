@@ -1,4 +1,4 @@
-package test
+package rapier_test
 
 import (
 	"log"

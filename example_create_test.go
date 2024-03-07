@@ -1,25 +1,25 @@
-package test
+package rapier_test
 
 import (
 	"testing"
 
 	rapier "github.com/thinkgos/gorm-rapier"
-	"github.com/thinkgos/gorm-rapier/examples/model"
+	"github.com/thinkgos/gorm-rapier/testdata"
 )
 
-func Test_Create(t *testing.T) {
+func Test_Example_Create(t *testing.T) {
 	// single record
-	newDict := model.Dict{
+	newDict := testdata.Dict{
 		Key:    "key1",
 		Name:   "name1",
 		IsPin:  true,
 		Remark: "remark1",
 	}
-	err := rapier.NewExecutor[model.Dict](db).Create(&newDict)
+	err := rapier.NewExecutor[testdata.Dict](db).Create(&newDict)
 	_ = err // return error
 
 	// multiple record
-	newDicts := []*model.Dict{
+	newDicts := []*testdata.Dict{
 		{
 			Key:    "key1",
 			Name:   "name1",
@@ -33,13 +33,13 @@ func Test_Create(t *testing.T) {
 			Remark: "remark2",
 		},
 	}
-	err = rapier.NewExecutor[model.Dict](db).Create(newDicts...)
+	err = rapier.NewExecutor[testdata.Dict](db).Create(newDicts...)
 	_ = err // return error
 }
 
-func Test_CreateInBatch(t *testing.T) {
+func Test_Example_CreateInBatch(t *testing.T) {
 	// multiple record
-	newDicts := []*model.Dict{
+	newDicts := []*testdata.Dict{
 		{
 			Key:    "key1",
 			Name:   "name1",
@@ -59,6 +59,6 @@ func Test_CreateInBatch(t *testing.T) {
 			Remark: "remark3",
 		},
 	}
-	err := rapier.NewExecutor[model.Dict](db).CreateInBatches(newDicts, 2)
+	err := rapier.NewExecutor[testdata.Dict](db).CreateInBatches(newDicts, 2)
 	_ = err // return error
 }

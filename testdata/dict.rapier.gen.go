@@ -1,4 +1,4 @@
-package model
+package testdata
 
 import (
 	rapier "github.com/thinkgos/gorm-rapier"
