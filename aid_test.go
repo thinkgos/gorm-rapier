@@ -30,11 +30,11 @@ func newDb() *gorm.DB {
 }
 
 func NewStatement() *gorm.Statement {
-	user, _ := schema.Parse(&Dict{}, &sync.Map{}, db.NamingStrategy)
+	dd, _ := schema.Parse(&Dict{}, &sync.Map{}, db.NamingStrategy)
 	return &gorm.Statement{
 		DB:      db,
-		Table:   user.Table,
-		Schema:  user,
+		Table:   dd.Table,
+		Schema:  dd,
 		Clauses: map[string]clause.Clause{},
 	}
 }
