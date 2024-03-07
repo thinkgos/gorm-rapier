@@ -128,8 +128,9 @@ func (x *Executor[T]) FirstOrCreate() (*T, error) {
 	return &dest, nil
 }
 
-func (x *Executor[T]) Save(value *T) error {
-	return x.IntoRawDB().Save(value).Error
+func (x *Executor[T]) Save(value *T) (rowsAffected int64, err error) {
+	result := x.IntoRawDB().Save(value)
+	return result.RowsAffected, result.Error
 }
 
 func (x *Executor[T]) Updates(value *T) (rowsAffected int64, err error) {

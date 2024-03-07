@@ -7,7 +7,7 @@ import (
 	"github.com/thinkgos/gorm-rapier/testdata"
 )
 
-func Test_Delete(t *testing.T) {
+func Test_Example_Delete(t *testing.T) {
 	refDict := testdata.Ref_Dict()
 	rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
 		Model().

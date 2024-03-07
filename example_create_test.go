@@ -7,7 +7,12 @@ import (
 	"github.com/thinkgos/gorm-rapier/testdata"
 )
 
-func Test_Example_Create(t *testing.T) {
+func Test_Example_EmptyRecord_Create(t *testing.T) {
+	// empty record
+	err := rapier.NewExecutor[testdata.Dict](db).Create()
+	_ = err // return error
+}
+func Test_Example_SingleRecord_Create(t *testing.T) {
 	// single record
 	newDict := testdata.Dict{
 		Key:    "key1",
@@ -17,7 +22,8 @@ func Test_Example_Create(t *testing.T) {
 	}
 	err := rapier.NewExecutor[testdata.Dict](db).Create(&newDict)
 	_ = err // return error
-
+}
+func Test_Example_Multiple_Create(t *testing.T) {
 	// multiple record
 	newDicts := []*testdata.Dict{
 		{
@@ -33,12 +39,12 @@ func Test_Example_Create(t *testing.T) {
 			Remark: "remark2",
 		},
 	}
-	err = rapier.NewExecutor[testdata.Dict](db).Create(newDicts...)
+	err := rapier.NewExecutor[testdata.Dict](db).Create(newDicts...)
 	_ = err // return error
 }
 
-func Test_Example_CreateInBatch(t *testing.T) {
-	// multiple record
+func Test_Example_Batch_CreateInBatch(t *testing.T) {
+	// batch insert multiple record
 	newDicts := []*testdata.Dict{
 		{
 			Key:    "key1",
@@ -61,4 +67,5 @@ func Test_Example_CreateInBatch(t *testing.T) {
 	}
 	err := rapier.NewExecutor[testdata.Dict](db).CreateInBatches(newDicts, 2)
 	_ = err // return error
+
 }
