@@ -132,11 +132,6 @@ func (x *Dict_Native) Ref_Alias() string { return x.refAlias }
 
 // TableName hold table name when call New_Dict that you defined.
 func (x *Dict_Native) TableName() string { return x.refTableName }
-
-// New_Executor new entity executor which suggest use only once.
-func (*Dict_Native) New_Executor(db *gorm.DB) *rapier.Executor[Dict] {
-    return rapier.NewExecutor[Dict](db)
-}
 ```
 
 ### 2.2 Connecting to a Database
@@ -145,11 +140,11 @@ see [gorm Connecting to a Database](https://gorm.io/docs/connecting_to_the_datab
 
 ### 2.3 CRUD interface
 
-`Executor[T]`'s `Where` and the suffix with `Expr` method can use field which implement `Expr` interface.
+`Executor[T]`'s `Where`, `Or`, `Not`, `Having` and the suffix with `Expr` method can use field which implement `Expr` interface.
 
 #### 2.3.1 Create
 
-empty record
+##### empty record
 
 ```go
     // empty record
@@ -158,7 +153,7 @@ empty record
     // do nothing
 ```
 
-single record
+##### single record
 
 ```go
 newDict := testdata.Dict{
@@ -172,7 +167,7 @@ _ = err // return error
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.135","2024-02-20 07:18:42.135")
 ```
 
-multiple record
+##### multiple record
 
 ```go
 newDicts := []*testdata.Dict{
@@ -194,7 +189,7 @@ _ = err // return error
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136"),("key2","name2",true,"remark2","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136")
 ```
 
-batch insert multiple record
+##### batch insert multiple record
 
 ```go
     // batch insert multiple record
@@ -228,11 +223,193 @@ more information see [gorm Create](https://gorm.io/docs/create.html)
 
 #### 2.3.2 Query
 
+##### Retrieving a single object
+
+```go
+    var dummy testdata.Dict
+
+    // Get the first record ordered by primary key
+    record1, err := rapier.NewExecutor[testdata.Dict](db).FirstOne()
+    _ = err     // return error
+    _ = record1 // return record
+    // Get one record, no specified order
+    record1, err = rapier.NewExecutor[testdata.Dict](db).TakeOne()
+    _ = err     // return error
+    _ = record1 // return record
+    // Get one record, no specified order
+    record1, err = rapier.NewExecutor[testdata.Dict](db).LastOne()
+    _ = err     // return error
+    _ = record1 // return record
+
+    // Get the first record ordered by primary key  with original gorm api
+    err = rapier.NewExecutor[testdata.Dict](db).First(&dummy)
+    _ = err     // return error
+    _ = record1 // return record
+    // Get one record, no specified order with original gorm api
+    err = rapier.NewExecutor[testdata.Dict](db).Take(&dummy)
+    _ = err     // return error
+    _ = record1 // return record
+    // Get one record, no specified order with original gorm api
+    err = rapier.NewExecutor[testdata.Dict](db).Last(&dummy)
+    _ = err     // return error
+    _ = record1 // return record
+```
+
+##### Retrieving a single field, the api like `FirstXXX` or `TakeXXX`, return follow type: `bool`,`string`, `float32`, `float64`, `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, `uint16`, `uint32`, `uint64`.
+
+```go
+    refDict := testdata.Ref_Dict()
+    // Get the first record ordered returned single field.
+    _ = err // return error
+    _, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).FirstString()
+    // SELECT `dict`.`key` FROM `dict` ORDER BY `dict`.`id` LIMIT 1
+
+    // Get one record, no specified order returned single field.
+    _, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).TakeString()
+    // SELECT `dict`.`key` FROM `dict` LIMIT 1
+```
+
+##### Retrieving multiple objects
+
+```go
+    // Get the multiple record.
+    records1, err := rapier.NewExecutor[testdata.Dict](db).
+        FindAll()
+    _ = err      // return error
+    _ = records1 // return records
+    // SELECT * FROM `dict`
+
+    var records2 []*testdata.Dict
+    // Get the multiple record.
+    err = rapier.NewExecutor[testdata.Dict](db).
+        SelectExpr(rapier.All).
+        Find(&records2)
+    _ = err      // return error
+    _ = records1 // return records
+    // SELECT * FROM `dict`
+```
+
+##### Condition
+
+In addition to [gorm Conditions](https://gorm.io/docs/query.html#Conditions) usages, there are usable usage related to `rapier`
+
+```go
+    refDict := testdata.Ref_Dict()
+
+    // =
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Eq("key1")).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` = "key1" LIMIT 1
+    // <>
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Neq("key1")).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` <> "key1" LIMIT 1
+    // IN
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.In("key1", "key2")).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` IN ("key1","key2") LIMIT 1
+    // NOT IN
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.NotIn("key1", "key2")).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` NOT IN ("key1","key2") LIMIT 1
+    // Fuzzy LIKE
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.FuzzyLike("key1")).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` LIKE "%key1%" LIMIT 1
+    // Left LIKE
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.LeftLike("key1")).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` LIKE "key1%" LIMIT 1
+    // LIKE
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Like("%key1%")).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` LIKE "%key1%" LIMIT 1
+    // NOT LIKE
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.NotLike("%key1%")).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` NOT LIKE "%key1%" LIMIT 1
+    // AND
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Eq("key1"), refDict.IsPin.Eq(true)).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` = "key1" AND `dict`.`is_pin` = true LIMIT 1
+    // >
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Gt(time.Now())).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`created_at` > "2024-03-07 06:20:47.057" LIMIT 1
+    // >=
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Gte(time.Now())).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`created_at` >= "2024-03-07 06:20:47.057" LIMIT 1
+    // <
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Lt(time.Now())).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`created_at` < "2024-03-07 06:20:47.057" LIMIT 1
+    // <=
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Lte(time.Now())).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`created_at` <= "2024-03-07 06:20:47.057" LIMIT 1
+    // BETWEEN
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Between(time.Now().Add(time.Hour), time.Now())).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`created_at` BETWEEN "2024-03-07 07:20:47.057" AND "2024-03-07 06:20:47.057" LIMIT 1
+    // NOT BETWEEN
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.NotBetween(time.Now().Add(time.Hour), time.Now())).TakeOne()
+    // SELECT * FROM `dict` WHERE NOT (`dict`.`created_at` BETWEEN "2024-03-07 07:20:47.057" AND "2024-03-07 06:20:47.057") LIMIT 1
+ 
+    // not condition
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Not(refDict.Key.Eq("key1")).TakeOne()
+    // SELECT * FROM `dict` WHERE NOT `dict`.`key` = "key1" LIMIT 1
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(rapier.Not(refDict.Key.Eq("key1"))).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` <> "key1" LIMIT 1
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Not(refDict.Key.In("key1", "key2")).TakeOne()
+    // SELECT * FROM `dict` WHERE NOT `dict`.`key` IN ("key1","key2") LIMIT 1
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(rapier.Not(refDict.Key.In("key1", "key2"))).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` NOT IN ("key1","key2") LIMIT 1
+
+    // Or condition
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Eq("key1")).Or(refDict.Key.Eq("key2")).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` = "key1" OR `dict`.`key` = "key2" LIMIT 1
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(rapier.Or(refDict.Key.Eq("key1"), refDict.Key.Eq("key2"))).TakeOne()
+    // SELECT * FROM `dict` WHERE (`dict`.`key` = "key1" OR `dict`.`key` = "key2") LIMIT 1
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Eq("key1")).Or(refDict.Key.Eq("key2"), refDict.IsPin.Eq(true)).TakeOne()
+    // SELECT * FROM `dict` WHERE `dict`.`key` = "key1" OR (`dict`.`key` = "key2" AND `dict`.`is_pin` = true) LIMIT 1
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Where(rapier.Or(refDict.Key.Eq("key1"), rapier.And(refDict.Key.Eq("key2"), refDict.IsPin.Eq(true)))).TakeOne()
+    // SELECT * FROM `dict` WHERE (`dict`.`key` = "key1" OR (`dict`.`key` = "key2" AND `dict`.`is_pin` = true))
+```
+
+##### Selecting Specific Fields
+
+`Select`, `SelectExpr` allows you to specify the fields that you want to retrieve from database.
+
+```go
+    var records []*struct {
+        Key   string
+        IsPin bool
+    }
+    refDict := testdata.Ref_Dict()
+
+    // with expr
+    _ = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key, refDict.IsPin).Find(&records)
+    // SELECT `dict`.`key`,`dict`.`is_pin` FROM `dict`
+    _ = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key.Trim("1").As(refDict.Key.ColumnName()), refDict.IsPin).Find(&records)
+    // SELECT TRIM(BOTH "1" FROM `dict`.`key`) AS `key`,`dict`.`is_pin` FROM `dict`
+
+    // with original gorm api
+    _ = rapier.NewExecutor[testdata.Dict](db).Select("key", "is_pin").Find(&records)
+    // SELECT `key`,`is_pin` FROM `dict`
+```
+
+##### Order
+
+Specify order when retrieving records from the database
+
+```go
+    refDict := testdata.Ref_Dict()
+
+    // with expr
+    _, _ = rapier.NewExecutor[testdata.Dict](db).OrderExpr(refDict.Key.Desc(), refDict.Name).FindAll()
+    _, _ = rapier.NewExecutor[testdata.Dict](db).OrderExpr(refDict.Key.Desc()).OrderExpr(refDict.Name).FindAll()
+
+    // with original gorm api
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Order("`key` DESC,name").FindAll()
+    _, _ = rapier.NewExecutor[testdata.Dict](db).Order("`key` DESC").Order("name").FindAll()
+```
+
+##### Limit & Offset
+
+more information see [gorm Update](https://gorm.io/docs/query.html)
+
 #### 2.3.3 Advanced Query
 
 #### 2.3.4 Update
 
-`Save` will save all fields when performing the Updating SQL
+##### `Save` will save all fields when performing the Updating SQL
 
 ```go
     rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
@@ -247,10 +424,10 @@ more information see [gorm Create](https://gorm.io/docs/create.html)
     // UPDATE `dict` SET `key`="k1",`name`="",`is_pin`=false,`remark`="remark1",`created_at`="2024-03-07 01:53:14.633",`updated_at`="2024-03-07 01:53:14.633" WHERE `id` = 100
 ```
 
-Update single column
+##### Update single column
 
 ```go
-refDict := testdata.Ref_Dict()
+    refDict := testdata.Ref_Dict()
     // update with expr
     rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
         Model().
@@ -279,7 +456,7 @@ refDict := testdata.Ref_Dict()
     // UPDATE `dict` SET `key`="k1",`updated_at`="2024-03-07 02:10:44.258" WHERE `dict`.`id` = 100
 ```
 
-Updates multiple columns
+##### Updates multiple columns
 
 ```go
     refDict := testdata.Ref_Dict()
@@ -320,7 +497,7 @@ Updates multiple columns
     // UPDATE `dict` SET `key`="k1",`remark`="remark1",`updated_at`="2024-03-07 02:19:10.144" WHERE `dict`.`id` = 100
 ```
 
-Update from SubQuery
+##### Update from SubQuery
 
 ```go
     refDict := testdata.Ref_Dict()
@@ -356,7 +533,7 @@ Update from SubQuery
     // UPDATE `dict` SET `key`=(SELECT `dict`.`key` FROM `dict` WHERE `dict`.`id` = 101),`updated_at`="2024-03-07 02:41:40.548" WHERE `dict`.`id` = 100
 ```
 
-Without Hooks/Time Tracking
+##### Without Hooks/Time Tracking
 
 ```go
 refDict := testdata.Ref_Dict()

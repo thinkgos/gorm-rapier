@@ -2,7 +2,6 @@ package testdata
 
 import (
 	rapier "github.com/thinkgos/gorm-rapier"
-	"gorm.io/gorm"
 )
 
 var ref_Dict_Native = new_Dict("dict", "dict")
@@ -53,11 +52,6 @@ func (x *Dict_Native) Ref_Alias() string { return x.refAlias }
 
 // TableName hold table name when call New_Dict that you defined.
 func (x *Dict_Native) TableName() string { return x.refTableName }
-
-// New_Executor new entity executor which suggest use only once.
-func (*Dict_Native) New_Executor(db *gorm.DB) *rapier.Executor[Dict] {
-	return rapier.NewExecutor[Dict](db)
-}
 
 // Select_Expr select model fields
 func (x *Dict_Native) Select_Expr() []rapier.Expr {

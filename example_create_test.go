@@ -67,5 +67,4 @@ func Test_Example_Batch_CreateInBatch(t *testing.T) {
 	}
 	err := rapier.NewExecutor[testdata.Dict](db).CreateInBatches(newDicts, 2)
 	_ = err // return error
-
 }
