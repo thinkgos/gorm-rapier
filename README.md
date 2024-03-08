@@ -590,7 +590,54 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).
 
 [返回顶部](#gorm-rapier)
 
-TODO...
+```go
+refDict := testdata.Ref_Dict()
+refDictItem := testdata.Ref_DictItem()
+d := refDict.As("d")
+di := refDictItem.As("di")
+
+// join
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+        refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+        refDictItem.Name.As(refDictItem.Name.FieldName(refDictItem.TableName())),
+    ).
+    InnerJoinsExpr(refDictItem, refDictItem.DictId.EqCol(refDict.Id), refDictItem.IsEnabled.Eq(true)).
+    Take(&struct{}{})
+// SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`dict_item`.`name` AS `dict_item_name` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = true LIMIT 1
+
+// join with alias
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+        refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+        d.Id.As(d.Id.FieldName(d.Ref_Alias())),
+    ).
+    InnerJoinsExpr(rapier.NewJoinTable(d, d.Ref_Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+    Take(&struct{}{})
+// SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`d`.`id` AS `d_id` FROM `dict` INNER JOIN `dict` `d` ON `d`.`name` = `dict`.`name` AND `d`.`is_pin` = true LIMIT 1
+
+// join with SubQuery
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+        refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+        di.Sort.As(di.Sort.FieldName(di.Ref_Alias())),
+    ).
+    InnerJoinsExpr(
+        rapier.NewJoinTableSubQuery(
+            rapier.NewExecutor[testdata.DictItem](db).
+                Where(refDictItem.IsEnabled.Eq(true)).
+                IntoDB(),
+            "di",
+        ),
+        di.Name.EqCol(refDict.Name),
+        di.Sort.Gt(10),
+    ).
+    Take(&struct{}{})
+// SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`di`.`sort` AS `di_sort` FROM `dict` INNER JOIN (SELECT * FROM `dict_item` WHERE `dict_item`.`is_enabled` = true) AS `di` ON `di`.`name` = `dict`.`name` AND `di`.`sort` > 10 LIMIT 1
+```
 
 ##### Scan
 

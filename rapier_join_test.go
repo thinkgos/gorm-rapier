@@ -102,17 +102,15 @@ func Test_SubJoins(t *testing.T) {
 					refDict.Id,
 					xDi.Name,
 				).
-				Scopes(
-					InnerJoinsExpr(
-						NewJoinTableSubQuery(
-							refDictItem.New_Executor(newDb()).
-								SelectExpr(refDictItem.DictId, refDictItem.Name).
-								Where(refDictItem.Id.Eq(10)).
-								IntoDB(),
-							"di",
-						),
-						xDi.DictId.EqCol(refDict.Id),
+				InnerJoinsExpr(
+					NewJoinTableSubQuery(
+						refDictItem.New_Executor(newDb()).
+							SelectExpr(refDictItem.DictId, refDictItem.Name).
+							Where(refDictItem.Id.Eq(10)).
+							IntoDB(),
+						"di",
 					),
+					xDi.DictId.EqCol(refDict.Id),
 				).
 				IntoDB().
 				Take(&dummy),

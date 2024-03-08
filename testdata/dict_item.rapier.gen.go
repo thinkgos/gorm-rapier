@@ -12,7 +12,7 @@ type DictItem_Native struct {
 	DictId       rapier.Int64
 	Name         rapier.String
 	Sort         rapier.Uint32
-	IsPin        rapier.Bool
+	IsEnabled    rapier.Bool
 }
 
 func new_DictItem(tableName, alias string) *DictItem_Native {
@@ -23,8 +23,8 @@ func new_DictItem(tableName, alias string) *DictItem_Native {
 		Id:           rapier.NewInt64(alias, "id"),
 		DictId:       rapier.NewInt64(alias, "dict_id"),
 		Name:         rapier.NewString(alias, "name"),
-		IsPin:        rapier.NewBool(alias, "is_pin"),
 		Sort:         rapier.NewUint32(alias, "sort"),
+		IsEnabled:    rapier.NewBool(alias, "is_enabled"),
 	}
 }
 

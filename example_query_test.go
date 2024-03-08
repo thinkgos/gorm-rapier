@@ -265,16 +265,18 @@ func Test_Example_Query_Distinct(t *testing.T) {
 
 func Test_Example_Query_Join(t *testing.T) {
 	refDict := testdata.Ref_Dict()
+	refDictItem := testdata.Ref_DictItem()
 	d := refDict.As("d")
+	di := refDictItem.As("di")
 
 	// join
 	_ = rapier.NewExecutor[testdata.Dict](db).
 		SelectExpr(
 			refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
 			refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
-			d.Id.As(d.Id.FieldName(d.Ref_Alias())),
+			refDictItem.Name.As(refDictItem.Name.FieldName(refDictItem.TableName())),
 		).
-		InnerJoinsExpr(rapier.NewJoinTable(d, d.Ref_Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+		InnerJoinsExpr(refDictItem, refDictItem.DictId.EqCol(refDict.Id), refDictItem.IsEnabled.Eq(true)).
 		Take(&struct{}{})
 
 	// join with alias
@@ -285,6 +287,25 @@ func Test_Example_Query_Join(t *testing.T) {
 			d.Id.As(d.Id.FieldName(d.Ref_Alias())),
 		).
 		InnerJoinsExpr(rapier.NewJoinTable(d, d.Ref_Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+		Take(&struct{}{})
+
+	// join with SubQuery
+	_ = rapier.NewExecutor[testdata.Dict](db).
+		SelectExpr(
+			refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+			refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+			di.Sort.As(di.Sort.FieldName(di.Ref_Alias())),
+		).
+		InnerJoinsExpr(
+			rapier.NewJoinTableSubQuery(
+				rapier.NewExecutor[testdata.DictItem](db).
+					Where(refDictItem.IsEnabled.Eq(true)).
+					IntoDB(),
+				"di",
+			),
+			di.Name.EqCol(refDict.Name),
+			di.Sort.Gt(10),
+		).
 		Take(&struct{}{})
 }
 
