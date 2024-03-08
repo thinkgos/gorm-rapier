@@ -43,6 +43,13 @@ func Test_Condition_Stand(t *testing.T) {
 			t.Error(err)
 		}
 	})
+	t.Run("preload", func(t *testing.T) {
+		var td TestDict
+
+		_ = refDict.New_Executor(newDbWithLog()).
+			Scopes(NewConditions().Preload("DictItem").Build()...).
+			Take(&td)
+	})
 }
 
 func Test_Condition_Expr(t *testing.T) {

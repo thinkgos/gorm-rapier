@@ -1,6 +1,8 @@
 package rapier
 
 import (
+	"log"
+	"os"
 	"reflect"
 	"strings"
 	"sync"
@@ -9,6 +11,7 @@ import (
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"gorm.io/gorm/utils/tests"
 )
@@ -20,6 +23,17 @@ type TestFloat float64
 type TestString string
 type TestBytes []byte
 type TestTime time.Time
+type TestDict struct {
+	Id       int64
+	Pid      int64
+	Name     string
+	DictItem []*TestDictItem `gorm:"foreignKey:DictId"`
+}
+type TestDictItem struct {
+	Id     int64
+	DictId int64
+	Name   string
+}
 
 /******************* test function *******************************************/
 
@@ -27,6 +41,17 @@ var db, _ = gorm.Open(tests.DummyDialector{}, nil)
 
 func newDb() *gorm.DB {
 	return db.Session(&gorm.Session{DryRun: true})
+}
+
+func newDbWithLog() *gorm.DB {
+	newDB := db.Session(&gorm.Session{DryRun: true})
+	newDB.Logger = logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
+		SlowThreshold:             200 * time.Millisecond,
+		LogLevel:                  logger.Info,
+		IgnoreRecordNotFoundError: false,
+		Colorful:                  true,
+	})
+	return newDB
 }
 
 func NewStatement() *gorm.Statement {

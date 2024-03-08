@@ -420,7 +420,7 @@ func Test_Executor_Attrs(t *testing.T) {
 			t.Fatal(err)
 		}
 		if got2.Name != wantName || got2.Sort != wantSort {
-			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got2.Name, wantSort, got2.Sort)
 		}
 	})
 	t.Run("attr expr", func(t *testing.T) {
@@ -452,7 +452,7 @@ func Test_Executor_Attrs(t *testing.T) {
 			t.Fatal(err)
 		}
 		if got2.Name != wantName || got2.Sort != wantSort {
-			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
+			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got2.Name, wantSort, got2.Sort)
 		}
 	})
 }
@@ -519,4 +519,11 @@ func Test_Executor_Assign(t *testing.T) {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
 	})
+}
+
+func Test_Executor_Preload(t *testing.T) {
+	var td TestDict
+
+	_ = refDict.New_Executor(newDbWithLog()).
+		Preload("DictItem").Take(&td)
 }

@@ -3,7 +3,7 @@ module github.com/thinkgos/gorm-rapier
 go 1.20
 
 require (
-	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
+	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225
 	gorm.io/gorm v1.25.7
 )
 
