@@ -1,6 +1,6 @@
 # gorm-rapier
 
-gorm rapier is an assist rapier for gorm.
+[gorm-rapier](https://github.com/thinkgos/gorm-rapier) is an assist rapier for gorm.
 
 [![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/github.com/thinkgos/gorm-rapier?tab=doc)
 [![codecov](https://codecov.io/gh/thinkgos/gorm-rapier/graph/badge.svg?token=aHu5wq1m6i)](https://codecov.io/gh/thinkgos/gorm-rapier)
