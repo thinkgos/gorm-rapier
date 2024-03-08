@@ -69,6 +69,8 @@ gorm rapier is an assist rapier for gorm.
 
 ## Usage
 
+[返回顶部](#gorm-rapier)
+
 ### 1. Installation
 
 Use go get.
@@ -88,6 +90,8 @@ import "github.com/thinkgos/gorm-rapier"
 [GORM Guides](http://gorm.io/docs)
 
 ### 2.1 Declaring gorm and rapier Model
+
+[返回顶部](#gorm-rapier)
 
 model defined detail see [testdata](./testdata).
 
@@ -110,6 +114,8 @@ Supported field:
 - raw filed: `Raw`
 
 #### 2.1.3 How to define model
+
+[返回顶部](#gorm-rapier)
 
 if we have a gorm model follow:
 
@@ -186,6 +192,8 @@ func (x *Dict_Native) TableName() string { return x.refTableName }
 
 ### 2.2 Connecting to a Database
 
+[返回顶部](#gorm-rapier)
+
 see [gorm Connecting to a Database](https://gorm.io/docs/connecting_to_the_database.html)
 
 ### 2.3 CRUD interface
@@ -205,6 +213,8 @@ _ = err // return error
 
 ##### Single record
 
+[返回顶部](#gorm-rapier)
+
 ```go
 newDict := testdata.Dict{
     Key:    "key1",
@@ -218,6 +228,8 @@ _ = err // return error
 ```
 
 ##### Multiple record
+
+[返回顶部](#gorm-rapier)
 
 ```go
 newDicts := []*testdata.Dict{
@@ -240,6 +252,8 @@ _ = err // return error
 ```
 
 ##### Batch insert multiple record
+
+[返回顶部](#gorm-rapier)
 
 ```go
 // batch insert multiple record
@@ -272,6 +286,8 @@ _ = err // return error
 more information see [gorm Create](https://gorm.io/docs/create.html)
 
 #### 2.3.2 Query
+
+[返回顶部](#gorm-rapier)
 
 ##### Retrieving a single object
 
@@ -307,6 +323,8 @@ _ = record1 // return record
 
 ##### Retrieving a single field
 
+[返回顶部](#gorm-rapier)
+
 the api like `FirstXXX` or `TakeXXX`, return follow type: `bool`,`string`, `float32`, `float64`, `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, `uint16`, `uint32`, `uint64`
 
 ```go
@@ -322,6 +340,8 @@ _, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).TakeStrin
 ```
 
 ##### Retrieving multiple objects
+
+[返回顶部](#gorm-rapier)
 
 ```go
 // Get the multiple record.
@@ -342,6 +362,8 @@ _ = records1 // return records
 ```
 
 ##### Condition
+
+[返回顶部](#gorm-rapier)
 
 In addition to [gorm Conditions](https://gorm.io/docs/query.html#Conditions) usages, there are usable usage related to `rapier`
 
@@ -417,6 +439,8 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).Where(rapier.Or(refDict.Key.Eq("key
 
 ##### Selecting Specific Fields
 
+[返回顶部](#gorm-rapier)
+
 `Select`, `SelectExpr` allows you to specify the fields that you want to retrieve from database.
 
 ```go
@@ -439,6 +463,8 @@ _ = rapier.NewExecutor[testdata.Dict](db).Select("key", "is_pin").Find(&records)
 
 ##### Order
 
+[返回顶部](#gorm-rapier)
+
 Specify order when retrieving records from the database
 
 ```go
@@ -458,6 +484,8 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).Order("`key` DESC").Order("name").F
 ```
 
 ##### Limit & Offset
+
+[返回顶部](#gorm-rapier)
 
 `Pagination`:
 
@@ -483,6 +511,8 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).Limit(10).Offset(5).FindAll()
 ```
 
 ##### Group By & Having
+
+[返回顶部](#gorm-rapier)
 
 ```go
 var result struct {
@@ -536,6 +566,8 @@ _ = rapier.NewExecutor[testdata.Dict](db).
 
 ##### Distinct
 
+[返回顶部](#gorm-rapier)
+
 ```go
 refDict := testdata.Ref_Dict()
 // with expr
@@ -556,9 +588,13 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).
 
 ##### Joins
 
+[返回顶部](#gorm-rapier)
+
 TODO...
 
 ##### Scan
+
+[返回顶部](#gorm-rapier)
 
 Retrieving a single field, the api like `ScanXXX` return follow type: `bool`,`string`, `float32`, `float64`, `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, `uint16`, `uint32`, `uint64`.
 
@@ -580,6 +616,8 @@ _ = record1 // return record
 more information see [gorm Query](https://gorm.io/docs/query.html)
 
 #### 2.3.3 Advanced Query
+
+[返回顶部](#gorm-rapier)
 
 ##### Locking
 
@@ -615,6 +653,8 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).
 
 ##### SubQuery
 
+[返回顶部](#gorm-rapier)
+
 ```go
 refDict := testdata.Ref_Dict()
 
@@ -646,6 +686,8 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).
 
 ##### From SubQuery
 
+[返回顶部](#gorm-rapier)
+
 ```go
 refDict := testdata.Ref_Dict()
 _, _ = rapier.NewExecutor[testdata.Dict](db).
@@ -668,6 +710,8 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).
 ```
 
 ##### FirstOrInit
+
+[返回顶部](#gorm-rapier)
 
 `FirstOrInit` method is utilized to fetch the first record that matches given conditions, or initialize a new instance if no matching record is found. This method allows additional flexibility with the `Attrs`, `Assign`, `AttrsExpr`, `AssignExpr` methods.
 
@@ -747,6 +791,8 @@ _ = newdict
 ```
 
 ##### FirstOrCreate
+
+[返回顶部](#gorm-rapier)
 
 `FirstOrCreate` is used to fetch the first record that matches given conditions or create a new one if no matching record is found. This method is effective with both struct and map conditions. The RowsAffected property is useful to determine the number of records created or updated.
 
@@ -835,6 +881,8 @@ _ = newdict
 
 ##### Pluck
 
+[返回顶部](#gorm-rapier)
+
 The `Pluck`, `PluckExpr` method is used to query a single column from the database and scan the result into a slice. This method is ideal for when you need to retrieve specific fields from a model.
 
 If you need to query more than one column, you can use Select with `Scan` or `Find` instead.
@@ -882,6 +930,8 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint64("id")
 
 ##### Count
 
+[返回顶部](#gorm-rapier)
+
 The `Count` method is used to retrieve the number of records that match a given query. It’s a useful feature for understanding the size of a dataset, particularly in scenarios involving conditional queries or data analysis.
 
 ```go
@@ -893,7 +943,9 @@ _ = total
 
 ##### Exist
 
-The `Count` method is used to check whether the exist record that match a given query.
+[返回顶部](#gorm-rapier)
+
+The `Exist` method is used to check whether the exist record that match a given query.
 
 ```go
 refDict := testdata.Ref_Dict()
@@ -906,6 +958,8 @@ _ = b
 more information see [gorm Advanced Query](https://gorm.io/docs/advanced_query.html)
 
 #### 2.3.4 Update
+
+[返回顶部](#gorm-rapier)
 
 ##### `Save` will save all fields
 
@@ -925,6 +979,8 @@ _ = rowsAffected // return row affected
 ```
 
 ##### Update single column
+
+[返回顶部](#gorm-rapier)
 
 ```go
 refDict := testdata.Ref_Dict()
@@ -957,6 +1013,8 @@ _ = rowsAffected // return row affected
 ```
 
 ##### Updates multiple columns
+
+[返回顶部](#gorm-rapier)
 
 ```go
 refDict := testdata.Ref_Dict()
@@ -998,6 +1056,8 @@ _ = rowsAffected // return row affected
 ```
 
 ##### Update from SubQuery
+
+[返回顶部](#gorm-rapier)
 
 ```go
 refDict := testdata.Ref_Dict()
@@ -1048,6 +1108,8 @@ _ = rowsAffected // return row affected
 ```
 
 ##### Without Hooks/Time Tracking
+
+[返回顶部](#gorm-rapier)
 
 ```go
 refDict := testdata.Ref_Dict()
@@ -1108,6 +1170,8 @@ more information see [gorm Update](https://gorm.io/docs/update.html)
 
 #### 2.3.5 Delete
 
+[返回顶部](#gorm-rapier)
+
 ```go
 refDict := testdata.Ref_Dict()
     rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
@@ -1123,6 +1187,8 @@ more information see [gorm Delete](https://gorm.io/docs/delete.html)
 
 ### 2.4 Original gorm db
 
+[返回顶部](#gorm-rapier)
+
 `IntoDB`, `IntoRawDB` will get original gorm db.
 
 - `IntoDB`: with model or table
@@ -1137,6 +1203,8 @@ more information see [gorm Delete](https://gorm.io/docs/delete.html)
 not supported yet, you can use gorm original api.
 
 ### 2.7 Example
+
+[返回顶部](#gorm-rapier)
 
 - [create](./example_create_test.go): example create
 - [query](./example_query_test.go): example query
