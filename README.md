@@ -9,6 +9,57 @@ gorm rapier is an assist rapier for gorm.
 [![Licence](https://img.shields.io/github/license/thinkgos/gorm-rapier)](https://raw.githubusercontent.com/thinkgos/gorm-rapier/main/LICENSE)
 [![Tag](https://img.shields.io/github/v/tag/thinkgos/gorm-rapier)](https://github.com/thinkgos/gorm-rapier/tags)
 
+- [gorm-rapier](#gorm-rapier)
+  - [Overview](#overview)
+  - [Usage](#usage)
+    - [1. Installation](#1-installation)
+    - [2. Getting Started](#2-getting-started)
+    - [2.1 Declaring gorm and rapier Model](#21-declaring-gorm-and-rapier-model)
+      - [2.1.1 Declaring gorm model](#211-declaring-gorm-model)
+      - [2.1.2 Declaring rapier model](#212-declaring-rapier-model)
+      - [2.1.3 How to define model](#213-how-to-define-model)
+    - [2.2 Connecting to a Database](#22-connecting-to-a-database)
+    - [2.3 CRUD interface](#23-crud-interface)
+      - [2.3.1 Create](#231-create)
+        - [Empty record](#empty-record)
+        - [Single record](#single-record)
+        - [Multiple record](#multiple-record)
+        - [Batch insert multiple record](#batch-insert-multiple-record)
+      - [2.3.2 Query](#232-query)
+        - [Retrieving a single object](#retrieving-a-single-object)
+        - [Retrieving a single field](#retrieving-a-single-field)
+        - [Retrieving multiple objects](#retrieving-multiple-objects)
+        - [Condition](#condition)
+        - [Selecting Specific Fields](#selecting-specific-fields)
+        - [Order](#order)
+        - [Limit \& Offset](#limit--offset)
+        - [Group By \& Having](#group-by--having)
+        - [Distinct](#distinct)
+        - [Joins](#joins)
+        - [Scan](#scan)
+      - [2.3.3 Advanced Query](#233-advanced-query)
+        - [Locking](#locking)
+        - [SubQuery](#subquery)
+        - [From SubQuery](#from-subquery)
+        - [FirstOrInit](#firstorinit)
+        - [FirstOrCreate](#firstorcreate)
+        - [Pluck](#pluck)
+        - [Count](#count)
+        - [Exist](#exist)
+      - [2.3.4 Update](#234-update)
+        - [`Save` will save all fields](#save-will-save-all-fields)
+        - [Update single column](#update-single-column)
+        - [Updates multiple columns](#updates-multiple-columns)
+        - [Update from SubQuery](#update-from-subquery)
+        - [Without Hooks/Time Tracking](#without-hookstime-tracking)
+      - [2.3.5 Delete](#235-delete)
+    - [2.4 Original gorm db](#24-original-gorm-db)
+    - [2.5 Transaction](#25-transaction)
+    - [2.6 Associations](#26-associations)
+    - [2.7 Example](#27-example)
+  - [Reference](#reference)
+  - [License](#license)
+
 ## Overview
 
 - Idiomatic and Reusable API from Dynamic Raw SQL
@@ -143,7 +194,7 @@ see [gorm Connecting to a Database](https://gorm.io/docs/connecting_to_the_datab
 
 #### 2.3.1 Create
 
-##### empty record
+##### Empty record
 
 ```go
 // empty record
@@ -152,7 +203,7 @@ _ = err // return error
 // do nothing
 ```
 
-##### single record
+##### Single record
 
 ```go
 newDict := testdata.Dict{
@@ -166,7 +217,7 @@ _ = err // return error
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.135","2024-02-20 07:18:42.135")
 ```
 
-##### multiple record
+##### Multiple record
 
 ```go
 newDicts := []*testdata.Dict{
@@ -188,7 +239,7 @@ _ = err // return error
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136"),("key2","name2",true,"remark2","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136")
 ```
 
-##### batch insert multiple record
+##### Batch insert multiple record
 
 ```go
 // batch insert multiple record
@@ -254,7 +305,9 @@ _ = err     // return error
 _ = record1 // return record
 ```
 
-##### Retrieving a single field, the api like `FirstXXX` or `TakeXXX`, return follow type: `bool`,`string`, `float32`, `float64`, `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, `uint16`, `uint32`, `uint64`
+##### Retrieving a single field
+
+the api like `FirstXXX` or `TakeXXX`, return follow type: `bool`,`string`, `float32`, `float64`, `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, `uint16`, `uint32`, `uint64`
 
 ```go
 refDict := testdata.Ref_Dict()
@@ -854,7 +907,9 @@ more information see [gorm Advanced Query](https://gorm.io/docs/advanced_query.h
 
 #### 2.3.4 Update
 
-##### `Save` will save all fields when performing the Updating SQL
+##### `Save` will save all fields
+
+`Save` will save all fields when performing the Updating SQL
 
 ```go
 rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
@@ -1068,13 +1123,26 @@ more information see [gorm Delete](https://gorm.io/docs/delete.html)
 
 ### 2.4 Original gorm db
 
+`IntoDB`, `IntoRawDB` will get original gorm db.
+
+- `IntoDB`: with model or table
+- `IntoRawDB`: without model or table
+
 ### 2.5 Transaction
+
+[gorm transaction](https://gorm.io/docs/transactions.html)
 
 ### 2.6 Associations
 
-not supported yet
+not supported yet, you can use gorm original api.
 
 ### 2.7 Example
+
+- [create](./example_create_test.go): example create
+- [query](./example_query_test.go): example query
+- [advance query](./example_advance_query_test.go): example advance query
+- [update](./example_update_test.go): example update
+- [delete](./example_delete_test.go): example delete
 
 ## Reference
 
