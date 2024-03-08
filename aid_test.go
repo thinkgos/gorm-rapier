@@ -107,50 +107,49 @@ func (*Dict) TableName() string {
 	return "dict"
 }
 
-var refDict = new_Dict("dict")
+var refDict = New_Dict("dict")
 
 type Dict_Active struct {
-	refAlias  string
-	ALL       Asterisk
-	Id        Int64
-	Pid       Int64
-	Name      String
-	Score     Float64
-	Sort      Uint16
-	IsPin     Bool
-	CreatedAt Time
+	refAlias     string
+	refTableName string
+	ALL          Asterisk
+	Id           Int64
+	Pid          Int64
+	Name         String
+	Score        Float64
+	Sort         Uint16
+	IsPin        Bool
+	CreatedAt    Time
 }
 
-func new_Dict(alias string) Dict_Active {
+func new_Dict(tableName, alias string) Dict_Active {
 	return Dict_Active{
-		refAlias:  alias,
-		ALL:       NewAsterisk(alias),
-		Id:        NewInt64(alias, "id"),
-		Pid:       NewInt64(alias, "pid"),
-		Name:      NewString(alias, "name"),
-		Score:     NewFloat64(alias, "score"),
-		Sort:      NewUint16(alias, "sort"),
-		IsPin:     NewBool(alias, "is_pin"),
-		CreatedAt: NewTime(alias, "created_at"),
-	}
-}
-func New_Dict(alias string) Dict_Active {
-	if alias == "dict" {
-		return refDict
-	} else {
-		return new_Dict(alias)
+		refAlias:     alias,
+		refTableName: tableName,
+		ALL:          NewAsterisk(alias),
+		Id:           NewInt64(alias, "id"),
+		Pid:          NewInt64(alias, "pid"),
+		Name:         NewString(alias, "name"),
+		Score:        NewFloat64(alias, "score"),
+		Sort:         NewUint16(alias, "sort"),
+		IsPin:        NewBool(alias, "is_pin"),
+		CreatedAt:    NewTime(alias, "created_at"),
 	}
 }
 func Ref_Dict() Dict_Active { return refDict }
 
-func (*Dict_Active) As(alias string) Dict_Active { return New_Dict(alias) }
-func (*Dict_Active) TableName() string           { return "dict" }
-func (x *Dict_Active) Ref_Alias() string         { return x.refAlias }
+func New_Dict(tableName string) Dict_Active {
+	return new_Dict(tableName, tableName)
+}
+
+func (x *Dict_Active) As(alias string) Dict_Active { return new_Dict(x.refTableName, alias) }
+func (x *Dict_Active) TableName() string           { return x.refTableName }
+func (x *Dict_Active) Ref_Alias() string           { return x.refAlias }
 func (*Dict_Active) New_Executor(db *gorm.DB) *Executor[Dict] {
 	return NewExecutor[Dict](db)
 }
 
-var refDictItem = new_DictItem("dict_item")
+var refDictItem = New_DictItem("dict_item")
 
 type DictItem struct {
 	Id        int64 `gorm:"autoIncrement:true;not null;primaryKey"`
@@ -161,38 +160,40 @@ type DictItem struct {
 }
 
 type DictItem_Active struct {
-	refAlias  string
-	ALL       Asterisk
-	Id        Int64
-	DictId    Int64
-	Name      String
-	Sort      Uint32
-	IsEnabled Bool
+	refAlias     string
+	refTableName string
+	ALL          Asterisk
+	Id           Int64
+	DictId       Int64
+	Name         String
+	Sort         Uint32
+	IsEnabled    Bool
 }
 
-func new_DictItem(alias string) DictItem_Active {
+func new_DictItem(tableName, alias string) DictItem_Active {
 	return DictItem_Active{
-		refAlias:  alias,
-		ALL:       NewAsterisk(alias),
-		Id:        NewInt64(alias, "id"),
-		DictId:    NewInt64(alias, "dict_id"),
-		Name:      NewString(alias, "name"),
-		Sort:      NewUint32(alias, "sort"),
-		IsEnabled: NewBool(alias, "is_enabled"),
+		refAlias:     alias,
+		refTableName: tableName,
+		ALL:          NewAsterisk(alias),
+		Id:           NewInt64(alias, "id"),
+		DictId:       NewInt64(alias, "dict_id"),
+		Name:         NewString(alias, "name"),
+		Sort:         NewUint32(alias, "sort"),
+		IsEnabled:    NewBool(alias, "is_enabled"),
 	}
 }
-func New_DictItem(alias string) DictItem_Active {
-	if alias == "dict_item" {
-		return refDictItem
-	} else {
-		return new_DictItem(alias)
-	}
-}
+
 func Ref_DictItem() DictItem_Active { return refDictItem }
 
-func (*DictItem_Active) As(alias string) DictItem_Active { return New_DictItem(alias) }
-func (*DictItem_Active) TableName() string               { return "dict_item" }
-func (x *DictItem_Active) Ref_Alias() string             { return x.refAlias }
+func New_DictItem(tableName string) DictItem_Active {
+	return new_DictItem(tableName, tableName)
+}
+
+func (x *DictItem_Active) As(alias string) DictItem_Active {
+	return new_DictItem(x.refTableName, alias)
+}
+func (x *DictItem_Active) TableName() string { return x.refTableName }
+func (x *DictItem_Active) Ref_Alias() string { return x.refAlias }
 func (*DictItem_Active) New_Executor(db *gorm.DB) *Executor[DictItem] {
 	return NewExecutor[DictItem](db)
 }

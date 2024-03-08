@@ -263,6 +263,31 @@ func Test_Example_Query_Distinct(t *testing.T) {
 		FindAll()
 }
 
+func Test_Example_Query_Join(t *testing.T) {
+	refDict := testdata.Ref_Dict()
+	d := refDict.As("d")
+
+	// join
+	_ = rapier.NewExecutor[testdata.Dict](db).
+		SelectExpr(
+			refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+			refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+			d.Id.As(d.Id.FieldName(d.Ref_Alias())),
+		).
+		InnerJoinsExpr(rapier.NewJoinTable(d, d.Ref_Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+		Take(&struct{}{})
+
+	// join with alias
+	_ = rapier.NewExecutor[testdata.Dict](db).
+		SelectExpr(
+			refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+			refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+			d.Id.As(d.Id.FieldName(d.Ref_Alias())),
+		).
+		InnerJoinsExpr(rapier.NewJoinTable(d, d.Ref_Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+		Take(&struct{}{})
+}
+
 func Test_Example_Query_Scan(t *testing.T) {
 	var dummy testdata.Dict
 

@@ -4,7 +4,7 @@ import (
 	rapier "github.com/thinkgos/gorm-rapier"
 )
 
-var ref_Dict_Native = new_Dict("dict", "dict")
+var ref_Dict_Native = New_Dict("dict")
 
 type Dict_Native struct {
 	refAlias     string
