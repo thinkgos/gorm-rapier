@@ -3,7 +3,7 @@ authors = ['thinkgo']
 language = 'en'
 multilingual = false
 src = 'src'
-title = 'gorm rapier Documentation'
+title = 'Gorm Rapier Documentation'
 [output.html]
 mathjax-support = true
 git-repository-url = 'https://github.com/thinkgos/gorm-rapier'

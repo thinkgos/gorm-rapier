@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "**/*.go"
 
 jobs:
   deploy:
@@ -23,7 +25,7 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: mdbook-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: mdbook-${{ runner.os }}-cargo-${{ hashFiles('**/book.toml') }}
       - name: Install mdbook
         run: |
           which mdbook || cargo install mdbook --locked
