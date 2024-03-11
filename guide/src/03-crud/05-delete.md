@@ -11,4 +11,4 @@ refDict := testdata.Ref_Dict()
  // DELETE FROM `dict` WHERE `dict`.`id` = 100
 ```
 
-more information see [gorm Delete](https://gorm.io/docs/delete.html)
+more information [gorm Delete](https://gorm.io/docs/delete.html)

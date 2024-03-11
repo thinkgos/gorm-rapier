@@ -204,4 +204,4 @@ _ = rowsAffected // return row affected
 // UPDATE `dict` SET `key`="k1" WHERE `dict`.`id` = 100
 ```
 
-more information see [gorm Update](https://gorm.io/docs/update.html)
+more information [gorm Update](https://gorm.io/docs/update.html)

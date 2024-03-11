@@ -332,4 +332,4 @@ _ = b
 // SELECT 1 FROM `dict` WHERE `dict`.`id` = 100 LIMIT 1
 ```
 
-more information see [gorm Advanced Query](https://gorm.io/docs/advanced_query.html)
+more information [gorm Advanced Query](https://gorm.io/docs/advanced_query.html)

@@ -364,4 +364,4 @@ _ = record2 // return record
 // SELECT * FROM `dict`
 ```
 
-more information see [gorm Query](https://gorm.io/docs/query.html)
+more information [gorm Query](https://gorm.io/docs/query.html)

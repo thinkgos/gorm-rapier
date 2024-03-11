@@ -81,4 +81,4 @@ _ = err // return error
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key3","name3",true,"remark3","2024-02-20 07:18:42.135","2024-02-20 07:18:42.135")
 ```
 
-more information see [gorm Create](https://gorm.io/docs/create.html)
+more information [gorm Create](https://gorm.io/docs/create.html)
