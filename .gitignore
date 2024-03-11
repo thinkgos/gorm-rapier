@@ -16,3 +16,5 @@
 .idea
 .vscode
 dist/
+
+guide/book

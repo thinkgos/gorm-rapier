@@ -9,7 +9,7 @@ import (
 )
 
 func Test_Example_Query_SingleObject(t *testing.T) {
-	var dummy testdata.Dict
+	var record2 testdata.Dict
 
 	// Get the first record ordered by primary key
 	record1, err := rapier.NewExecutor[testdata.Dict](db).FirstOne()
@@ -25,17 +25,17 @@ func Test_Example_Query_SingleObject(t *testing.T) {
 	_ = record1 // return record
 
 	// Get the first record ordered by primary key with original gorm api
-	err = rapier.NewExecutor[testdata.Dict](db).First(&dummy)
+	err = rapier.NewExecutor[testdata.Dict](db).First(&record2)
 	_ = err     // return error
-	_ = record1 // return record
+	_ = record2 // return record
 	// Get one record, no specified order with original gorm api
-	err = rapier.NewExecutor[testdata.Dict](db).Take(&dummy)
+	err = rapier.NewExecutor[testdata.Dict](db).Take(&record2)
 	_ = err     // return error
-	_ = record1 // return record
+	_ = record2 // return record
 	// Get one record, no specified order with original gorm api
-	err = rapier.NewExecutor[testdata.Dict](db).Last(&dummy)
+	err = rapier.NewExecutor[testdata.Dict](db).Last(&record2)
 	_ = err     // return error
-	_ = record1 // return record
+	_ = record2 // return record
 }
 
 func Test_Example_Query_SingleObject_SingleFiled(t *testing.T) {
@@ -310,16 +310,16 @@ func Test_Example_Query_Join(t *testing.T) {
 }
 
 func Test_Example_Query_Scan(t *testing.T) {
-	var dummy testdata.Dict
+	var record2 testdata.Dict
 
 	// Get one record, no specified order
 	record1, err := rapier.NewExecutor[testdata.Dict](db).ScanOne()
 	_ = err     // return error
 	_ = record1 // return record
 	// Get one record, no specified order with original gorm api
-	err = rapier.NewExecutor[testdata.Dict](db).Scan(&dummy)
+	err = rapier.NewExecutor[testdata.Dict](db).Scan(&record2)
 	_ = err     // return error
-	_ = record1 // return record
+	_ = record2 // return record
 }
 
 func Test_Example_Query_Scan_SingleFiled(t *testing.T) {
