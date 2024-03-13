@@ -6,8 +6,8 @@ src = 'src'
 title = 'Gorm Rapier Documentation'
 [output.html]
 mathjax-support = true
-additional-js = ["prism.js"]
-additional-css = ["prism.css"]
+additional-js = ["resources/prism.js"]
+additional-css = ["resources/prism.css"]
 git-repository-url = 'https://github.com/thinkgos/gorm-rapier'
 
 [output.html.playground]

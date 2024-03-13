@@ -25,7 +25,7 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: mdbook-${{ runner.os }}-cargo-${{ hashFiles('**/book.toml') }}
+          key: mdbook-${{ runner.os }}
       - name: Install mdbook
         run: |
           which mdbook || cargo install mdbook --locked
