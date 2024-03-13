@@ -80,6 +80,31 @@ func Test_Example_AdvanceQuery_FromSubQuery(t *testing.T) {
 		FindAll()
 }
 
+func Test_Example_AdvanceQuery_IN_WithMultipleColumns(t *testing.T) {
+	refDict := testdata.Ref_Dict()
+
+	record1, _ := rapier.NewExecutor[testdata.Dict](db).
+		Where(
+			rapier.NewColumns(refDict.Name, refDict.IsPin).
+				In([][]any{{"name1", true}, {"name2", false}}),
+		).
+		FindAll()
+	_ = record1
+
+	record2, _ := rapier.NewExecutor[testdata.Dict](db).
+		Where(
+			rapier.NewColumns(refDict.Name, refDict.IsPin).
+				In(
+					rapier.NewExecutor[testdata.Dict](db).
+						SelectExpr(refDict.Name, refDict.IsPin).
+						Where(refDict.Id.In(10, 11)).
+						IntoDB(),
+				),
+		).
+		FindAll()
+	_ = record2
+}
+
 func Test_Example_AdvanceQuery_FirstOrInit(t *testing.T) {
 	refDict := testdata.Ref_Dict()
 	// NOTE!!!: if with expr condition will not initialize the field when initializing, so we should use

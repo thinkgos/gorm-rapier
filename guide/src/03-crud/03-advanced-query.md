@@ -4,11 +4,18 @@
   - [Locking](#locking)
   - [SubQuery](#subquery)
   - [From SubQuery](#from-subquery)
+  - [IN with multiple columns](#in-with-multiple-columns)
   - [FirstOrInit](#firstorinit)
   - [FirstOrCreate](#firstorcreate)
   - [Pluck](#pluck)
   - [Count](#count)
   - [Exist](#exist)
+  - [Function](#function)
+    - [Case When](#case-when)
+    - [Concat](#concat)
+    - [IF](#if)
+
+more information [gorm Advanced Query](https://gorm.io/docs/advanced_query.html)
 
 ## Locking
 
@@ -94,6 +101,36 @@ _, _ = rapier.NewExecutor[testdata.Dict](db).
     ).
     FindAll()
 // SELECT * FROM (SELECT `dict`.`key` FROM `dict`) AS `u`, (SELECT `dict`.`key` FROM `dict`) AS `p`
+```
+
+## IN with multiple columns
+
+supports the IN clause with multiple columns, allowing you to filter data based on multiple field values in a single query.
+
+```go
+refDict := testdata.Ref_Dict()
+
+record1, _ := rapier.NewExecutor[testdata.Dict](db).
+    Where(
+        rapier.NewColumns(refDict.Name, refDict.IsPin).
+            In([][]any{{"name1", true}, {"name2", false}}),
+    ).
+    FindAll()
+_ = record1
+// SELECT * FROM `dict` WHERE (`dict`.`name`, `dict`.`is_pin`) IN (("name1",true),("name2",false))
+record2, _ := rapier.NewExecutor[testdata.Dict](db).
+    Where(
+        rapier.NewColumns(refDict.Name, refDict.IsPin).
+            In(
+                rapier.NewExecutor[testdata.Dict](db).
+                    SelectExpr(refDict.Name, refDict.IsPin).
+                    Where(refDict.Id.In(10, 11)).
+                    IntoDB(),
+            ),
+    ).
+    FindAll()
+_ = record2
+// SELECT * FROM `dict` WHERE (`dict`.`name`,`dict`.`is_pin`) IN (SELECT `dict`.`name`,`dict`.`is_pin` FROM `dict` WHERE `dict`.`id` IN (10,11))
 ```
 
 ## FirstOrInit
@@ -332,4 +369,32 @@ _ = b
 // SELECT 1 FROM `dict` WHERE `dict`.`id` = 100 LIMIT 1
 ```
 
-more information [gorm Advanced Query](https://gorm.io/docs/advanced_query.html)
+## Function
+
+### Case When
+
+```go
+NewCaseWhen().
+WhenThen(NewField("", "id1").Gt(100), NewField("", "value1")).
+WhenThen(NewField("", "id2").Gt(200), NewField("", "value2")).
+Else(NewField("", "result")).
+Build()
+// (CASE WHEN `id1` > ? THEN `value1` WHEN `id2` > ? THEN `value2` ELSE `result` END)
+```
+
+### Concat
+
+```go
+ConcatCol(NewString("", "id"), NewString("", "new_id"), NewString("", "new_id2"))
+// CONCAT(`id`,`new_id`,`new_id2`)
+
+ConcatWsCol(NewRaw(`'-'`), NewString("", "id"), NewString("", "new_id"), NewString("", "new_id2"))
+// CONCAT_WS('-',`id`,`new_id`,`new_id2`)
+```
+
+### IF
+
+```go
+IF(NewField("", "id1").Gt(100), NewRaw("t"), NewField("", "f").Sub(1))
+// IF(`id1` > ?,t,`f`-?)
+```

@@ -1,15 +1,9 @@
-# Getting Started
+# Declaring Models
 
-- [Getting Started](#getting-started)
-  - [Guides](#guides)
+- [Declaring Models](#declaring-models)
   - [Declaring gorm model](#declaring-gorm-model)
   - [Declaring rapier model](#declaring-rapier-model)
   - [How to define model](#how-to-define-model)
-  - [Connecting to a Database](#connecting-to-a-database)
-
-## Guides
-
-[gorm Guides](http://gorm.io/docs)
 
 ## Declaring gorm model
 
@@ -21,7 +15,7 @@ Supported field:
 
 - bool: `Bool`
 - []byte: `Bytes`
-- float: `Float32`, `float64`, `Decimal`
+- float: `Float32`, `Float64`, `Decimal`
 - integer: `Int`, `Int8`, `Int16`, `Int32`, `Int64`
 - unsigned integer: `Uint`, `Uint8`, `Uint16`, `Uint32`, `Uint64`
 - string: `String`
@@ -105,7 +99,3 @@ func (x *Dict_Native) Ref_Alias() string { return x.refAlias }
 // TableName hold table name when call New_Dict that you defined.
 func (x *Dict_Native) TableName() string { return x.refTableName }
 ```
-
-## Connecting to a Database
-
-[gorm Connecting to a Database](https://gorm.io/docs/connecting_to_the_database.html)
