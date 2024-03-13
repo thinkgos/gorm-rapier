@@ -4,9 +4,11 @@ on:
   push:
     paths-ignore:
       - "**.md"
+      - "guide/*"
   pull_request:
     paths-ignore:
       - "**.md"
+      - "guide/*"
 
 env:
   GO111MODULE: on
