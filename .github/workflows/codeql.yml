@@ -4,11 +4,11 @@ on:
   push:
     paths-ignore:
       - "**.md"
-      - "guide/*"
+      - "guide/**"
   pull_request:
     paths-ignore:
       - "**.md"
-      - "guide/*"
+      - "guide/**"
   schedule:
     - cron: "0 5 * * 6"
 
