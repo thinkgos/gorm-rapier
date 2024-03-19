@@ -47,9 +47,9 @@ func newDbWithLog() *gorm.DB {
 	newDB := db.Session(&gorm.Session{DryRun: true})
 	newDB.Logger = logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
 		SlowThreshold:             200 * time.Millisecond,
-		LogLevel:                  logger.Info,
-		IgnoreRecordNotFoundError: false,
 		Colorful:                  true,
+		IgnoreRecordNotFoundError: false,
+		LogLevel:                  logger.Info,
 	})
 	return newDB
 }

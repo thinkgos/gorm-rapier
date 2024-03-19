@@ -22,7 +22,7 @@ func Test_Expr_Function(t *testing.T) {
 		{
 			name: "not",
 			expr: Not(NewField("", "id1"), NewField("", "id2")),
-			want: "(NOT `id1` AND NOT `id2`)",
+			want: "NOT (`id1` AND `id2`)",
 		},
 	}
 	for _, tt := range tests {

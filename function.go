@@ -18,7 +18,7 @@ func And(exprs ...Expr) Expr {
 }
 
 // Not return not condition
-// form example: (NOT `id1` AND NOT `id2`)
+// form example: NOT (`id1` AND `id2`)
 func Not(exprs ...Expr) Expr {
 	return &expr{e: clause.Not(IntoExpression(exprs...)...)}
 }
