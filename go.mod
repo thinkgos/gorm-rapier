@@ -12,4 +12,7 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 )
 
-retract v0.0.6
+retract (
+	v0.0.15
+	v0.0.6
+)

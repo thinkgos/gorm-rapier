@@ -79,21 +79,44 @@ func (x *Executor[T]) Exist() (exist bool, err error) {
 	return exist, err
 }
 
-func (x *Executor[T]) FindAll() ([]*T, error) {
-	var rows []*T
-
-	err := x.Find(&rows)
+func (x *Executor[T]) FindAll() (rows []*T, err error) {
+	err = x.Find(&rows)
 	if err != nil {
 		return nil, err
 	}
 	return rows, nil
 }
 
+func (x *Executor[T]) FindAllByPage(offset, limit int) (rows []*T, count int64, err error) {
+	count, err = x.FindByPage(rows, offset, limit)
+	return rows, count, err
+}
+
+func (x *Executor[T]) FindAllPaginate(page, perPage int64, maxPerPages ...int64) (rows []*T, count int64, err error) {
+	count, err = x.FindPaginate(rows, page, perPage, maxPerPages...)
+	return rows, count, err
+}
+
 func (x *Executor[T]) Find(dest any) error {
 	return x.IntoDB().Find(dest).Error
 }
 
-func (x *Executor[T]) FindPage(dest any, page, perPage int64, maxPerPages ...int64) (count int64, err error) {
+func (x *Executor[T]) FindByPage(dest any, offset, limit int) (count int64, err error) {
+	db := x.IntoDB()
+	err = db.Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	if count > 0 {
+		err = db.Offset(offset).Limit(limit).Find(dest).Error
+		if err != nil {
+			return 0, err
+		}
+	}
+	return count, nil
+}
+
+func (x *Executor[T]) FindPaginate(dest any, page, perPage int64, maxPerPages ...int64) (count int64, err error) {
 	db := x.IntoDB()
 	err = db.Count(&count).Error
 	if err != nil {
