@@ -22,3 +22,5 @@ type SetExpr interface {
 
 	SetExpr() any
 }
+
+type AssignExpr = SetExpr
