@@ -93,6 +93,21 @@ func (x *Executor[T]) Find(dest any) error {
 	return x.IntoDB().Find(dest).Error
 }
 
+func (x *Executor[T]) FindPage(dest any, page, perPage int64, maxPerPages ...int64) (count int64, err error) {
+	db := x.IntoDB()
+	err = db.Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	if count > 0 {
+		err = db.Scopes(Pagination(page, perPage, maxPerPages...)).Find(dest).Error
+		if err != nil {
+			return 0, err
+		}
+	}
+	return count, nil
+}
+
 func (x *Executor[T]) FindInBatches(dest any, batchSize int, fc func(tx *gorm.DB, batch int) error) error {
 	return x.IntoDB().FindInBatches(dest, batchSize, fc).Error
 }
