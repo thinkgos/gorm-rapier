@@ -6,7 +6,7 @@ import (
 )
 
 var _ Expr = (*expr)(nil)
-var _ SetExpr = (*expr)(nil)
+var _ AssignExpr = (*expr)(nil)
 
 // BuildOption build option
 type BuildOption uint

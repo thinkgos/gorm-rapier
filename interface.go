@@ -5,6 +5,8 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+type SetExpr = AssignExpr
+
 // Expr a query expression about field
 type Expr interface {
 	clause.Expression
@@ -17,10 +19,8 @@ type Expr interface {
 	BuildWithArgs(*gorm.Statement) (query string, args []any)
 }
 
-type SetExpr interface {
+type AssignExpr interface {
 	Expr
 
 	SetExpr() any
 }
-
-type AssignExpr = SetExpr

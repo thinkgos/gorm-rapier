@@ -46,16 +46,16 @@ func (x *Executor[T]) Assign(attrs ...any) *Executor[T] {
 	return x
 }
 
-// AttrsExpr with SetExpr
+// AttrsExpr with AssignExpr
 // provide attributes used in [FirstOrCreate] or [FirstOrInit]
-func (x *Executor[T]) AttrsExpr(attrs ...SetExpr) *Executor[T] {
+func (x *Executor[T]) AttrsExpr(attrs ...AssignExpr) *Executor[T] {
 	x.db = x.db.Attrs(buildAttrsValue(attrs)...)
 	return x
 }
 
-// AssignExpr with SetExpr
+// AssignExpr with AssignExpr
 // provide attributes used in [FirstOrCreate] or [FirstOrInit]
-func (x *Executor[T]) AssignExpr(attrs ...SetExpr) *Executor[T] {
+func (x *Executor[T]) AssignExpr(attrs ...AssignExpr) *Executor[T] {
 	x.db = x.db.Assign(buildAttrsValue(attrs)...)
 	return x
 }

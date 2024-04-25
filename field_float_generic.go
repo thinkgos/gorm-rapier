@@ -169,17 +169,17 @@ func (e Float[T]) DivCol(col Expr) Float[T] {
 }
 
 // Value set value
-func (field Float[T]) Value(value T) SetExpr {
+func (field Float[T]) Value(value T) AssignExpr {
 	return field.value(value)
 }
 
 // Value set value use pointer
-func (field Float[T]) ValuePointer(value *T) SetExpr {
+func (field Float[T]) ValuePointer(value *T) AssignExpr {
 	return field.value(value)
 }
 
 // ValueZero set value zero
-func (field Float[T]) ValueZero() SetExpr {
+func (field Float[T]) ValueZero() AssignExpr {
 	var zero T
 
 	return field.value(zero)

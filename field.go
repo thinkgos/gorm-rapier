@@ -525,6 +525,6 @@ func (field Field) ConcatWsCol(separator Expr, cols ...Expr) Field {
 }
 
 // Value set value
-func (field Field) Value(value any) SetExpr {
+func (field Field) Value(value any) AssignExpr {
 	return field.value(value)
 }

@@ -51,7 +51,7 @@ func Test_buildAssignSet(t *testing.T) {
 	db := newDb()
 	got := buildClauseSet(
 		db,
-		[]SetExpr{
+		[]AssignExpr{
 			refDict.Pid.Value(100),
 			refDict.Score.Add(1),
 			refDict.Name.valueEq("name"),
@@ -94,7 +94,7 @@ func Test_buildAttrsValue(t *testing.T) {
 		},
 	}
 	got := buildAttrsValue(
-		[]SetExpr{
+		[]AssignExpr{
 			refDict.Pid.Value(100),
 			refDict.Name.valueEq("name"),
 		})

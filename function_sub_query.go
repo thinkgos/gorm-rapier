@@ -42,7 +42,7 @@ type Columns []Expr
 func NewColumns(cols ...Expr) Columns { return cols }
 
 // SetSubQuery set with subQuery
-func (cs Columns) Set(subQuery *gorm.DB) SetExpr {
+func (cs Columns) Set(subQuery *gorm.DB) AssignExpr {
 	if len(cs) == 0 {
 		return expr{e: clause.Set{}}
 	}

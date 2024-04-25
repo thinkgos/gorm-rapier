@@ -324,7 +324,7 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 			want:     "UPDATE `dict` SET `sort`=`sort`+? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updateExpr: value SetExpr",
+			name: "updateExpr: value AssignExpr",
 			db: refDict.New_Executor(newDb()).
 				Where(refDict.Id.Eq(1)).
 				updateExpr(refDict.Sort, refDict.Score.Add(100)),
@@ -332,7 +332,7 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 			want:     "UPDATE `dict` SET `sort`=`dict`.`score`+? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updatesExpr: value SetExpr",
+			name: "updatesExpr: value AssignExpr",
 			db: refDict.New_Executor(newDb()).
 				Where(refDict.Id.Eq(1)).
 				updatesExpr(
@@ -353,7 +353,7 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 			want:     "UPDATE `dict` SET `sort`=? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updateColumnExpr: value SetExpr",
+			name: "updateColumnExpr: value AssignExpr",
 			db: refDict.New_Executor(newDb()).
 				Where(refDict.Id.Eq(1)).
 				updateColumnExpr(refDict.Sort, refDict.Sort.Add(100)),
@@ -361,7 +361,7 @@ func Test_Executor_Update_SetExpr(t *testing.T) {
 			want:     "UPDATE `dict` SET `sort`=`dict`.`sort`+? WHERE `dict`.`id` = ?",
 		},
 		{
-			name: "updateColumnsExpr: value SetExpr",
+			name: "updateColumnsExpr: value AssignExpr",
 			db: refDict.New_Executor(newDb()).
 				Where(refDict.Id.Eq(1)).
 				updateColumnsExpr(

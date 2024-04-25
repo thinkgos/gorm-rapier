@@ -44,7 +44,7 @@ func buildColumnsValue(db *gorm.DB, columns ...Expr) string {
 }
 
 // buildClauseSet build all set
-func buildClauseSet(db *gorm.DB, exprs []SetExpr) (set clause.Set) {
+func buildClauseSet(db *gorm.DB, exprs []AssignExpr) (set clause.Set) {
 	for _, expr := range exprs {
 		column := clause.Column{
 			Table: "", // FIXME: when need table?.
@@ -71,7 +71,7 @@ func buildClauseSet(db *gorm.DB, exprs []SetExpr) (set clause.Set) {
 	return append(set, callbacks.ConvertToAssignments(stmt)...)
 }
 
-func buildAttrsValue(attrs []SetExpr) []any {
+func buildAttrsValue(attrs []AssignExpr) []any {
 	values := make([]any, 0, len(attrs))
 	for _, expr := range attrs {
 		switch e := expr.SetExpr().(type) {

@@ -19,7 +19,7 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 				Where(refDict.Id.Eq(1)).
 				Clauses(buildClauseSet(
 					newDb(),
-					[]SetExpr{
+					[]AssignExpr{
 						NewColumns().
 							Set(
 								newDb().Model(&Dict{}).
@@ -40,7 +40,7 @@ func Test_Columns_SubQuery_Assign(t *testing.T) {
 				Where(refDict.Id.Eq(1)).
 				Clauses(buildClauseSet(
 					newDb(),
-					[]SetExpr{
+					[]AssignExpr{
 						NewColumns(refDict.Sort, refDict.IsPin).
 							Set(
 								newDb().Model(&Dict{}).

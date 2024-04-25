@@ -265,16 +265,16 @@ func (field String) ConcatWsCol(separator Expr, cols ...Expr) String {
 }
 
 // Value set value
-func (field String) Value(value string) SetExpr {
+func (field String) Value(value string) AssignExpr {
 	return field.value(value)
 }
 
 // Value set value use pointer
-func (field String) ValuePointer(value *string) SetExpr {
+func (field String) ValuePointer(value *string) AssignExpr {
 	return field.value(value)
 }
 
 // ValueZero set value zero
-func (field String) ValueZero() SetExpr {
+func (field String) ValueZero() AssignExpr {
 	return field.value("")
 }

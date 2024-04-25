@@ -231,17 +231,17 @@ func (e Integer[T]) DivCol(col Expr) Integer[T] {
 }
 
 // Value set value
-func (field Integer[T]) Value(value T) SetExpr {
+func (field Integer[T]) Value(value T) AssignExpr {
 	return field.value(value)
 }
 
 // Value set value use pointer
-func (field Integer[T]) ValuePointer(value *T) SetExpr {
+func (field Integer[T]) ValuePointer(value *T) AssignExpr {
 	return field.value(value)
 }
 
 // ValueZero set value zero
-func (field Integer[T]) ValueZero() SetExpr {
+func (field Integer[T]) ValueZero() AssignExpr {
 	var zero T
 
 	return field.value(zero)

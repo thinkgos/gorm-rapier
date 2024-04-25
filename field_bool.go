@@ -84,16 +84,16 @@ func (field Bool) BitOr(value bool) Expr {
 }
 
 // Value set value
-func (field Bool) Value(value bool) SetExpr {
+func (field Bool) Value(value bool) AssignExpr {
 	return field.value(value)
 }
 
 // Value set value use pointer
-func (field Bool) ValuePointer(value *bool) SetExpr {
+func (field Bool) ValuePointer(value *bool) AssignExpr {
 	return field.value(value)
 }
 
 // ValueZero set value zero
-func (field Bool) ValueZero() SetExpr {
+func (field Bool) ValueZero() AssignExpr {
 	return field.value(false)
 }

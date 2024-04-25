@@ -37,7 +37,7 @@ _ = err          // return error
 _ = rowsAffected // return row affected
 // UPDATE `dict` SET `key`="k1",`updated_at`="2024-03-07 02:10:44.258" WHERE `dict`.`id` = 100
 
-// update SetExpr with expr
+// update AssignExpr with expr
 rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
     Model().
     Where(refDict.Id.Eq(100)).

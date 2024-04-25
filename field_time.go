@@ -303,16 +303,16 @@ func (e Time) DivCol(col Expr) Time {
 }
 
 // Value set value
-func (field Time) Value(value time.Time) SetExpr {
+func (field Time) Value(value time.Time) AssignExpr {
 	return field.value(value)
 }
 
 // ValuePointer set value use pointer
-func (field Time) ValuePointer(value *time.Time) SetExpr {
+func (field Time) ValuePointer(value *time.Time) AssignExpr {
 	return field.value(value)
 }
 
 // ValueZero set value zero
-func (field Time) ValueZero() SetExpr {
+func (field Time) ValueZero() AssignExpr {
 	return field.value(time.Time{})
 }

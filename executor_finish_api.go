@@ -206,7 +206,7 @@ func (x *Executor[T]) UpdateExpr(column Expr, value any) (rowsAffected int64, er
 	return result.RowsAffected, result.Error
 }
 
-func (x *Executor[T]) UpdatesExpr(columns ...SetExpr) (rowsAffected int64, err error) {
+func (x *Executor[T]) UpdatesExpr(columns ...AssignExpr) (rowsAffected int64, err error) {
 	result := x.updatesExpr(columns...)
 	return result.RowsAffected, result.Error
 }
@@ -216,7 +216,7 @@ func (x *Executor[T]) UpdateColumnExpr(column Expr, value any) (rowsAffected int
 	return result.RowsAffected, result.Error
 }
 
-func (x *Executor[T]) UpdateColumnsExpr(columns ...SetExpr) (rowsAffected int64, err error) {
+func (x *Executor[T]) UpdateColumnsExpr(columns ...AssignExpr) (rowsAffected int64, err error) {
 	result := x.updateColumnsExpr(columns...)
 	return result.RowsAffected, result.Error
 }
@@ -567,14 +567,14 @@ func (x *Executor[T]) updateExpr(column Expr, value any) *gorm.DB {
 	columnName := column.BuildColumn(db.Statement, WithoutQuote)
 
 	switch v := value.(type) {
-	case SetExpr:
+	case AssignExpr:
 		return db.Update(columnName, v.SetExpr())
 	default:
 		return db.Update(columnName, v)
 	}
 }
 
-func (x *Executor[T]) updatesExpr(columns ...SetExpr) *gorm.DB {
+func (x *Executor[T]) updatesExpr(columns ...AssignExpr) *gorm.DB {
 	db := x.IntoDB()
 	return db.
 		Clauses(buildClauseSet(db, columns)).
@@ -586,14 +586,14 @@ func (x *Executor[T]) updateColumnExpr(column Expr, value any) *gorm.DB {
 	db := x.IntoDB()
 	columnName := column.BuildColumn(db.Statement, WithoutQuote)
 	switch v := value.(type) {
-	case SetExpr:
+	case AssignExpr:
 		return db.UpdateColumn(columnName, v.SetExpr())
 	default:
 		return db.UpdateColumn(columnName, v)
 	}
 }
 
-func (x *Executor[T]) updateColumnsExpr(columns ...SetExpr) *gorm.DB {
+func (x *Executor[T]) updateColumnsExpr(columns ...AssignExpr) *gorm.DB {
 	db := x.IntoDB()
 	db.Statement.SkipHooks = true
 	return db.Clauses(buildClauseSet(db, columns)).

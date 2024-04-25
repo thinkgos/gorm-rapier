@@ -29,7 +29,7 @@ func Test_Example_UpdateColumn(t *testing.T) {
 	_ = err          // return error
 	_ = rowsAffected // return row affected
 
-	// update SetExpr with expr
+	// update AssignExpr with expr
 	rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
 		Model().
 		Where(refDict.Id.Eq(100)).

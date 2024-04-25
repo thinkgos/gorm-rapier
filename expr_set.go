@@ -6,7 +6,7 @@ import (
 )
 
 // valueEq same as value, but use clause.Eq
-func (e expr) valueEq(value any) SetExpr {
+func (e expr) valueEq(value any) AssignExpr {
 	e.e = clause.Eq{
 		Column: e.col.Name,
 		Value:  value,
@@ -15,7 +15,7 @@ func (e expr) valueEq(value any) SetExpr {
 }
 
 // value set value, Clause.Set
-func (e expr) value(value any) SetExpr {
+func (e expr) value(value any) AssignExpr {
 	e.e = clause.Set{
 		{
 			Column: clause.Column{
@@ -28,7 +28,7 @@ func (e expr) value(value any) SetExpr {
 }
 
 // ValueNull set value NULL
-func (e expr) ValueNull() SetExpr {
+func (e expr) ValueNull() AssignExpr {
 	e.e = clause.Set{
 		{
 			Column: clause.Column{
@@ -42,12 +42,12 @@ func (e expr) ValueNull() SetExpr {
 
 // ValueSubQuery set with subQuery
 // same as SetSubQuery.
-func (e expr) ValueSubQuery(subQuery *gorm.DB) SetExpr {
+func (e expr) ValueSubQuery(subQuery *gorm.DB) AssignExpr {
 	return e.SetSubQuery(subQuery)
 }
 
 // ValueAny set any value.
-func (e expr) ValueAny(value any) SetExpr {
+func (e expr) ValueAny(value any) AssignExpr {
 	e.e = clause.Set{
 		{
 			Column: clause.Column{

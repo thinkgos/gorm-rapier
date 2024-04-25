@@ -77,7 +77,7 @@ func (e expr) FindInSetColWith(e2 Expr) Expr {
 }
 
 // SetCol expr1=expr2
-func (e expr) SetCol(e2 Expr) SetExpr {
+func (e expr) SetCol(e2 Expr) AssignExpr {
 	e.e = clause.Set{
 		{
 			Column: clause.Column{
