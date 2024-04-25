@@ -15,7 +15,7 @@ func buildSelectValue(stmt *gorm.Statement, exprs ...Expr) (query string, args [
 		return "", nil
 	}
 
-	var queryItems []string
+	queryItems := make([]string, 0, len(exprs))
 	for _, e := range exprs {
 		sql, vars := e.BuildWithArgs(stmt)
 		queryItems = append(queryItems, sql)
