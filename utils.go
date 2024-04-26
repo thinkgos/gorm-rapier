@@ -34,12 +34,11 @@ func buildColumnsValue(db *gorm.DB, columns ...Expr) string {
 		Schema: db.Statement.Schema,
 	}
 	for i, column := range columns {
-		if i != 0 {
+		if i > 0 {
 			_ = stmt.WriteByte(',')
 		}
 		column.Build(stmt)
 	}
-
 	return stmt.SQL.String()
 }
 
