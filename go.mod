@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225
-	gorm.io/gorm v1.25.9
+	gorm.io/gorm v1.25.10
 )
 
 require (
