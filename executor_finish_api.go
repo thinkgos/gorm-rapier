@@ -2,6 +2,11 @@ package rapier
 
 import "gorm.io/gorm"
 
+type Result[T any] struct {
+	RowsAffected int64
+	Data         *T
+}
+
 func (x *Executor[T]) FirstOne() (*T, error) {
 	var dest T
 
@@ -135,35 +140,39 @@ func (x *Executor[T]) FindInBatches(dest any, batchSize int, fc func(tx *gorm.DB
 	return x.IntoDB().FindInBatches(dest, batchSize, fc).Error
 }
 
-func (x *Executor[T]) Create(values ...*T) error {
+func (x *Executor[T]) Create(values ...*T) (rowsAffected int64, err error) {
 	if len(values) == 0 {
-		return nil
+		return 0, nil
 	}
-	return x.IntoRawDB().Create(values).Error
+	res := x.IntoRawDB().Create(values)
+	return res.RowsAffected, res.Error
 }
 
-func (x *Executor[T]) CreateInBatches(value []*T, batchSize int) error {
-	return x.IntoRawDB().CreateInBatches(value, batchSize).Error
+func (x *Executor[T]) CreateInBatches(value []*T, batchSize int) (rowsAffected int64, err error) {
+	res := x.IntoRawDB().CreateInBatches(value, batchSize)
+	return res.RowsAffected, res.Error
 }
 
-func (x *Executor[T]) FirstOrInit() (*T, error) {
+func (x *Executor[T]) FirstOrInit() (Result[T], error) {
 	var dest T
+	var result Result[T]
 
-	err := x.IntoDB().FirstOrInit(&dest).Error
-	if err != nil {
-		return nil, err
+	res := x.IntoDB().FirstOrInit(&dest)
+	if err := res.Error; err != nil {
+		return result, err
 	}
-	return &dest, nil
+	return Result[T]{RowsAffected: res.RowsAffected, Data: &dest}, nil
 }
 
-func (x *Executor[T]) FirstOrCreate() (*T, error) {
+func (x *Executor[T]) FirstOrCreate() (Result[T], error) {
 	var dest T
+	var result Result[T]
 
-	err := x.IntoDB().FirstOrCreate(&dest).Error
-	if err != nil {
-		return nil, err
+	res := x.IntoDB().FirstOrCreate(&dest)
+	if err := res.Error; err != nil {
+		return result, err
 	}
-	return &dest, nil
+	return Result[T]{RowsAffected: res.RowsAffected, Data: &dest}, nil
 }
 
 func (x *Executor[T]) Save(value *T) (rowsAffected int64, err error) {

@@ -112,11 +112,14 @@ func Test_Example_AdvanceQuery_FirstOrInit(t *testing.T) {
 
 	// `Attrs`, `AttrsExpr`
 	// with expr
-	newdict, _ := rapier.NewExecutor[testdata.Dict](db).
+	result, _ := rapier.NewExecutor[testdata.Dict](db).
 		Where(refDict.Name.Eq("myname")).
 		AttrsExpr(refDict.Remark.Value("remark11")).
 		FirstOrInit()
+	newdict := result.Data
+	rowsAffected := result.RowsAffected
 	_ = newdict
+	_ = rowsAffected
 	// NOTE: Condition use expr. here will not initialize the field of the condition when initializing.
 	// if not found
 	// newdict -> Dict{ Remark: "remark11" }
@@ -125,21 +128,27 @@ func Test_Example_AdvanceQuery_FirstOrInit(t *testing.T) {
 	// newdict -> Dict{ Id: 11, Name: "myname", Remark: "remark" }
 
 	// with original gorm api
-	newdict, _ = rapier.NewExecutor[testdata.Dict](db).
+	result, _ = rapier.NewExecutor[testdata.Dict](db).
 		Where(&testdata.Dict{
 			Name: "non_existing",
 		}).
 		FirstOrInit()
+	newdict = result.Data
+	rowsAffected = result.RowsAffected
 	_ = newdict
+	_ = rowsAffected
 	// NOTE: Condition not use expr, here will initialize the field of the condition when initializing.
 	// newdict -> Dict{ Name: "non_existing" } if not found
-	newdict, _ = rapier.NewExecutor[testdata.Dict](db).
+	result, _ = rapier.NewExecutor[testdata.Dict](db).
 		Where(&testdata.Dict{
 			Name: "myname",
 		}).
 		Attrs(&testdata.Dict{Remark: "remark11"}).
 		FirstOrInit()
+	newdict = result.Data
+	rowsAffected = result.RowsAffected
 	_ = newdict
+	_ = rowsAffected
 	// NOTE: Condition not use expr, here will initialize the field of the condition when initializing.
 	// if not found
 	// newdict -> Dict{ Name: "myname", Remark: "remark11" }
@@ -149,24 +158,30 @@ func Test_Example_AdvanceQuery_FirstOrInit(t *testing.T) {
 
 	// `Assign`, `AssignExpr`
 	// with expr
-	newdict, _ = rapier.NewExecutor[testdata.Dict](db).
+	result, _ = rapier.NewExecutor[testdata.Dict](db).
 		Where(refDict.Name.Eq("myname")).
 		AssignExpr(refDict.Remark.Value("remark11")).
 		FirstOrInit()
+	newdict = result.Data
+	rowsAffected = result.RowsAffected
 	_ = newdict
+	_ = rowsAffected
 	// NOTE: Where condition use expr, here will not initialize the field of the condition when initializing.
 	//  if not found
 	// newdict -> Dict{ Remark: "remark11" }
 	//
 	//  if not found
 	// newdict -> Dict{ Name: "non_existing" }
-	newdict, _ = rapier.NewExecutor[testdata.Dict](db).
+	result, _ = rapier.NewExecutor[testdata.Dict](db).
 		Where(&testdata.Dict{
 			Name: "myname",
 		}).
 		Assign(&testdata.Dict{Remark: "remark11"}).
 		FirstOrInit()
+	newdict = result.Data
+	rowsAffected = result.RowsAffected
 	_ = newdict
+	_ = rowsAffected
 	// NOTE: condition not use expr, here will initialize the field of the condition when initializing.
 	// if not found
 	// newdict -> Dict{ Name: "myname", Remark: "remark11" }
@@ -182,11 +197,14 @@ func Test_Example_AdvanceQuery_FirstOrCreate(t *testing.T) {
 
 	// `Attrs`, `AttrsExpr`
 	// with expr
-	newdict, _ := rapier.NewExecutor[testdata.Dict](db).
+	result, _ := rapier.NewExecutor[testdata.Dict](db).
 		Where(refDict.Name.Eq("myname")).
 		AttrsExpr(refDict.Remark.Value("remark11")).
 		FirstOrCreate()
+	newdict := result.Data
+	rowsAffected := result.RowsAffected
 	_ = newdict
+	_ = rowsAffected
 	// NOTE: Condition use expr. here will not initialize the field of the condition when creating.
 	// if not found. initialize with additional attributes
 	// SELECT * FROM `dict` WHERE `dict`.`name` = "myname" ORDER BY `dict`.`id` LIMIT 1;
@@ -197,13 +215,16 @@ func Test_Example_AdvanceQuery_FirstOrCreate(t *testing.T) {
 	// newdict -> Dict{ Id: 11, Name: "myname", Remark: "remark" }
 
 	// with original gorm api
-	newdict, _ = rapier.NewExecutor[testdata.Dict](db).
+	result, _ = rapier.NewExecutor[testdata.Dict](db).
 		Where(&testdata.Dict{
 			Name: "myname",
 		}).
 		Attrs(&testdata.Dict{Remark: "remark11"}).
 		FirstOrCreate()
+	newdict = result.Data
+	rowsAffected = result.RowsAffected
 	_ = newdict
+	_ = rowsAffected
 	// NOTE: Condition not use expr, here will initialize the field of the condition when creating.
 	// if not found, initialize with given conditions and additional attributes
 	// SELECT * FROM `dict` WHERE `dict`.`name` = "myname" ORDER BY `dict`.`id` LIMIT 1;
@@ -215,11 +236,14 @@ func Test_Example_AdvanceQuery_FirstOrCreate(t *testing.T) {
 
 	// `Assign`, `AssignExpr`
 	// with expr
-	newdict, _ = rapier.NewExecutor[testdata.Dict](db).
+	result, _ = rapier.NewExecutor[testdata.Dict](db).
 		Where(refDict.Name.Eq("myname")).
 		AssignExpr(refDict.Remark.Value("remark11")).
 		FirstOrCreate()
+	newdict = result.Data
+	rowsAffected = result.RowsAffected
 	_ = newdict
+	_ = rowsAffected
 	// NOTE: Where condition use expr, here will not initialize the field of the condition when creating.
 	// whether it is found or not, and `Assign`, `AssignExpr` attributes are saved back to the database.
 	// if no found
@@ -232,13 +256,16 @@ func Test_Example_AdvanceQuery_FirstOrCreate(t *testing.T) {
 	// UPDATE `dict` SET `remark` = "remark11" WHERE id = "11"
 	// newdict -> Dict{ Id: 11, Name: "myname", Remark: "remark11", ... }
 
-	newdict, _ = rapier.NewExecutor[testdata.Dict](db).
+	result, _ = rapier.NewExecutor[testdata.Dict](db).
 		Where(&testdata.Dict{
 			Name: "myname",
 		}).
 		Assign(&testdata.Dict{Remark: "remark11"}).
 		FirstOrCreate()
+	newdict = result.Data
+	rowsAffected = result.RowsAffected
 	_ = newdict
+	_ = rowsAffected
 	// NOTE: condition not use expr, here will initialize the field of the condition when creating.
 	// whether it is found or not, and `Assign`, `AssignExpr` attributes are saved back to the database.
 	// if no found

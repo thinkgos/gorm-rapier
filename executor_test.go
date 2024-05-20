@@ -395,7 +395,7 @@ func Test_Executor_Attrs(t *testing.T) {
 	t.Run("attr", func(t *testing.T) {
 		wantName := "aaaa"
 		wantSort := uint16(1111)
-		got1, err := refDict.New_Executor(newDb()).
+		result1, err := refDict.New_Executor(newDb()).
 			Where(refDict.Id.Eq(1)).
 			Attrs(&Dict{
 				Name: wantName,
@@ -405,11 +405,12 @@ func Test_Executor_Attrs(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		got1 := result1.Data
 		if got1.Name != wantName || got1.Sort != wantSort {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
 
-		got2, err := refDict.New_Executor(newDb()).
+		result2, err := refDict.New_Executor(newDb()).
 			Where(refDict.Id.Eq(1)).
 			Attrs(&Dict{
 				Name: wantName,
@@ -419,6 +420,7 @@ func Test_Executor_Attrs(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		got2 := result2.Data
 		if got2.Name != wantName || got2.Sort != wantSort {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got2.Name, wantSort, got2.Sort)
 		}
@@ -427,7 +429,7 @@ func Test_Executor_Attrs(t *testing.T) {
 		wantName := "bbbb"
 		wantSort := uint16(2222)
 
-		got1, err := refDict.New_Executor(newDb()).
+		result1, err := refDict.New_Executor(newDb()).
 			Where(refDict.Id.Eq(1)).
 			AttrsExpr(
 				refDict.Name.Value(wantName),
@@ -437,11 +439,12 @@ func Test_Executor_Attrs(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		got1 := result1.Data
 		if got1.Name != wantName || got1.Sort != wantSort {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
 
-		got2, err := refDict.New_Executor(newDb()).
+		result2, err := refDict.New_Executor(newDb()).
 			Where(refDict.Id.Eq(1)).
 			AttrsExpr(
 				refDict.Name.Value(wantName),
@@ -451,6 +454,7 @@ func Test_Executor_Attrs(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		got2 := result2.Data
 		if got2.Name != wantName || got2.Sort != wantSort {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got2.Name, wantSort, got2.Sort)
 		}
@@ -461,7 +465,7 @@ func Test_Executor_Assign(t *testing.T) {
 	t.Run("assign", func(t *testing.T) {
 		wantName := "aaaa"
 		wantSort := uint16(1111)
-		got1, err := refDict.New_Executor(newDb()).
+		result1, err := refDict.New_Executor(newDb()).
 			Where(refDict.Id.Eq(1)).
 			Assign(&Dict{
 				Name: wantName,
@@ -471,11 +475,12 @@ func Test_Executor_Assign(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		got1 := result1.Data
 		if got1.Name != wantName || got1.Sort != wantSort {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
 
-		got2, err := refDict.New_Executor(newDb()).
+		result2, err := refDict.New_Executor(newDb()).
 			Where(refDict.Id.Eq(1)).
 			Assign(&Dict{
 				Name: wantName,
@@ -485,6 +490,7 @@ func Test_Executor_Assign(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		got2 := result2.Data
 		if got2.Name != wantName || got2.Sort != wantSort {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
@@ -492,7 +498,7 @@ func Test_Executor_Assign(t *testing.T) {
 	t.Run("assign expr", func(t *testing.T) {
 		wantName := "bbbb"
 		wantSort := uint16(2222)
-		got1, err := refDict.New_Executor(newDb()).
+		result1, err := refDict.New_Executor(newDb()).
 			Where(refDict.Id.Eq(1)).
 			AssignExpr(
 				refDict.Name.Value(wantName),
@@ -502,10 +508,11 @@ func Test_Executor_Assign(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		got1 := result1.Data
 		if got1.Name != wantName || got1.Sort != wantSort {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}
-		got2, err := refDict.New_Executor(newDb()).
+		result2, err := refDict.New_Executor(newDb()).
 			Where(refDict.Id.Eq(1)).
 			AssignExpr(
 				refDict.Name.Value(wantName),
@@ -515,6 +522,7 @@ func Test_Executor_Assign(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		got2 := result2.Data
 		if got2.Name != wantName || got2.Sort != wantSort {
 			t.Errorf("name want: %v, got: %v,  sort want: %v got: %v", wantName, got1.Name, wantSort, got1.Sort)
 		}

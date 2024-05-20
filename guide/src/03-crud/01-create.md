@@ -10,28 +10,31 @@
 
 ```go
 // empty record
-err := rapier.NewExecutor[testdata.Dict](db).Create()
-_ = err // return error
-// do nothing
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db)Create()
+_ = err          // return error
+_ = rowsAffected // return row affected
 ```
 
 ## Single record
 
 ```go
+// single record
 newDict := testdata.Dict{
     Key:    "key1",
     Name:   "name1",
     IsPin:  true,
     Remark: "remark1",
 }
-err := rapier.NewExecutor[testdata.Dict](db).Create(newDict)
-_ = err // return error
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).Create(&newDict)
+_ = err          // return error
+_ = rowsAffected // return row affected
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.135","2024-02-20 07:18:42.135")
 ```
 
 ## Multiple record
 
 ```go
+// multiple record
 newDicts := []*testdata.Dict{
     {
         Key:    "key1",
@@ -46,8 +49,9 @@ newDicts := []*testdata.Dict{
         Remark: "remark2",
     },
 }
-err = rapier.NewExecutor[testdata.Dict](db).Create(newDicts...)
-_ = err // return error
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).Create(newDicts...)
+_ = err          // return error
+_ = rowsAffected // return row affected
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136"),("key2","name2",true,"remark2","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136")
 ```
 
@@ -75,8 +79,9 @@ newDicts := []*testdata.Dict{
         Remark: "remark3",
     },
 }
-err := rapier.NewExecutor[testdata.Dict](db).CreateInBatches(newDicts, 2)
-_ = err // return error
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).CreateInBatches(newDicts, 2)
+_ = err          // return error
+_ = rowsAffected // return row affected
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136"),("key2","name2",true,"remark2","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136")
 // INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key3","name3",true,"remark3","2024-02-20 07:18:42.135","2024-02-20 07:18:42.135")
 ```

@@ -9,8 +9,9 @@ import (
 
 func Test_Example_EmptyRecord_Create(t *testing.T) {
 	// empty record
-	err := rapier.NewExecutor[testdata.Dict](db).Create()
-	_ = err // return error
+	rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).Create()
+	_ = err          // return error
+	_ = rowsAffected // return row affected
 }
 func Test_Example_SingleRecord_Create(t *testing.T) {
 	// single record
@@ -20,8 +21,9 @@ func Test_Example_SingleRecord_Create(t *testing.T) {
 		IsPin:  true,
 		Remark: "remark1",
 	}
-	err := rapier.NewExecutor[testdata.Dict](db).Create(&newDict)
-	_ = err // return error
+	rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).Create(&newDict)
+	_ = err          // return error
+	_ = rowsAffected // return row affected
 }
 func Test_Example_Multiple_Create(t *testing.T) {
 	// multiple record
@@ -39,8 +41,9 @@ func Test_Example_Multiple_Create(t *testing.T) {
 			Remark: "remark2",
 		},
 	}
-	err := rapier.NewExecutor[testdata.Dict](db).Create(newDicts...)
-	_ = err // return error
+	rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).Create(newDicts...)
+	_ = err          // return error
+	_ = rowsAffected // return row affected
 }
 
 func Test_Example_Batch_CreateInBatch(t *testing.T) {
@@ -65,6 +68,7 @@ func Test_Example_Batch_CreateInBatch(t *testing.T) {
 			Remark: "remark3",
 		},
 	}
-	err := rapier.NewExecutor[testdata.Dict](db).CreateInBatches(newDicts, 2)
-	_ = err // return error
+	rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).CreateInBatches(newDicts, 2)
+	_ = err          // return error
+	_ = rowsAffected // return row affected
 }
