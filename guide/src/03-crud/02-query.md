@@ -324,6 +324,18 @@ _ = rapier.NewExecutor[testdata.Dict](db).
     Take(&struct{}{})
 // SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`d`.`id` AS `d_id` FROM `dict` INNER JOIN `dict` `d` ON `d`.`name` = `dict`.`name` AND `d`.`is_pin` = true LIMIT 1
 
+// join with alias which table implements Alias interface.
+// we can directly use it. no need `NewJoinTable`.
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+        refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+        d.Id.As(d.Id.FieldName(d.Alias())),
+    ).
+    InnerJoinsExpr(d, d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+    Take(&struct{}{})
+// SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`d`.`id` AS `d_id` FROM `dict` INNER JOIN `dict` `d` ON `d`.`name` = `dict`.`name` AND `d`.`is_pin` = true LIMIT 1
+
 // join with SubQuery
 _ = rapier.NewExecutor[testdata.Dict](db).
     SelectExpr(

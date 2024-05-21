@@ -77,6 +77,17 @@ func Test_Joins(t *testing.T) {
 			wantVars: []any{true, 1},
 			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` INNER JOIN `dict_item` `di` ON `di`.`is_enabled` = ? LIMIT ?",
 		},
+		{
+			name: "inner join with Alias interface- multiple",
+			db: newDb().Model(&Dict{}).
+				Scopes(
+					InnerJoinsExpr(&refDictItem, refDictItem.DictId.EqCol(refDict.Id)),
+					InnerJoinsExpr(&xDi, xDi.IsEnabled.Eq(true)),
+				).
+				Take(&dummy),
+			wantVars: []any{true, 1},
+			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` INNER JOIN `dict_item` `di` ON `di`.`is_enabled` = ? LIMIT ?",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -31,11 +31,17 @@ func joinsExpr(joinType clause.JoinType, table schema.Tabler, conds ...Expr) Con
 		if len(conds) == 0 {
 			return db
 		}
-
+		tableName := table.TableName()
 		join := clause.Join{
 			Type:  joinType,
-			Table: clause.Table{Name: table.TableName()},
+			Table: clause.Table{Name: tableName},
 			ON:    clause.Where{Exprs: IntoExpression(conds...)},
+		}
+		// if table implement Alias interface, then we can use alias.
+		if al, ok := table.(Alias); ok {
+			if alias := al.Alias(); alias != "" && alias != tableName {
+				join.Table.Alias = alias
+			}
 		}
 		if jt, ok := table.(*JoinTable); ok {
 			switch tb := jt.table.(type) {
@@ -46,7 +52,7 @@ func joinsExpr(joinType clause.JoinType, table schema.Tabler, conds ...Expr) Con
 					TableExpr: TableExpr(From{Alias: jt.alias, SubQuery: tb})(newDb).Statement.TableExpr,
 				}
 			case schema.Tabler:
-				if jt.alias != "" {
+				if jt.alias != "" && jt.alias != tableName {
 					join.Table.Alias = jt.alias
 				}
 			default:
@@ -81,6 +87,7 @@ type JoinTable struct {
 }
 
 // NewJoinTable new join table as alias
+// if table implement `Alias` interface too, you can directly use it, not need this api.
 func NewJoinTable(table schema.Tabler, alias string) *JoinTable {
 	return &JoinTable{
 		table: table,

@@ -24,3 +24,7 @@ type AssignExpr interface {
 
 	SetExpr() any
 }
+
+type Alias interface {
+	Alias() string
+}
