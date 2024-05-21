@@ -125,26 +125,6 @@ func (x *Executor[T]) RightJoinsExpr(table schema.Tabler, conds ...Expr) *Execut
 	return x.execute(RightJoinsExpr(table, conds...))
 }
 
-// Deprecated: use other CrossJoinsExpr(NewJoinTable(table, alias), conds...).
-func (x *Executor[T]) CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Executor[T] {
-	return x.execute(CrossJoinsXExpr(table, alias, conds...))
-}
-
-// Deprecated: use other InnerJoinsExpr(NewJoinTable(table, alias), conds...).
-func (x *Executor[T]) InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Executor[T] {
-	return x.execute(InnerJoinsXExpr(table, alias, conds...))
-}
-
-// Deprecated: use other LeftJoinsExpr(NewJoinTable(table, alias), conds...).
-func (x *Executor[T]) LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Executor[T] {
-	return x.execute(LeftJoinsXExpr(table, alias, conds...))
-}
-
-// Deprecated: use other RightJoinsExpr(NewJoinTable(table, alias), conds...).
-func (x *Executor[T]) RightJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Executor[T] {
-	return x.execute(RightJoinsXExpr(table, alias, conds...))
-}
-
 func (x *Executor[T]) LockingUpdate() *Executor[T] {
 	return x.execute(LockingUpdate())
 }

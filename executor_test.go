@@ -30,8 +30,8 @@ func Test_Executor_Stand(t *testing.T) {
 			Order("created_at").
 			Group("name").
 			Having("").
-			InnerJoins(refDict.Ref_Alias()).
-			Joins(refDict.Ref_Alias()).
+			InnerJoins(refDict.Alias()).
+			Joins(refDict.Alias()).
 			Limit(10).
 			Offset(2).
 			Find(&[]Dict{})
@@ -129,11 +129,10 @@ func Test_Executor_Expr(t *testing.T) {
 			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
-			name: "Expr: cross join X",
+			name: "Expr: cross join with alias",
 			db: refDict.New_Executor(newDb()).
-				CrossJoinsXExpr(
-					&xDd,
-					xDd.Ref_Alias(),
+				CrossJoinsExpr(
+					NewJoinTable(&xDd, xDd.Alias()),
 					xDd.Id.EqCol(refDict.Pid),
 					xDd.IsPin.Eq(true),
 				).
@@ -152,9 +151,9 @@ func Test_Executor_Expr(t *testing.T) {
 			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
-			name: "Expr: inner join X",
+			name: "Expr: inner join with alias",
 			db: refDict.New_Executor(newDb()).
-				InnerJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
+				InnerJoinsExpr(NewJoinTable(&xDd, xDd.Alias()), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{true, 1},
@@ -170,9 +169,9 @@ func Test_Executor_Expr(t *testing.T) {
 			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
-			name: "Expr: left join X",
+			name: "Expr: left join with alias",
 			db: refDict.New_Executor(newDb()).
-				LeftJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
+				LeftJoinsExpr(NewJoinTable(&xDd, xDd.Alias()), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{true, 1},
@@ -188,9 +187,9 @@ func Test_Executor_Expr(t *testing.T) {
 			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
-			name: "Expr: right join X",
+			name: "Expr: right join with alias",
 			db: refDict.New_Executor(newDb()).
-				RightJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
+				RightJoinsExpr(NewJoinTable(&xDd, xDd.Alias()), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 				IntoDB().
 				Take(&dummy),
 			wantVars: []any{true, 1},

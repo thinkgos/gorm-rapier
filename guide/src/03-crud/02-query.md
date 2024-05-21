@@ -318,9 +318,9 @@ _ = rapier.NewExecutor[testdata.Dict](db).
     SelectExpr(
         refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
         refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
-        d.Id.As(d.Id.FieldName(d.Ref_Alias())),
+        d.Id.As(d.Id.FieldName(d.Alias())),
     ).
-    InnerJoinsExpr(rapier.NewJoinTable(d, d.Ref_Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+    InnerJoinsExpr(rapier.NewJoinTable(d, d.Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
     Take(&struct{}{})
 // SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`d`.`id` AS `d_id` FROM `dict` INNER JOIN `dict` `d` ON `d`.`name` = `dict`.`name` AND `d`.`is_pin` = true LIMIT 1
 
@@ -329,7 +329,7 @@ _ = rapier.NewExecutor[testdata.Dict](db).
     SelectExpr(
         refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
         refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
-        di.Sort.As(di.Sort.FieldName(di.Ref_Alias())),
+        di.Sort.As(di.Sort.FieldName(di.Alias())),
     ).
     InnerJoinsExpr(
         rapier.NewJoinTableSubQuery(

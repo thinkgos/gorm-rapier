@@ -71,7 +71,7 @@ func Test_Joins(t *testing.T) {
 			db: newDb().Model(&Dict{}).
 				Scopes(
 					InnerJoinsExpr(&refDictItem, refDictItem.DictId.EqCol(refDict.Id)),
-					InnerJoinsXExpr(&xDi, xDi.Ref_Alias(), xDi.IsEnabled.Eq(true)),
+					InnerJoinsExpr(NewJoinTable(&xDi, xDi.Alias()), xDi.IsEnabled.Eq(true)),
 				).
 				Take(&dummy),
 			wantVars: []any{true, 1},

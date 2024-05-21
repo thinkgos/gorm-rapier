@@ -284,9 +284,9 @@ func Test_Example_Query_Join(t *testing.T) {
 		SelectExpr(
 			refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
 			refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
-			d.Id.As(d.Id.FieldName(d.Ref_Alias())),
+			d.Id.As(d.Id.FieldName(d.Alias())),
 		).
-		InnerJoinsExpr(rapier.NewJoinTable(d, d.Ref_Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+		InnerJoinsExpr(rapier.NewJoinTable(d, d.Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
 		Take(&struct{}{})
 
 	// join with SubQuery
@@ -294,7 +294,7 @@ func Test_Example_Query_Join(t *testing.T) {
 		SelectExpr(
 			refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
 			refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
-			di.Sort.As(di.Sort.FieldName(di.Ref_Alias())),
+			di.Sort.As(di.Sort.FieldName(di.Alias())),
 		).
 		InnerJoinsExpr(
 			rapier.NewJoinTableSubQuery(

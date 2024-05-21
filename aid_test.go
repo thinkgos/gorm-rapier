@@ -144,7 +144,7 @@ func New_Dict(tableName string) Dict_Active {
 
 func (x *Dict_Active) As(alias string) Dict_Active { return new_Dict(x.refTableName, alias) }
 func (x *Dict_Active) TableName() string           { return x.refTableName }
-func (x *Dict_Active) Ref_Alias() string           { return x.refAlias }
+func (x *Dict_Active) Alias() string               { return x.refAlias }
 func (*Dict_Active) New_Executor(db *gorm.DB) *Executor[Dict] {
 	return NewExecutor[Dict](db)
 }
@@ -193,7 +193,7 @@ func (x *DictItem_Active) As(alias string) DictItem_Active {
 	return new_DictItem(x.refTableName, alias)
 }
 func (x *DictItem_Active) TableName() string { return x.refTableName }
-func (x *DictItem_Active) Ref_Alias() string { return x.refAlias }
+func (x *DictItem_Active) Alias() string     { return x.refAlias }
 func (*DictItem_Active) New_Executor(db *gorm.DB) *Executor[DictItem] {
 	return NewExecutor[DictItem](db)
 }

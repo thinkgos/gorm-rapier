@@ -26,8 +26,8 @@ func Test_Condition_Stand(t *testing.T) {
 					Order("created_at").
 					Group("name").
 					Having("").
-					InnerJoins(refDict.Ref_Alias()).
-					Joins(refDict.Ref_Alias()).
+					InnerJoins(refDict.Alias()).
+					Joins(refDict.Alias()).
 					Limit(10).
 					Offset(2).
 					Scopes(func(d *gorm.DB) *gorm.DB {
@@ -165,13 +165,12 @@ func Test_Condition_Expr(t *testing.T) {
 			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` CROSS JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
-			name: "Expr: cross join X",
+			name: "Expr: cross join with alias",
 			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						CrossJoinsXExpr(
-							&xDd,
-							xDd.Ref_Alias(),
+						CrossJoinsExpr(
+							NewJoinTable(&xDd, xDd.Alias()),
 							xDd.Id.EqCol(refDict.Pid),
 							xDd.IsPin.Eq(true),
 						).
@@ -196,11 +195,11 @@ func Test_Condition_Expr(t *testing.T) {
 			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
-			name: "Expr: inner join X",
+			name: "Expr: inner join with alias",
 			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						InnerJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
+						InnerJoinsExpr(NewJoinTable(&xDd, xDd.Alias()), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 						Build()...,
 				).
 				IntoDB().
@@ -222,11 +221,11 @@ func Test_Condition_Expr(t *testing.T) {
 			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` LEFT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
-			name: "Expr: left join X",
+			name: "Expr: left join with alias",
 			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						LeftJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
+						LeftJoinsExpr(NewJoinTable(&xDd, xDd.Alias()), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 						Build()...,
 				).
 				IntoDB().
@@ -248,11 +247,11 @@ func Test_Condition_Expr(t *testing.T) {
 			want:     "SELECT `dict`.`id`,`dict`.`pid`,`dict`.`name`,`dict`.`score`,`dict`.`is_pin`,`dict`.`sort`,`dict`.`created_at` FROM `dict` RIGHT JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` LIMIT ?",
 		},
 		{
-			name: "Expr: right join X",
+			name: "Expr: right join with alias",
 			db: refDict.New_Executor(newDb()).
 				Scopes(
 					NewConditions().
-						RightJoinsXExpr(&xDd, xDd.Ref_Alias(), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
+						RightJoinsExpr(NewJoinTable(&xDd, xDd.Alias()), xDd.Id.EqCol(refDict.Pid), xDd.IsPin.Eq(true)).
 						Build()...,
 				).
 				IntoDB().

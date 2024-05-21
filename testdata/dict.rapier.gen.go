@@ -47,8 +47,8 @@ func (x *Dict_Native) As(alias string) *Dict_Native {
 	return new_Dict(x.refTableName, alias)
 }
 
-// Ref_Alias hold alias name when call Dict_Active.As that you defined.
-func (x *Dict_Native) Ref_Alias() string { return x.refAlias }
+// Alias hold alias name when call Dict_Active.As that you defined.
+func (x *Dict_Native) Alias() string { return x.refAlias }
 
 // TableName hold table name when call New_Dict that you defined.
 func (x *Dict_Native) TableName() string { return x.refTableName }

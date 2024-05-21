@@ -151,30 +151,6 @@ func (c *Conditions) RightJoinsExpr(table schema.Tabler, conds ...Expr) *Conditi
 	return c.Scopes(RightJoinsExpr(table, conds...))
 }
 
-// Deprecated: use other CrossJoinsExpr(NewJoinTable(table, alias), conds...).
-// CrossJoinsXExpr cross joins condition
-func (c *Conditions) CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(CrossJoinsXExpr(table, alias, conds...))
-}
-
-// Deprecated: use other InnerJoinsExpr(NewJoinTable(table, alias), conds...).
-// InnerJoinsXExpr inner joins condition
-func (c *Conditions) InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(InnerJoinsXExpr(table, alias, conds...))
-}
-
-// Deprecated: use other LeftJoinsExpr(NewJoinTable(table, alias), conds...).
-// LeftJoinsXExpr left join condition
-func (c *Conditions) LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(LeftJoinsXExpr(table, alias, conds...))
-}
-
-// Deprecated: use other RightJoinsExpr(NewJoinTable(table, alias), conds...).
-// RightJoinsXExpr right join condition
-func (c *Conditions) RightJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) *Conditions {
-	return c.Scopes(RightJoinsXExpr(table, alias, conds...))
-}
-
 // LockingUpdate specify the lock strength to UPDATE
 func (c *Conditions) LockingUpdate() *Conditions {
 	return c.Scopes(LockingUpdate())

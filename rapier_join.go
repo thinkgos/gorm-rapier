@@ -26,30 +26,6 @@ func RightJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
 	return joinsExpr(clause.RightJoin, table, conds...)
 }
 
-// Deprecated: use other CrossJoinsExpr(NewJoinTable(table, alias), conds...).
-// CrossJoinsXExpr cross joins condition
-func CrossJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
-	return CrossJoinsExpr(NewJoinTable(table, alias), conds...)
-}
-
-// Deprecated: use other InnerJoinsExpr(NewJoinTable(table, alias), conds...).
-// InnerJoinsXExpr inner joins condition
-func InnerJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
-	return InnerJoinsExpr(NewJoinTable(table, alias), conds...)
-}
-
-// Deprecated: use other LeftJoinsExpr(NewJoinTable(table, alias), conds...).
-// LeftJoinsXExpr left join condition
-func LeftJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
-	return LeftJoinsExpr(NewJoinTable(table, alias), conds...)
-}
-
-// Deprecated: use other RightJoinsExpr(NewJoinTable(table, alias), conds...).
-// RightJoinsXExpr right join condition
-func RightJoinsXExpr(table schema.Tabler, alias string, conds ...Expr) Condition {
-	return RightJoinsExpr(NewJoinTable(table, alias), conds...)
-}
-
 func joinsExpr(joinType clause.JoinType, table schema.Tabler, conds ...Expr) Condition {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(conds) == 0 {
