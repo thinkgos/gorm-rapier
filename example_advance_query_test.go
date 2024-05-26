@@ -325,3 +325,17 @@ func Test_Example_AdvanceQuery_Exist(t *testing.T) {
 	_ = err
 	_ = b
 }
+
+func Test_Example_AdvanceQuery_FindByPage(t *testing.T) {
+	rows, total, err := rapier.NewExecutor[testdata.Dict](db).
+		FindAllByPage(10, 10)
+	_ = err
+	_ = rows
+	_ = total
+
+	rows, total, err = rapier.NewExecutor[testdata.Dict](db).
+		FindAllPaginate(2, 10)
+	_ = err
+	_ = rows
+	_ = total
+}
