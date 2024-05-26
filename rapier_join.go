@@ -27,10 +27,10 @@ func RightJoinsExpr(table schema.Tabler, conds ...Expr) Condition {
 }
 
 func joinsExpr(joinType clause.JoinType, table schema.Tabler, conds ...Expr) Condition {
+	if len(conds) == 0 {
+		return Empty
+	}
 	return func(db *gorm.DB) *gorm.DB {
-		if len(conds) == 0 {
-			return db
-		}
 		tableName := table.TableName()
 		join := clause.Join{
 			Type:  joinType,

@@ -23,12 +23,16 @@ type From struct {
 	SubQuery *gorm.DB
 }
 
+func Empty(db *gorm.DB) *gorm.DB {
+	return db
+}
+
 // TableExpr return a table produced by SubQuery.
 func TableExpr(fromSubs ...From) Condition {
+	if len(fromSubs) == 0 {
+		return Empty
+	}
 	return func(db *gorm.DB) *gorm.DB {
-		if len(fromSubs) == 0 {
-			return db
-		}
 		tablePlaceholder := make([]string, len(fromSubs))
 		tableExprs := make([]any, len(fromSubs))
 		for i, query := range fromSubs {
@@ -55,10 +59,10 @@ func SelectExpr(columns ...Expr) Condition {
 
 // OmitExpr with field
 func OmitExpr(columns ...Expr) Condition {
+	if len(columns) == 0 {
+		return Empty
+	}
 	return func(db *gorm.DB) *gorm.DB {
-		if len(columns) == 0 {
-			return db
-		}
 		return db.Omit(buildColumnName(columns...)...)
 	}
 }
@@ -87,10 +91,10 @@ func OrderExpr(columns ...Expr) Condition {
 
 // GroupExpr with field
 func GroupExpr(columns ...Expr) Condition {
+	if len(columns) == 0 {
+		return Empty
+	}
 	return func(db *gorm.DB) *gorm.DB {
-		if len(columns) == 0 {
-			return db
-		}
 		return db.Group(buildColumnsValue(db, columns...))
 	}
 }
