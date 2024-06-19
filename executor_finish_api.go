@@ -93,12 +93,12 @@ func (x *Executor[T]) FindAll() (rows []*T, err error) {
 }
 
 func (x *Executor[T]) FindAllByPage(offset, limit int) (rows []*T, count int64, err error) {
-	count, err = x.FindByPage(rows, offset, limit)
+	count, err = x.FindByPage(&rows, offset, limit)
 	return rows, count, err
 }
 
 func (x *Executor[T]) FindAllPaginate(page, perPage int64, maxPerPages ...int64) (rows []*T, count int64, err error) {
-	count, err = x.FindPaginate(rows, page, perPage, maxPerPages...)
+	count, err = x.FindPaginate(&rows, page, perPage, maxPerPages...)
 	return rows, count, err
 }
 
