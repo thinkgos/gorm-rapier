@@ -1,9 +1,9 @@
 module github.com/thinkgos/gorm-rapier
 
-go 1.21
+go 1.22
 
 require (
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225
+	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e
 	gorm.io/gorm v1.25.11
 )
 
