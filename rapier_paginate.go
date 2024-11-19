@@ -40,8 +40,39 @@ func Paginate(page, perPage int64, maxPerPages ...int64) clause.Expression {
 // Pagination 分页器
 // 分页索引: page >= 1
 // 分页大小: perPage >= 1 && <= DefaultMaxPerPage
-func Pagination(page, perPage int64, maxPerPages ...int64) Condition {
+func Pagination(page, perPage int64, maxPerPages ...int64) func(*gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Clauses(Paginate(page, perPage, maxPerPages...))
+	}
+}
+
+// 限制器
+// offset = perPage * (page - 1)
+// limit = perPage
+// if limit > 0: use limit
+// if offset > 0: use offset
+// if limit <= 0 and offset <= 0: use none
+func Limit(page, perPage int64) func(*gorm.DB) *gorm.DB {
+	offset := 0
+	if page > 0 {
+		offset = int(perPage * (page - 1))
+	}
+	limit := int(perPage)
+	return func(db *gorm.DB) *gorm.DB {
+		if offset > 0 || limit > 0 {
+			l := clause.Limit{
+				Limit:  new(int),
+				Offset: offset,
+			}
+			if offset > 0 {
+				l.Offset = offset
+			}
+			if limit > 0 {
+				l.Limit = &limit
+			}
+			return db.Clauses(l)
+		} else {
+			return db
+		}
 	}
 }
