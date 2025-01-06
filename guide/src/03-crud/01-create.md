@@ -10,7 +10,7 @@
 
 ```go
 // empty record
-rowsAffected, err := rapier.NewExecutor[testdata.Dict](db)Create()
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).Create()
 _ = err          // return error
 _ = rowsAffected // return row affected
 ```
