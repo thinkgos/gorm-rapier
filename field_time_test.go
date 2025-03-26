@@ -149,13 +149,13 @@ func Test_Expr_Time(t *testing.T) {
 		{
 			name:     "Add use DATE_ADD()",
 			expr:     NewTime("", "created_at").Add(24 * time.Hour),
-			wantVars: []any{time.Duration(24 * time.Hour).Microseconds()},
+			wantVars: []any{24 * time.Hour.Microseconds()},
 			want:     "DATE_ADD(`created_at`, INTERVAL ? MICROSECOND)",
 		},
 		{
 			name:     "Sub use DATE_SUB(date, INTERVAL value unit)",
 			expr:     NewTime("", "created_at").Sub(24 * time.Hour),
-			wantVars: []any{time.Duration(24 * time.Hour).Microseconds()},
+			wantVars: []any{24 * time.Hour.Microseconds()},
 			want:     "DATE_SUB(`created_at`, INTERVAL ? MICROSECOND)",
 		},
 		{

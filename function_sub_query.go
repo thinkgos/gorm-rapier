@@ -132,7 +132,7 @@ func (columns Columns) containsValues(op string, value clause.Expr) Expr {
 	case 1:
 		return expr{e: clause.Expr{
 			SQL:  fmt.Sprintf("? %s (?)", op),
-			Vars: []any{columns[0].RawExpr(), clause.Expr(value)},
+			Vars: []any{columns[0].RawExpr(), value},
 		}}
 	default: // len(columns) > 0
 		vars := make([]string, len(columns))

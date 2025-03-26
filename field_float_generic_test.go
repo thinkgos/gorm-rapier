@@ -72,9 +72,9 @@ func testExprFloat[T constraints.Float | ~string](
 	getTestValue func() (T, T, T),
 ) {
 	value1, value2, value3 := getTestValue()
-	var value4 []T = []T{value1, value2, value3}
-	var value5 []TestFloat = []TestFloat{1.1, 2.2, 3.3}
-	var value6 []string = []string{"1", "2", "3"}
+	var value4 = []T{value1, value2, value3}
+	var value5 = []TestFloat{1.1, 2.2, 3.3}
+	var value6 = []string{"1", "2", "3"}
 
 	tests := []struct {
 		name     string

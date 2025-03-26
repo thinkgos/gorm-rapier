@@ -332,12 +332,12 @@ func Test_Field_Expr_Col(t *testing.T) {
 }
 
 func Test_Expr_Field(t *testing.T) {
-	var value1 int = 1
-	var value2 int = 2
-	var value3 int = 3
+	var value1 = 1
+	var value2 = 2
+	var value3 = 3
 	timeTime1, _ := time.Parse("2006-01-02 15:04:05", "2021-06-29 15:11:49")
 	timeDuration1 := time.Second
-	timeDurationToMicroSecond1 := time.Duration(timeDuration1).Microseconds()
+	timeDurationToMicroSecond1 := timeDuration1.Microseconds()
 
 	tests := []struct {
 		name     string

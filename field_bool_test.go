@@ -3,7 +3,6 @@ package rapier
 import "testing"
 
 func Test_Bool(t *testing.T) {
-	var value1 bool = true
 	tests := []struct {
 		name     string
 		expr     Expr
@@ -12,32 +11,32 @@ func Test_Bool(t *testing.T) {
 	}{
 		{
 			name:     "IfNull",
-			expr:     NewBool("", "male").IfNull(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").IfNull(true),
+			wantVars: []any{true},
 			want:     "IFNULL(`male`,?)",
 		},
 		{
 			name:     "NullIf",
-			expr:     NewBool("", "male").NullIf(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").NullIf(true),
+			wantVars: []any{true},
 			want:     "NULLIF(`male`,?)",
 		},
 		{
 			name:     "eq",
-			expr:     NewBool("", "male").Eq(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").Eq(true),
+			wantVars: []any{true},
 			want:     "`male` = ?",
 		},
 		{
 			name:     "eq",
-			expr:     NewBool("", "male").Neq(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").Neq(true),
+			wantVars: []any{true},
 			want:     "`male` <> ?",
 		},
 		{
 			name:     "is",
-			expr:     NewBool("", "male").Is(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").Is(true),
+			wantVars: []any{true},
 			want:     "`male` = ?",
 		},
 		{
@@ -54,39 +53,39 @@ func Test_Bool(t *testing.T) {
 		},
 		{
 			name:     "xor",
-			expr:     NewBool("", "male").Xor(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").Xor(true),
+			wantVars: []any{true},
 			want:     "`male` XOR ?",
 		},
 		{
 			name:     "and",
-			expr:     NewBool("", "male").And(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").And(true),
+			wantVars: []any{true},
 			want:     "`male` AND ?",
 		},
 		{
 			name:     "or",
-			expr:     NewBool("", "male").Or(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").Or(true),
+			wantVars: []any{true},
 			want:     "`male` OR ?",
 		},
 
 		{
 			name:     "bit and",
-			expr:     NewBool("", "male").BitAnd(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").BitAnd(true),
+			wantVars: []any{true},
 			want:     "`male`&?",
 		},
 		{
 			name:     "bit or",
-			expr:     NewBool("", "male").BitOr(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").BitOr(true),
+			wantVars: []any{true},
 			want:     "`male`|?",
 		},
 		{
 			name:     "bit xor",
-			expr:     NewBool("", "male").BitXor(value1),
-			wantVars: []any{value1},
+			expr:     NewBool("", "male").BitXor(true),
+			wantVars: []any{true},
 			want:     "`male`^?",
 		},
 	}

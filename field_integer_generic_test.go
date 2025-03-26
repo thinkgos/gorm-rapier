@@ -79,9 +79,9 @@ func testExprInteger[T constraints.Integer](
 	var value1 T = 0
 	var value2 T = 5
 	var value3 T = 8
-	var value4 []T = []T{value1, value2, value3}
-	var value5 []TestInteger = []TestInteger{1, 2, 3}
-	var value6 []string = []string{"1", "2", "3"}
+	var value4 = []T{value1, value2, value3}
+	var value5 = []TestInteger{1, 2, 3}
+	var value6 = []string{"1", "2", "3"}
 
 	tests := []struct {
 		name     string
