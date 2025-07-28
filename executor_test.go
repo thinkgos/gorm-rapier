@@ -11,7 +11,9 @@ import (
 func Test_Executor_Stand(t *testing.T) {
 	t.Run("executor", func(t *testing.T) {
 		err := refDict.New_Executor(newDb()).
-			Debug().
+			Configure(func(e *Executor[Dict]) *Executor[Dict] {
+				return e.Debug()
+			}).
 			WithContext(context.Background()).
 			Unscoped().
 			Session(&gorm.Session{}).

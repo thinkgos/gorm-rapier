@@ -6,6 +6,8 @@ import (
 	"gorm.io/gorm"
 )
 
+type Configure[T any] func(*Executor[T]) *Executor[T]
+
 type Executor[T any] struct {
 	db     *gorm.DB
 	table  Condition
@@ -57,6 +59,14 @@ func (x *Executor[T]) AttrsExpr(attrs ...AssignExpr) *Executor[T] {
 // provide attributes used in [FirstOrCreate] or [FirstOrInit]
 func (x *Executor[T]) AssignExpr(attrs ...AssignExpr) *Executor[T] {
 	x.db = x.db.Assign(buildAttrsValue(attrs)...)
+	return x
+}
+
+// Configure executor middleware
+func (x *Executor[T]) Configure(cs ...Configure[T]) *Executor[T] {
+	for _, f := range cs {
+		x = f(x)
+	}
 	return x
 }
 
