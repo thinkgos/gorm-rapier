@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e
-	gorm.io/gorm v1.30.5
+	gorm.io/gorm v1.31.0
 )
 
 require (
