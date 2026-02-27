@@ -1,0 +1,1417 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gorm Rapier Documentation</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="resources/prism-07efd639.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-5b88ac29.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-f2ef044e.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Gorm Rapier Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/thinkgos/gorm-rapier" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="rapier-guides"><a class="header" href="#rapier-guides">rapier Guides</a></h1>
+<ul>
+<li><a href="#rapier-guides">rapier Guides</a>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#installation">Installation</a></li>
+</ul>
+</li>
+</ul>
+<p><a href="https://github.com/thinkgos/gorm-rapier">gorm-rapier</a> is an assist rapier for gorm.</p>
+<p><a href="https://pkg.go.dev/github.com/thinkgos/gorm-rapier?tab=doc"><img src="https://img.shields.io/badge/go.dev-reference-blue?logo=go&amp;logoColor=white" alt="Go.Dev reference"></a>
+<a href="https://codecov.io/gh/thinkgos/gorm-rapier"><img src="https://codecov.io/gh/thinkgos/gorm-rapier/graph/badge.svg?token=aHu5wq1m6i" alt="codecov"></a>
+<a href="https://github.com/thinkgos/gorm-rapier/actions/workflows/ci.yml"><img src="https://github.com/thinkgos/gorm-rapier/actions/workflows/ci.yml/badge.svg?branch=main" alt="Tests"></a>
+<a href="https://goreportcard.com/report/github.com/thinkgos/gorm-rapier"><img src="https://goreportcard.com/badge/github.com/thinkgos/gorm-rapier" alt="Go Report Card"></a>
+<a href="https://raw.githubusercontent.com/thinkgos/gorm-rapier/main/LICENSE"><img src="https://img.shields.io/github/license/thinkgos/gorm-rapier" alt="Licence"></a>
+<a href="https://github.com/thinkgos/gorm-rapier/tags"><img src="https://img.shields.io/github/v/tag/thinkgos/gorm-rapier" alt="Tag"></a></p>
+<ul>
+<li><a href="http://gorm.io/docs">gorm Guides</a></li>
+<li><a href="https://thinkgos.github.io/gorm-rapier/">gorm rapier Guides</a></li>
+</ul>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<ul>
+<li>Idiomatic and Reusable API from Dynamic Raw SQL</li>
+<li>100% Type-safe API without interface{}</li>
+<li>Almost supports all features, plugins, DBMS that GORM supports</li>
+<li>Almost same behavior as gorm you used.</li>
+</ul>
+<h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
+<p>Use go get.</p>
+<pre><code class="language-bash">go get github.com/thinkgos/gorm-rapier
+</code></pre>
+<p>Then import the package into your own code.</p>
+<pre><code class="language-go">import "github.com/thinkgos/gorm-rapier"
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="declaring-models"><a class="header" href="#declaring-models">Declaring Models</a></h1>
+<ul>
+<li><a href="#declaring-models">Declaring Models</a>
+<ul>
+<li><a href="#declaring-gorm-model">Declaring gorm model</a></li>
+<li><a href="#declaring-rapier-model">Declaring rapier model</a></li>
+<li><a href="#how-to-define-model">How to define model</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="declaring-gorm-model"><a class="header" href="#declaring-gorm-model">Declaring gorm model</a></h2>
+<p><a href="https://gorm.io/docs/models.html">Declaring gorm Models</a></p>
+<h2 id="declaring-rapier-model"><a class="header" href="#declaring-rapier-model">Declaring rapier model</a></h2>
+<p>Supported field:</p>
+<ul>
+<li>bool: <code>Bool</code></li>
+<li>[]byte: <code>Bytes</code></li>
+<li>float: <code>Float32</code>, <code>Float64</code>, <code>Decimal</code></li>
+<li>integer: <code>Int</code>, <code>Int8</code>, <code>Int16</code>, <code>Int32</code>, <code>Int64</code></li>
+<li>unsigned integer: <code>Uint</code>, <code>Uint8</code>, <code>Uint16</code>, <code>Uint32</code>, <code>Uint64</code></li>
+<li>string: <code>String</code></li>
+<li>time.Time: <code>Time</code></li>
+<li>any: <code>Field</code></li>
+<li>raw filed: <code>Raw</code></li>
+</ul>
+<h2 id="how-to-define-model"><a class="header" href="#how-to-define-model">How to define model</a></h2>
+<p>model defined for test <a href="https://github.com/thinkgos/gorm-rapier/tree/main/testdata">testdata</a>.</p>
+<p>if we have a gorm model follow:</p>
+<pre><code class="language-go">// Dict 字典
+type Dict struct {
+    Id        int64     `gorm:"column:id;autoIncrement:true;not null;primaryKey" json:"id,omitempty"`
+    Key       string    `gorm:"column:key;type:varchar(64);not null;default:'';uniqueIndex:uk_key" json:"key,omitempty"`
+    Name      string    `gorm:"column:name;type:varchar(64);not null;default:''" json:"name,omitempty"`
+    IsPin     bool      `gorm:"column:is_pin;type:tinyint(1);not null;default:0" json:"is_pin,omitempty"`
+    Remark    string    `gorm:"column:remark;type:varchar(128);not null;default:''" json:"remark,omitempty"`
+    CreatedAt time.Time `gorm:"column:created_at;type:datetime;not null" json:"created_at,omitempty"`
+    UpdatedAt time.Time `gorm:"column:updated_at;type:datetime;not null" json:"updated_at,omitempty"`
+}
+
+// TableName implement schema.Tabler interface
+func (*Dict) TableName() string {
+    return "dict"
+}
+</code></pre>
+<p>then we can define rapier model:</p>
+<pre><code class="language-go">var ref_Dict_Native = New_Dict("dict")
+
+type Dict_Native struct {
+    refAlias     string
+    refTableName string
+    ALL          rapier.Asterisk
+    Id           rapier.Int64
+    Key          rapier.String
+    Name         rapier.String
+    IsPin        rapier.Bool
+    Remark       rapier.String
+    CreatedAt    rapier.Time
+    UpdatedAt    rapier.Time
+}
+
+func new_Dict(tableName, alias string) *Dict_Native {
+    return &amp;Dict_Native{
+        refAlias:     alias,
+        refTableName: tableName,
+        ALL:          rapier.NewAsterisk(alias),
+        Id:           rapier.NewInt64(alias, "id"),
+        Key:          rapier.NewString(alias, "key"),
+        Name:         rapier.NewString(alias, "name"),
+        IsPin:        rapier.NewBool(alias, "is_pin"),
+        Remark:       rapier.NewString(alias, "remark"),
+        CreatedAt:    rapier.NewTime(alias, "created_at"),
+        UpdatedAt:    rapier.NewTime(alias, "updated_at"),
+    }
+}
+
+// Ref_Dict model with TableName `dict`.
+func Ref_Dict() *Dict_Native { return ref_Dict_Native }
+
+// New_Dict new instance.
+func New_Dict(tableName string) *Dict_Native {
+    return new_Dict(tableName, tableName)
+}
+
+// As alias
+func (x *Dict_Native) As(alias string) *Dict_Native {
+    return new_Dict(x.refTableName, alias)
+}
+
+// Alias hold alias name when call Dict_Active.As that you defined.
+func (x *Dict_Native) Alias() string { return x.refAlias }
+
+// TableName hold table name when call New_Dict that you defined.
+func (x *Dict_Native) TableName() string { return x.refTableName }
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="connecting-to-a-database"><a class="header" href="#connecting-to-a-database">Connecting to a Database</a></h1>
+<p><a href="https://gorm.io/docs/connecting_to_the_database.html">Connecting to a Database</a></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="crud-interface"><a class="header" href="#crud-interface">CRUD interface</a></h1>
+<p><code>Executor[T]</code>’s <code>Where</code>, <code>Or</code>, <code>Not</code>, <code>Having</code> and the suffix with <code>Expr</code> method can use field which implement <code>Expr</code> interface.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="create"><a class="header" href="#create">Create</a></h1>
+<ul>
+<li><a href="#create">Create</a>
+<ul>
+<li><a href="#empty-record">Empty record</a></li>
+<li><a href="#single-record">Single record</a></li>
+<li><a href="#multiple-record">Multiple record</a></li>
+<li><a href="#batch-insert-multiple-record">Batch insert multiple record</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="empty-record"><a class="header" href="#empty-record">Empty record</a></h2>
+<pre><code class="language-go">// empty record
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).Create()
+_ = err          // return error
+_ = rowsAffected // return row affected
+</code></pre>
+<h2 id="single-record"><a class="header" href="#single-record">Single record</a></h2>
+<pre><code class="language-go">// single record
+newDict := testdata.Dict{
+    Key:    "key1",
+    Name:   "name1",
+    IsPin:  true,
+    Remark: "remark1",
+}
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).Create(&amp;newDict)
+_ = err          // return error
+_ = rowsAffected // return row affected
+// INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.135","2024-02-20 07:18:42.135")
+</code></pre>
+<h2 id="multiple-record"><a class="header" href="#multiple-record">Multiple record</a></h2>
+<pre><code class="language-go">// multiple record
+newDicts := []*testdata.Dict{
+    {
+        Key:    "key1",
+        Name:   "name1",
+        IsPin:  true,
+        Remark: "remark1",
+    },
+    {
+        Key:    "key2",
+        Name:   "name2",
+        IsPin:  true,
+        Remark: "remark2",
+    },
+}
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).Create(newDicts...)
+_ = err          // return error
+_ = rowsAffected // return row affected
+// INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136"),("key2","name2",true,"remark2","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136")
+</code></pre>
+<h2 id="batch-insert-multiple-record"><a class="header" href="#batch-insert-multiple-record">Batch insert multiple record</a></h2>
+<pre><code class="language-go">// batch insert multiple record
+newDicts := []*testdata.Dict{
+    {
+        Key:    "key1",
+        Name:   "name1",
+        IsPin:  true,
+        Remark: "remark1",
+    },
+    {
+        Key:    "key2",
+        Name:   "name2",
+        IsPin:  true,
+        Remark: "remark2",
+    },
+    {
+        Key:    "key3",
+        Name:   "name3",
+        IsPin:  true,
+        Remark: "remark3",
+    },
+}
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).CreateInBatches(newDicts, 2)
+_ = err          // return error
+_ = rowsAffected // return row affected
+// INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key1","name1",true,"remark1","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136"),("key2","name2",true,"remark2","2024-02-20 07:18:42.136","2024-02-20 07:18:42.136")
+// INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("key3","name3",true,"remark3","2024-02-20 07:18:42.135","2024-02-20 07:18:42.135")
+</code></pre>
+<p>more information <a href="https://gorm.io/docs/create.html">gorm Create</a></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="query"><a class="header" href="#query">Query</a></h1>
+<ul>
+<li><a href="#query">Query</a>
+<ul>
+<li><a href="#retrieving-a-single-object">Retrieving a single object</a></li>
+<li><a href="#retrieving-a-single-field">Retrieving a single field</a></li>
+<li><a href="#retrieving-multiple-objects">Retrieving multiple objects</a></li>
+<li><a href="#condition">Condition</a></li>
+<li><a href="#selecting-specific-fields">Selecting Specific Fields</a></li>
+<li><a href="#order">Order</a></li>
+<li><a href="#limit--offset">Limit &amp; Offset</a></li>
+<li><a href="#group-by--having">Group By &amp; Having</a></li>
+<li><a href="#distinct">Distinct</a></li>
+<li><a href="#joins">Joins</a></li>
+<li><a href="#scan">Scan</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="retrieving-a-single-object"><a class="header" href="#retrieving-a-single-object">Retrieving a single object</a></h2>
+<pre><code class="language-go">var record2 testdata.Dict
+
+// Get the first record ordered by primary key
+record1, err := rapier.NewExecutor[testdata.Dict](db).FirstOne()
+_ = err     // return error
+_ = record1 // return record
+// Get one record, no specified order
+record1, err = rapier.NewExecutor[testdata.Dict](db).TakeOne()
+_ = err     // return error
+_ = record1 // return record
+// Get one record, no specified order
+record1, err = rapier.NewExecutor[testdata.Dict](db).LastOne()
+_ = err     // return error
+_ = record1 // return record
+
+// Get the first record ordered by primary key  with original gorm api
+err = rapier.NewExecutor[testdata.Dict](db).First(&amp;record2)
+_ = err     // return error
+_ = record2 // return record
+// Get one record, no specified order with original gorm api
+err = rapier.NewExecutor[testdata.Dict](db).Take(&amp;record2)
+_ = err     // return error
+_ = record2 // return record
+// Get one record, no specified order with original gorm api
+err = rapier.NewExecutor[testdata.Dict](db).Last(&amp;record2)
+_ = err     // return error
+_ = record2 // return record
+</code></pre>
+<h2 id="retrieving-a-single-field"><a class="header" href="#retrieving-a-single-field">Retrieving a single field</a></h2>
+<p>the api like <code>FirstXXX</code> or <code>TakeXXX</code>, return follow type: <code>bool</code>,<code>string</code>, <code>float32</code>, <code>float64</code>, <code>int</code>, <code>int8</code>, <code>int16</code>, <code>int32</code>, <code>int64</code>, <code>uint</code>, <code>uint8</code>, <code>uint16</code>, <code>uint32</code>, <code>uint64</code></p>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+// Get the first record ordered returned single field.
+_ = err // return error
+_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).FirstString()
+// SELECT `dict`.`key` FROM `dict` ORDER BY `dict`.`id` LIMIT 1
+
+// Get one record, no specified order returned single field.
+_, err = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key).TakeString()
+// SELECT `dict`.`key` FROM `dict` LIMIT 1
+</code></pre>
+<h2 id="retrieving-multiple-objects"><a class="header" href="#retrieving-multiple-objects">Retrieving multiple objects</a></h2>
+<pre><code class="language-go">// Get the multiple record.
+records1, err := rapier.NewExecutor[testdata.Dict](db).
+    FindAll()
+_ = err      // return error
+_ = records1 // return records
+// SELECT * FROM `dict`
+
+var records2 []*testdata.Dict
+// Get the multiple record.
+err = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(rapier.All).
+    Find(&amp;records2)
+_ = err      // return error
+_ = records1 // return records
+// SELECT * FROM `dict`
+</code></pre>
+<h2 id="condition"><a class="header" href="#condition">Condition</a></h2>
+<p>In addition to <a href="https://gorm.io/docs/query.html#Conditions">gorm Conditions</a> usages, there are usable usage related to <code>rapier</code></p>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+
+// =
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Eq("key1")).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` = "key1" LIMIT 1
+// &lt;&gt;
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Neq("key1")).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` &lt;&gt; "key1" LIMIT 1
+// IN
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.In("key1", "key2")).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` IN ("key1","key2") LIMIT 1
+// NOT IN
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.NotIn("key1", "key2")).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` NOT IN ("key1","key2") LIMIT 1
+// Fuzzy LIKE
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.FuzzyLike("key1")).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` LIKE "%key1%" LIMIT 1
+// Left LIKE
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.LeftLike("key1")).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` LIKE "key1%" LIMIT 1
+// LIKE
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Like("%key1%")).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` LIKE "%key1%" LIMIT 1
+// NOT LIKE
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.NotLike("%key1%")).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` NOT LIKE "%key1%" LIMIT 1
+// AND
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Eq("key1"), refDict.IsPin.Eq(true)).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` = "key1" AND `dict`.`is_pin` = true LIMIT 1
+// &gt;
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Gt(time.Now())).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`created_at` &gt; "2024-03-07 06:20:47.057" LIMIT 1
+// &gt;=
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Gte(time.Now())).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`created_at` &gt;= "2024-03-07 06:20:47.057" LIMIT 1
+// &lt;
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Lt(time.Now())).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`created_at` &lt; "2024-03-07 06:20:47.057" LIMIT 1
+// &lt;=
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Lte(time.Now())).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`created_at` &lt;= "2024-03-07 06:20:47.057" LIMIT 1
+// BETWEEN
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.Between(time.Now().Add(time.Hour), time.Now())).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`created_at` BETWEEN "2024-03-07 07:20:47.057" AND "2024-03-07 06:20:47.057" LIMIT 1
+// NOT BETWEEN
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.CreatedAt.NotBetween(time.Now().Add(time.Hour), time.Now())).TakeOne()
+// SELECT * FROM `dict` WHERE NOT (`dict`.`created_at` BETWEEN "2024-03-07 07:20:47.057" AND "2024-03-07 06:20:47.057") LIMIT 1
+ 
+// not condition
+_, _ = rapier.NewExecutor[testdata.Dict](db).Not(refDict.Key.Eq("key1")).TakeOne()
+// SELECT * FROM `dict` WHERE NOT `dict`.`key` = "key1" LIMIT 1
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(rapier.Not(refDict.Key.Eq("key1"))).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` &lt;&gt; "key1" LIMIT 1
+_, _ = rapier.NewExecutor[testdata.Dict](db).Not(refDict.Key.In("key1", "key2")).TakeOne()
+// SELECT * FROM `dict` WHERE NOT `dict`.`key` IN ("key1","key2") LIMIT 1
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(rapier.Not(refDict.Key.In("key1", "key2"))).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` NOT IN ("key1","key2") LIMIT 1
+
+// Or condition
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Eq("key1")).Or(refDict.Key.Eq("key2")).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` = "key1" OR `dict`.`key` = "key2" LIMIT 1
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(rapier.Or(refDict.Key.Eq("key1"), refDict.Key.Eq("key2"))).TakeOne()
+// SELECT * FROM `dict` WHERE (`dict`.`key` = "key1" OR `dict`.`key` = "key2") LIMIT 1
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(refDict.Key.Eq("key1")).Or(refDict.Key.Eq("key2"), refDict.IsPin.Eq(true)).TakeOne()
+// SELECT * FROM `dict` WHERE `dict`.`key` = "key1" OR (`dict`.`key` = "key2" AND `dict`.`is_pin` = true) LIMIT 1
+_, _ = rapier.NewExecutor[testdata.Dict](db).Where(rapier.Or(refDict.Key.Eq("key1"), rapier.And(refDict.Key.Eq("key2"), refDict.IsPin.Eq(true)))).TakeOne()
+// SELECT * FROM `dict` WHERE (`dict`.`key` = "key1" OR (`dict`.`key` = "key2" AND `dict`.`is_pin` = true))
+</code></pre>
+<h2 id="selecting-specific-fields"><a class="header" href="#selecting-specific-fields">Selecting Specific Fields</a></h2>
+<p><code>Select</code>, <code>SelectExpr</code> allows you to specify the fields that you want to retrieve from database.</p>
+<pre><code class="language-go">var records []*struct {
+    Key   string
+    IsPin bool
+}
+refDict := testdata.Ref_Dict()
+
+// with expr
+_ = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key, refDict.IsPin).Find(&amp;records)
+// SELECT `dict`.`key`,`dict`.`is_pin` FROM `dict`
+_ = rapier.NewExecutor[testdata.Dict](db).SelectExpr(refDict.Key.Trim("1").As(refDict.Key.ColumnName()), refDict.IsPin).Find(&amp;records)
+// SELECT TRIM(BOTH "1" FROM `dict`.`key`) AS `key`,`dict`.`is_pin` FROM `dict`
+
+// with original gorm api
+_ = rapier.NewExecutor[testdata.Dict](db).Select("key", "is_pin").Find(&amp;records)
+// SELECT `key`,`is_pin` FROM `dict`
+</code></pre>
+<h2 id="order"><a class="header" href="#order">Order</a></h2>
+<p>Specify order when retrieving records from the database</p>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+
+// with expr
+_, _ = rapier.NewExecutor[testdata.Dict](db).OrderExpr(refDict.Key.Desc(), refDict.Name).FindAll()
+// SELECT * FROM `dict` ORDER BY `dict`.`key` DESC,`dict`.`name`
+_, _ = rapier.NewExecutor[testdata.Dict](db).OrderExpr(refDict.Key.Desc()).OrderExpr(refDict.Name).FindAll()
+// SELECT * FROM `dict` ORDER BY `dict`.`key` DESC,`dict`.`name`
+
+// with original gorm api
+_, _ = rapier.NewExecutor[testdata.Dict](db).Order("`key` DESC,name").FindAll()
+// SELECT * FROM `dict` ORDER BY `key` DESC,name
+_, _ = rapier.NewExecutor[testdata.Dict](db).Order("`key` DESC").Order("name").FindAll()
+// SELECT * FROM `dict` ORDER BY `key` DESC,name
+</code></pre>
+<h2 id="limit--offset"><a class="header" href="#limit--offset">Limit &amp; Offset</a></h2>
+<p><code>Pagination</code>:</p>
+<ul>
+<li><code>page</code>: page index</li>
+<li><code>perPage</code>: per page size (default size is 50, default max size is 500)</li>
+<li><code>maxPerPages</code>: override default max size.</li>
+</ul>
+<p><code>Limit</code>: specify the max number of records to retrieve.<br><code>Offset</code>: specify the number of records to skip before starting to return the records</p>
+<pre><code class="language-go">// with Pagination
+_, _ = rapier.NewExecutor[testdata.Dict](db).Pagination(3, 5).FindAll()
+// SELECT * FROM `dict` LIMIT 5 OFFSET 10
+
+// with original gorm api
+_, _ = rapier.NewExecutor[testdata.Dict](db).Limit(3).FindAll()
+// SELECT * FROM `dict` LIMIT 3
+_, _ = rapier.NewExecutor[testdata.Dict](db).Offset(3).FindAll()
+// SELECT * FROM `dict` OFFSET 3
+_, _ = rapier.NewExecutor[testdata.Dict](db).Limit(10).Offset(5).FindAll()
+// SELECT * FROM `dict` LIMIT 10 OFFSET 5
+</code></pre>
+<h2 id="group-by--having"><a class="header" href="#group-by--having">Group By &amp; Having</a></h2>
+<pre><code class="language-go">var result struct {
+    Name  string
+    Total int
+}
+
+refDict := testdata.Ref_Dict()
+// with expr
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Name,
+        rapier.Star.Count().As("total"),
+    ).
+    Where(refDict.Name.LeftLike("group")).
+    GroupExpr(refDict.Name).
+    Take(&amp;result)
+// SELECT `dict`.`name`,COUNT(*) AS `total` FROM `dict` WHERE `dict`.`name` LIKE "group%" GROUP BY `dict`.`name`
+
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Name,
+        rapier.Star.Count().As("total"),
+    ).
+    GroupExpr(refDict.Name).
+    Having(refDict.Name.Eq("group")).
+    Take(&amp;result)
+// SELECT `dict`.`name`,COUNT(*) AS `total` FROM `dict` GROUP BY `dict`.`name` HAVING `dict`.`name` = "group"
+
+// with original gorm api
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Name,
+        rapier.Star.Count().As("total"),
+    ).
+    Where(refDict.Name.LeftLike("group")).
+    Group("name").
+    Take(&amp;result)
+// SELECT `dict`.`name`,COUNT(*) AS `total` FROM `dict` WHERE `dict`.`name` LIKE "group%" GROUP BY `name` LIMIT 1
+
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Name,
+        rapier.Star.Count().As("total"),
+    ).
+    Group("name").
+    Having("name = ?", "group").
+    Take(&amp;result)
+// SELECT `dict`.`name`,COUNT(*) AS `total` FROM `dict` GROUP BY `name` HAVING name = "group" LIMIT 1
+</code></pre>
+<h2 id="distinct"><a class="header" href="#distinct">Distinct</a></h2>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+// with expr
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    DistinctExpr(
+        refDict.Name,
+        refDict.IsPin,
+    ).
+    FindAll()
+// SELECT DISTINCT `dict`.`name`,`dict`.`is_pin` FROM `dict`
+
+// with original gorm api
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    Distinct("name", "is_pin").
+    FindAll()
+// SELECT DISTINCT `name`,`is_pin` FROM `dict`
+</code></pre>
+<h2 id="joins"><a class="header" href="#joins">Joins</a></h2>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+refDictItem := testdata.Ref_DictItem()
+d := refDict.As("d")
+di := refDictItem.As("di")
+
+// join
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+        refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+        refDictItem.Name.As(refDictItem.Name.FieldName(refDictItem.TableName())),
+    ).
+    InnerJoinsExpr(refDictItem, refDictItem.DictId.EqCol(refDict.Id), refDictItem.IsEnabled.Eq(true)).
+    Take(&amp;struct{}{})
+// SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`dict_item`.`name` AS `dict_item_name` FROM `dict` INNER JOIN `dict_item` ON `dict_item`.`dict_id` = `dict`.`id` AND `dict_item`.`is_enabled` = true LIMIT 1
+
+// join with alias
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+        refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+        d.Id.As(d.Id.FieldName(d.Alias())),
+    ).
+    InnerJoinsExpr(rapier.NewJoinTable(d, d.Alias()), d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+    Take(&amp;struct{}{})
+// SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`d`.`id` AS `d_id` FROM `dict` INNER JOIN `dict` `d` ON `d`.`name` = `dict`.`name` AND `d`.`is_pin` = true LIMIT 1
+
+// join with alias which table implements Alias interface.
+// we can directly use it. no need `NewJoinTable`.
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+        refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+        d.Id.As(d.Id.FieldName(d.Alias())),
+    ).
+    InnerJoinsExpr(d, d.Name.EqCol(refDict.Name), d.IsPin.Eq(true)).
+    Take(&amp;struct{}{})
+// SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`d`.`id` AS `d_id` FROM `dict` INNER JOIN `dict` `d` ON `d`.`name` = `dict`.`name` AND `d`.`is_pin` = true LIMIT 1
+
+// join with SubQuery
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Id.As(refDict.Id.FieldName(refDict.TableName())),
+        refDict.Key.As(refDict.Key.FieldName(refDict.TableName())),
+        di.Sort.As(di.Sort.FieldName(di.Alias())),
+    ).
+    InnerJoinsExpr(
+        rapier.NewJoinTableSubQuery(
+            rapier.NewExecutor[testdata.DictItem](db).
+                Where(refDictItem.IsEnabled.Eq(true)).
+                IntoDB(),
+            "di",
+        ),
+        di.Name.EqCol(refDict.Name),
+        di.Sort.Gt(10),
+    ).
+    Take(&amp;struct{}{})
+// SELECT `dict`.`id` AS `dict_id`,`dict`.`key` AS `dict_key`,`di`.`sort` AS `di_sort` FROM `dict` INNER JOIN (SELECT * FROM `dict_item` WHERE `dict_item`.`is_enabled` = true) AS `di` ON `di`.`name` = `dict`.`name` AND `di`.`sort` &gt; 10 LIMIT 1
+</code></pre>
+<h2 id="scan"><a class="header" href="#scan">Scan</a></h2>
+<p>Retrieving a single field, the api like <code>ScanXXX</code> return follow type: <code>bool</code>,<code>string</code>, <code>float32</code>, <code>float64</code>, <code>int</code>, <code>int8</code>, <code>int16</code>, <code>int32</code>, <code>int64</code>, <code>uint</code>, <code>uint8</code>, <code>uint16</code>, <code>uint32</code>, <code>uint64</code>.</p>
+<pre><code class="language-go">var record2 testdata.Dict
+
+// Get one record, no specified order
+record1, err := rapier.NewExecutor[testdata.Dict](db).ScanOne()
+_ = err     // return error
+_ = record1 // return record
+// SELECT * FROM `dict`
+// Get one record, no specified order with original gorm api
+err = rapier.NewExecutor[testdata.Dict](db).Scan(&amp;record2)
+_ = err     // return error
+_ = record2 // return record
+// SELECT * FROM `dict`
+</code></pre>
+<p>more information <a href="https://gorm.io/docs/query.html">gorm Query</a></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="advanced-query"><a class="header" href="#advanced-query">Advanced Query</a></h1>
+<ul>
+<li><a href="#advanced-query">Advanced Query</a>
+<ul>
+<li><a href="#locking">Locking</a></li>
+<li><a href="#subquery">SubQuery</a></li>
+<li><a href="#from-subquery">From SubQuery</a></li>
+<li><a href="#in-with-multiple-columns">IN with multiple columns</a></li>
+<li><a href="#firstorinit">FirstOrInit</a></li>
+<li><a href="#firstorcreate">FirstOrCreate</a></li>
+<li><a href="#pluck">Pluck</a></li>
+<li><a href="#count">Count</a></li>
+<li><a href="#exist">Exist</a></li>
+<li><a href="#function">Function</a>
+<ul>
+<li><a href="#case-when">Case When</a></li>
+<li><a href="#concat">Concat</a></li>
+<li><a href="#if">IF</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>more information <a href="https://gorm.io/docs/advanced_query.html">gorm Advanced Query</a></p>
+<h2 id="locking"><a class="header" href="#locking">Locking</a></h2>
+<pre><code class="language-go">// Basic FOR UPDATE lock
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    LockingUpdate().
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR UPDATE
+// Basic FOR UPDATE lock with Clauses api
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    Clauses(clause.Locking{Strength: "UPDATE"}).
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR UPDATE
+
+// Basic FOR SHARE lock
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    LockingShare().
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR SHARE
+// Basic FOR SHARE lock with Clauses api
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    Clauses(clause.Locking{Strength: "SHARE"}).
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR SHARE
+
+// Basic FOR UPDATE NOWAIT lock with Clauses api
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    Clauses(clause.Locking{Strength: "UPDATE",Options: "NOWAIT"}).
+    TakeOne()
+// SELECT * FROM `dict` LIMIT 1 FOR UPDATE NOWAIT
+</code></pre>
+<h2 id="subquery"><a class="header" href="#subquery">SubQuery</a></h2>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+
+_ = rapier.NewExecutor[testdata.Dict](db).
+    SelectExpr(
+        refDict.Id,
+        refDict.Key,
+        rapier.NewExecutor[testdata.Dict](db).
+            SelectExpr(rapier.Star.Count()).
+            Where(
+                refDict.Name.Eq("kkk"),
+            ).
+            IntoSubQueryExpr().As("total"),
+    ).
+    Where(refDict.Key.LeftLike("key")).
+    Find(&amp;struct{}{})
+// SELECT `dict`.`id`,`dict`.`key`,(SELECT COUNT(*) FROM `dict` WHERE `dict`.`name` = "kkk") AS `total` FROM `dict` WHERE `dict`.`key` LIKE "key%"
+
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    Where(refDict.Key.EqSubQuery(
+        rapier.NewExecutor[testdata.Dict](db).
+            SelectExpr(refDict.Key).
+            Where(refDict.Id.Eq(1001)).
+            IntoDB(),
+    )).
+    FindAll()
+// SELECT * FROM `dict` WHERE `dict`.`key` = (SELECT `dict`.`key` FROM `dict` WHERE `dict`.`id` = 1001)
+</code></pre>
+<h2 id="from-subquery"><a class="header" href="#from-subquery">From SubQuery</a></h2>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+_, _ = rapier.NewExecutor[testdata.Dict](db).
+    TableExpr(
+        rapier.From{
+            Alias: "u",
+            SubQuery: rapier.NewExecutor[testdata.Dict](db).
+                SelectExpr(refDict.Key).
+                IntoDB(),
+        },
+        rapier.From{
+            Alias: "p",
+            SubQuery: rapier.NewExecutor[testdata.Dict](db).
+                SelectExpr(refDict.Key).
+                IntoDB(),
+        },
+    ).
+    FindAll()
+// SELECT * FROM (SELECT `dict`.`key` FROM `dict`) AS `u`, (SELECT `dict`.`key` FROM `dict`) AS `p`
+</code></pre>
+<h2 id="in-with-multiple-columns"><a class="header" href="#in-with-multiple-columns">IN with multiple columns</a></h2>
+<p>supports the IN clause with multiple columns, allowing you to filter data based on multiple field values in a single query.</p>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+
+record1, _ := rapier.NewExecutor[testdata.Dict](db).
+    Where(
+        rapier.NewColumns(refDict.Name, refDict.IsPin).
+            In([][]any{{"name1", true}, {"name2", false}}),
+    ).
+    FindAll()
+_ = record1
+// SELECT * FROM `dict` WHERE (`dict`.`name`, `dict`.`is_pin`) IN (("name1",true),("name2",false))
+record2, _ := rapier.NewExecutor[testdata.Dict](db).
+    Where(
+        rapier.NewColumns(refDict.Name, refDict.IsPin).
+            In(
+                rapier.NewExecutor[testdata.Dict](db).
+                    SelectExpr(refDict.Name, refDict.IsPin).
+                    Where(refDict.Id.In(10, 11)).
+                    IntoDB(),
+            ),
+    ).
+    FindAll()
+_ = record2
+// SELECT * FROM `dict` WHERE (`dict`.`name`,`dict`.`is_pin`) IN (SELECT `dict`.`name`,`dict`.`is_pin` FROM `dict` WHERE `dict`.`id` IN (10,11))
+</code></pre>
+<h2 id="firstorinit"><a class="header" href="#firstorinit">FirstOrInit</a></h2>
+<p><code>FirstOrInit</code> method is utilized to fetch the first record that matches given conditions, or initialize a new instance if no matching record is found. This method allows additional flexibility with the <code>Attrs</code>, <code>Assign</code>, <code>AttrsExpr</code>, <code>AssignExpr</code> methods.</p>
+<ul>
+<li><code>Attrs</code>, <code>AttrsExpr</code>: When no record is found, you can use <code>Attrs</code>,<code>AttrsExpr</code> to initialize a struct with additional attributes. These attributes are included in the new struct but are not used in the SQL query.</li>
+<li><code>Assign</code>, <code>AssignExpr</code> method allows you to set attributes on the struct regardless of whether the record is found or not. These attributes are set on the struct but are not used to build the SQL query and the final data won’t be saved into the database.</li>
+</ul>
+<p><em><strong>NOTE!!!</strong></em>: if with expr condition will not initialize the field when initializing, so we should use <code>Attrs</code>, <code>AttrsExpr</code>, <code>Assign</code>, <code>AssignExpr</code> attributes to indicate these fields.</p>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+// NOTE!!!: if with expr condition will not initialize the field when initializing, so we should use
+// `Attrs`, `AttrsExpr`, `Assign`, `AssignExpr` attributes to indicate these fields.
+
+// `Attrs`, `AttrsExpr`
+// with expr
+result, _ := rapier.NewExecutor[testdata.Dict](db).
+    Where(refDict.Name.Eq("myname")).
+    AttrsExpr(refDict.Remark.Value("remark11")).
+    FirstOrInit()
+newdict := result.Data
+rowsAffected := result.RowsAffected
+_ = newdict
+_ = rowsAffected
+// NOTE: Condition use expr. here will not initialize the field of the condition when initializing.
+// if not found
+// newdict -&gt; Dict{ Remark: "remark11" }
+//
+// if found, `Attrs`, `AttrsExpr` are ignored
+// newdict -&gt; Dict{ Id: 11, Name: "myname", Remark: "remark" }
+
+// with original gorm api
+result, _ = rapier.NewExecutor[testdata.Dict](db).
+    Where(&amp;testdata.Dict{
+        Name: "non_existing",
+    }).
+    FirstOrInit()
+newdict = result.Data
+rowsAffected = result.RowsAffected
+_ = newdict
+_ = rowsAffected
+// NOTE: Condition not use expr, here will initialize the field of the condition when initializing.
+// newdict -&gt; Dict{ Name: "non_existing" } if not found
+result, _ = rapier.NewExecutor[testdata.Dict](db).
+    Where(&amp;testdata.Dict{
+        Name: "myname",
+    }).
+    Attrs(&amp;testdata.Dict{Remark: "remark11"}).
+    FirstOrInit()
+newdict = result.Data
+rowsAffected = result.RowsAffected
+_ = newdict
+_ = rowsAffected
+// NOTE: Condition not use expr, here will initialize the field of the condition when initializing.
+// if not found
+// newdict -&gt; Dict{ Name: "myname", Remark: "remark11" }
+//
+// if found, `Attrs`, `AttrsExpr` are ignored
+// newdict -&gt; Dict{ Id: 1, Name: "myname", Remark: "remark" }
+
+// `Assign`, `AssignExpr`
+// with expr
+result, _ = rapier.NewExecutor[testdata.Dict](db).
+    Where(refDict.Name.Eq("myname")).
+    AssignExpr(refDict.Remark.Value("remark11")).
+    FirstOrInit()
+newdict = result.Data
+rowsAffected = result.RowsAffected
+_ = newdict
+_ = rowsAffected
+// NOTE: Where condition use expr, here will not initialize the field of the condition when initializing.
+//  if not found
+// newdict -&gt; Dict{ Remark: "remark11" }
+//
+//  if not found
+// newdict -&gt; Dict{ Name: "non_existing" }
+result, _ = rapier.NewExecutor[testdata.Dict](db).
+    Where(&amp;testdata.Dict{
+        Name: "myname",
+    }).
+    Assign(&amp;testdata.Dict{Remark: "remark11"}).
+    FirstOrInit()
+newdict = result.Data
+rowsAffected = result.RowsAffected
+_ = newdict
+_ = rowsAffected
+// NOTE: condition not use expr, here will initialize the field of the condition when initializing.
+// if not found
+// newdict -&gt; Dict{ Name: "myname", Remark: "remark11" }
+//
+// if found, `Assign`, `AssignExpr` are set on the struct
+// newdict -&gt; Dict{ Id: 1, Name: "myname", Remark: "remark11" }
+</code></pre>
+<h2 id="firstorcreate"><a class="header" href="#firstorcreate">FirstOrCreate</a></h2>
+<p><code>FirstOrCreate</code> is used to fetch the first record that matches given conditions or create a new one if no matching record is found. This method is effective with both struct and map conditions. The RowsAffected property is useful to determine the number of records created or updated.</p>
+<ul>
+<li><code>Attrs</code>, <code>AttrsExpr</code> can be used to specify additional attributes for the new record if it is not found. These attributes are used for creation but not in the initial search query.</li>
+<li><code>Assign</code>, <code>AssignExpr</code> method sets attributes on the record regardless of whether it is found or not, and these attributes are saved back to the database.</li>
+</ul>
+<p><em><strong>NOTE!!!</strong></em>: if with expr condition will not initialize the field when creating, so we should use
+<code>Attrs</code>, <code>AttrsExpr</code>, <code>Assign</code>, <code>AssignExpr</code> attributes to indicate these fields.</p>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+// NOTE!!!: if with expr condition will not initialize the field when creating, so we should use
+// `Attrs`, `AttrsExpr`, `Assign`, `AssignExpr` attributes to indicate these fields.
+
+// `Attrs`, `AttrsExpr`
+// with expr
+result, _ := rapier.NewExecutor[testdata.Dict](db).
+    Where(refDict.Name.Eq("myname")).
+    AttrsExpr(refDict.Remark.Value("remark11")).
+    FirstOrCreate()
+newdict := result.Data
+rowsAffected := result.RowsAffected
+_ = newdict
+_ = rowsAffected
+// NOTE: Condition use expr. here will not initialize the field of the condition when creating.
+// if not found. initialize with additional attributes
+// SELECT * FROM `dict` WHERE `dict`.`name` = "myname" ORDER BY `dict`.`id` LIMIT 1;
+// INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("","",false,"remark11","2024-03-08 02:20:10.853","2024-03-08 02:20:10.853");
+// newdict -&gt; Dict{ Id: 11, Name: "", Remark: "remark11" } if not found
+//
+// if found, `Attrs`, `AttrsExpr` are ignored.
+// newdict -&gt; Dict{ Id: 11, Name: "myname", Remark: "remark" }
+
+// with original gorm api
+result, _ = rapier.NewExecutor[testdata.Dict](db).
+    Where(&amp;testdata.Dict{
+        Name: "myname",
+    }).
+    Attrs(&amp;testdata.Dict{Remark: "remark11"}).
+    FirstOrCreate()
+newdict = result.Data
+rowsAffected = result.RowsAffected
+_ = newdict
+_ = rowsAffected
+// NOTE: Condition not use expr, here will initialize the field of the condition when creating.
+// if not found, initialize with given conditions and additional attributes
+// SELECT * FROM `dict` WHERE `dict`.`name` = "myname" ORDER BY `dict`.`id` LIMIT 1;
+// INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("","myname",false,"remark11","2024-03-08 02:20:10.853","2024-03-08 02:20:10.853");
+// newdict -&gt; Dict{ Id: 11, Name: "myname", Remark: "remark11" }
+//
+// if found, `Attrs`, `AttrsExpr` are ignored
+// newdict -&gt; Dict{ Id: 11, Name: "myname", Remark: "remark" }
+
+// `Assign`, `AssignExpr`
+// with expr
+result, _ = rapier.NewExecutor[testdata.Dict](db).
+    Where(refDict.Name.Eq("myname")).
+    AssignExpr(refDict.Remark.Value("remark11")).
+    FirstOrCreate()
+newdict = result.Data
+rowsAffected = result.RowsAffected
+_ = newdict
+_ = rowsAffected
+// NOTE: Where condition use expr, here will not initialize the field of the condition when creating.
+// whether it is found or not, and `Assign`, `AssignExpr` attributes are saved back to the database.
+// if no found
+// SELECT * FROM `dict` WHERE `dict`.`name` = "myname" ORDER BY `dict`.`id` LIMIT 1
+// INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("","",false,"remark11","2024-03-08 02:26:12.619","2024-03-08 02:26:12.619");
+// newdict -&gt; Dict{ Id: 11, Name: "", Remark: "remark11", ... }
+//
+// if found
+// SELECT * FROM `dict` WHERE `dict`.`name` = "myname" ORDER BY `dict`.`id` LIMIT 1
+// UPDATE `dict` SET `remark` = "remark11" WHERE id = "11"
+// newdict -&gt; Dict{ Id: 11, Name: "myname", Remark: "remark11", ... }
+
+result, _ = rapier.NewExecutor[testdata.Dict](db).
+    Where(&amp;testdata.Dict{
+        Name: "myname",
+    }).
+    Assign(&amp;testdata.Dict{Remark: "remark11"}).
+    FirstOrCreate()
+newdict = result.Data
+rowsAffected = result.RowsAffected
+_ = newdict
+_ = rowsAffected
+// NOTE: condition not use expr, here will initialize the field of the condition when creating.
+// whether it is found or not, and `Assign`, `AssignExpr` attributes are saved back to the database.
+// if no found
+// SELECT * FROM `dict` WHERE `dict`.`name` = "myname" ORDER BY `dict`.`id` LIMIT 1
+// INSERT INTO `dict` (`key`,`name`,`is_pin`,`remark`,`created_at`,`updated_at`) VALUES ("","myname",false,"remark11","2024-03-08 02:26:12.619","2024-03-08 02:26:12.619");
+// newdict -&gt; Dict{ Id: 11, Name: "myname", Remark: "remark11", ... }
+//
+// if found
+// SELECT * FROM `dict` WHERE `dict`.`name` = "myname" ORDER BY `dict`.`id` LIMIT 1
+// UPDATE `dict` SET `remark` = "remark11" WHERE id = "11"
+// newdict -&gt; Dict{ Id: 11, Name: "myname", Remark: "remark11", ... }
+</code></pre>
+<h2 id="pluck"><a class="header" href="#pluck">Pluck</a></h2>
+<p>The <code>Pluck</code>, <code>PluckExpr</code> method is used to query a single column from the database and scan the result into a slice. This method is ideal for when you need to retrieve specific fields from a model.</p>
+<p>If you need to query more than one column, you can use Select with <code>Scan</code> or <code>Find</code> instead.</p>
+<pre><code class="language-go">var ids []int64
+
+refDict := testdata.Ref_Dict()
+// with expr api
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprString(refDict.Name)
+// SELECT `name` FROM `dict`
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprBool(refDict.IsPin)
+// SELECT `is_pin` FROM `dict`
+_ = rapier.NewExecutor[testdata.Dict](db).Pluck("id", &amp;ids)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt8(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt16(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt32(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprInt64(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint8(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint16(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint32(refDict.Id)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckExprUint64(refDict.Id)
+// SELECT `id` FROM `dict`
+
+// with original gorm api
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckString("name")
+// SELECT `name` FROM `dict`
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckBool("is_pin")
+// SELECT `is_pin` FROM `dict`
+_ = rapier.NewExecutor[testdata.Dict](db).Pluck("id", &amp;ids)
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt8("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt16("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt32("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckInt64("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint8("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint16("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint32("id")
+_, _ = rapier.NewExecutor[testdata.Dict](db).PluckUint64("id")
+// SELECT `id` FROM `dict`
+</code></pre>
+<h2 id="count"><a class="header" href="#count">Count</a></h2>
+<p>The <code>Count</code> method is used to retrieve the number of records that match a given query. It’s a useful feature for understanding the size of a dataset, particularly in scenarios involving conditional queries or data analysis.</p>
+<pre><code class="language-go">total, err := rapier.NewExecutor[testdata.Dict](db).Count()
+_ = err
+_ = total
+// SELECT count(*) FROM `dict`
+</code></pre>
+<h2 id="exist"><a class="header" href="#exist">Exist</a></h2>
+<p>The <code>Exist</code> method is used to check whether the exist record that match a given query.</p>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+b, err := rapier.NewExecutor[testdata.Dict](db).Where(refDict.Id.Eq(100)).Exist()
+_ = err
+_ = b
+// SELECT 1 FROM `dict` WHERE `dict`.`id` = 100 LIMIT 1
+</code></pre>
+<h2 id="function"><a class="header" href="#function">Function</a></h2>
+<h3 id="case-when"><a class="header" href="#case-when">Case When</a></h3>
+<pre><code class="language-go">NewCaseWhen().
+WhenThen(NewField("", "id1").Gt(100), NewField("", "value1")).
+WhenThen(NewField("", "id2").Gt(200), NewField("", "value2")).
+Else(NewField("", "result")).
+Build()
+// (CASE WHEN `id1` &gt; ? THEN `value1` WHEN `id2` &gt; ? THEN `value2` ELSE `result` END)
+</code></pre>
+<h3 id="concat"><a class="header" href="#concat">Concat</a></h3>
+<pre><code class="language-go">ConcatCol(NewString("", "id"), NewString("", "new_id"), NewString("", "new_id2"))
+// CONCAT(`id`,`new_id`,`new_id2`)
+
+ConcatWsCol(NewRaw(`'-'`), NewString("", "id"), NewString("", "new_id"), NewString("", "new_id2"))
+// CONCAT_WS('-',`id`,`new_id`,`new_id2`)
+</code></pre>
+<h3 id="if"><a class="header" href="#if">IF</a></h3>
+<pre><code class="language-go">IF(NewField("", "id1").Gt(100), NewRaw("t"), NewField("", "f").Sub(1))
+// IF(`id1` &gt; ?,t,`f`-?)
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="update"><a class="header" href="#update">Update</a></h1>
+<ul>
+<li><a href="#update">Update</a>
+<ul>
+<li><a href="#save-will-save-all-fields"><code>Save</code> will save all fields</a></li>
+<li><a href="#update-single-column">Update single column</a></li>
+<li><a href="#updates-multiple-columns">Updates multiple columns</a></li>
+<li><a href="#update-from-subquery">Update from SubQuery</a></li>
+<li><a href="#without-hookstime-tracking">Without Hooks/Time Tracking</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="save-will-save-all-fields"><a class="header" href="#save-will-save-all-fields"><code>Save</code> will save all fields</a></h2>
+<p><code>Save</code> will save all fields when performing the Updating SQL</p>
+<pre><code class="language-go">rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Save(&amp;testdata.Dict{
+        Id:     100,
+        Key:    "k1",
+        Remark: "remark1",
+    })
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1",`name`="",`is_pin`=false,`remark`="remark1",`created_at`="2024-03-07 01:53:14.633",`updated_at`="2024-03-07 01:53:14.633" WHERE `id` = 100
+</code></pre>
+<h2 id="update-single-column"><a class="header" href="#update-single-column">Update single column</a></h2>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+// update with expr
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdateExpr(refDict.Key, "k1")
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1",`updated_at`="2024-03-07 02:10:44.258" WHERE `dict`.`id` = 100
+
+// update AssignExpr with expr
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdateExpr(refDict.UpdatedAt, refDict.CreatedAt.Add(time.Second))
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `updated_at`=DATE_ADD(`dict`.`created_at`, INTERVAL 1000000 MICROSECOND) WHERE `dict`.`id`
+
+// update with original gorm api
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    Update("key", "k1")
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1",`updated_at`="2024-03-07 02:10:44.258" WHERE `dict`.`id` = 100
+</code></pre>
+<h2 id="updates-multiple-columns"><a class="header" href="#updates-multiple-columns">Updates multiple columns</a></h2>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+// update with expr
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdatesExpr(
+        refDict.Key.Value("k1"),
+        refDict.Remark.Value(""),
+    )
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1",`remark`="",`updated_at`="2024-03-07 02:19:10.144" WHERE `dict`.`id` = 100
+
+// update use `struct` with original gorm api
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    Updates(&amp;testdata.Dict{
+        Key:    "k1",
+        Remark: "remark1",
+    })
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1",`remark`="remark1",`updated_at`="2024-03-07 02:19:10.144" WHERE `dict`.`id` = 100
+
+// update use map with original gorm api
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdatesMap(map[string]any{
+        "key":    "k1",
+        "remark": "remark1",
+    })
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1",`remark`="remark1",`updated_at`="2024-03-07 02:19:10.144" WHERE `dict`.`id` = 100
+</code></pre>
+<h2 id="update-from-subquery"><a class="header" href="#update-from-subquery">Update from SubQuery</a></h2>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+// update with expr
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdateExpr(
+        refDict.Key,
+        rapier.NewExecutor[testdata.Dict](db).Model().
+            SelectExpr(refDict.Key).
+            Where(refDict.Id.Eq(101)).
+            IntoDB(),
+    )
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`=(SELECT `dict`.`key` FROM `dict` WHERE `dict`.`id` = 101),`updated_at`="2024-03-07 02:41:40.548" WHERE `dict`.`id` = 100
+
+// update with exprs
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdatesExpr(
+        refDict.Key.ValueSubQuery(
+            rapier.NewExecutor[testdata.Dict](db).Model().
+                SelectExpr(refDict.Key).
+                Where(refDict.Id.Eq(101)).
+                IntoDB(),
+        ),
+    )
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`=(SELECT `dict`.`key` FROM `dict` WHERE `dict`.`id` = 101),`updated_at`="2024-03-07 02:41:40.548" WHERE `dict`.`id` = 100
+
+// update use map with original gorm api
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdatesMap(map[string]any{
+        "key": rapier.NewExecutor[testdata.Dict](db).Model().
+            SelectExpr(refDict.Key).
+            Where(refDict.Id.Eq(101)).
+            IntoDB(),
+    })
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`=(SELECT `dict`.`key` FROM `dict` WHERE `dict`.`id` = 101),`updated_at`="2024-03-07 02:41:40.548" WHERE `dict`.`id` = 100
+</code></pre>
+<h2 id="without-hookstime-tracking"><a class="header" href="#without-hookstime-tracking">Without Hooks/Time Tracking</a></h2>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+// update with expr
+rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdateColumnsExpr(
+        refDict.Key.Value("k1"),
+        refDict.Remark.Value(""),
+    )
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1",`remark`="" WHERE `dict`.`id` = 100
+
+// update with expr
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdateColumnExpr(refDict.Key, "k1")
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1" WHERE `dict`.`id` = 100
+
+// update with original gorm api
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdateColumn("key", "k1")
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1" WHERE `dict`.`id` = 100
+
+// update with original gorm api
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdateColumns(&amp;testdata.Dict{
+        Key: "k1",
+    })
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1" WHERE `dict`.`id` = 100
+
+// update with original gorm api
+rowsAffected, err = rapier.NewExecutor[testdata.Dict](db).
+    Model().
+    Where(refDict.Id.Eq(100)).
+    UpdateColumnsMap(map[string]any{
+        "key": "k1",
+    })
+_ = err          // return error
+_ = rowsAffected // return row affected
+// UPDATE `dict` SET `key`="k1" WHERE `dict`.`id` = 100
+</code></pre>
+<p>more information <a href="https://gorm.io/docs/update.html">gorm Update</a></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="delete"><a class="header" href="#delete">Delete</a></h1>
+<pre><code class="language-go">refDict := testdata.Ref_Dict()
+    rowsAffected, err := rapier.NewExecutor[testdata.Dict](db).
+        Model().
+        Where(refDict.Id.Eq(100)).
+        Delete()
+    _ = err          // return error
+    _ = rowsAffected // return row affected
+ // DELETE FROM `dict` WHERE `dict`.`id` = 100
+</code></pre>
+<p>more information <a href="https://gorm.io/docs/delete.html">gorm Delete</a></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="raw-sql--sql-builder"><a class="header" href="#raw-sql--sql-builder">Raw SQL &amp; SQL Builder</a></h1>
+<p><a href="https://gorm.io/docs/sql_builder.html">Raw SQL &amp; SQL Builder</a></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="original-gorm-db"><a class="header" href="#original-gorm-db">Original gorm db</a></h1>
+<p><code>IntoDB</code>, <code>IntoRawDB</code> will get original gorm db.</p>
+<ul>
+<li><code>IntoDB</code>: with model or table</li>
+<li><code>IntoRawDB</code>: without model or table</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="transaction"><a class="header" href="#transaction">Transaction</a></h1>
+<p><a href="https://gorm.io/docs/transactions.html">gorm transaction</a></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="associations"><a class="header" href="#associations">Associations</a></h1>
+<p>not supported yet, you can use <a href="https://gorm.io/docs/">gorm original api</a>’s associations topic.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="ace-2a3cd908.js"></script>
+        <script src="mode-rust-2c9d5c9a.js"></script>
+        <script src="editor-16ca416c.js"></script>
+        <script src="theme-dawn-4493f9c8.js"></script>
+        <script src="theme-tomorrow_night-9dbe62a9.js"></script>
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="resources/prism-fbefe70f.js"></script>
+
+        <script>
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>
